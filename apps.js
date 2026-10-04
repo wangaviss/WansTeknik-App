@@ -146,11 +146,59 @@ async function muatPengajuan(){
 async function logoutAdmin(){await db.auth.signOut();openPengajuan()}
 
 async function openGaleri(){
+  if(!db){
+    content('<h2>🗂️ Galeri & Arsip</h2><div class="status error">Supabase belum terhubung.</div>');
+    return;
+  }
+
+  const {data:{session}} = await db.auth.getSession();
+
+  if(session){
+    return tampilGaleri(session);
+  }
+
+  content(`<h2>🔒 Galeri & Arsip</h2>
+    <p>Bagian ini khusus admin. Silakan login menggunakan akun admin Supabase.</p>
+    <form id="galeriLoginForm" class="form">
+      <input id="galeriEmail" type="email" placeholder="Email admin" required>
+      <input id="galeriPassword" type="password" placeholder="Password admin" required>
+      <button type="submit">🔐 Masuk Galeri</button>
+    </form>
+    <div id="galeriLoginStatus"></div>`);
+  document.getElementById("galeriLoginForm").addEventListener("submit", loginGaleri);
+}
+
+async function loginGaleri(e){
+  e.preventDefault();
+  const email=document.getElementById("galeriEmail").value.trim();
+  const password=document.getElementById("galeriPassword").value;
+  const el=document.getElementById("galeriLoginStatus");
+  el.innerHTML='<div class="status">Memproses login...</div>';
+
+  const {data,error}=await db.auth.signInWithPassword({email,password});
+
+  if(error){
+    el.innerHTML='<div class="status error">Login gagal: '+esc(error.message)+'</div>';
+    return;
+  }
+
+  tampilGaleri(data.session);
+}
+
+async function tampilGaleri(session){
   content(`<h2>🗂️ Galeri & Arsip</h2>
-  <p>Modul ini memakai Supabase Storage. Upload/rename/hapus akan dibuat setelah bucket arsip dibuat.</p>
-  <div class="status">Folder yang direncanakan: sejarah, dokumen, foto, logo.</div>
-  <button class="action" type="button" onclick="cekStorage()">🔎 Cek Storage</button>
-  <div id="storageStatus"></div>`);
+    <p>Admin aktif: ${esc(session.user.email)}</p>
+    <div class="inline">
+      <button class="action" type="button" onclick="cekStorage()">🔎 Cek Storage</button>
+      <button class="action secondary" type="button" onclick="logoutGaleri()">Keluar</button>
+    </div>
+    <div class="status">🔐 Akses galeri berhasil dibuka.</div>
+    <div id="storageStatus"></div>`);
+}
+
+async function logoutGaleri(){
+  await db.auth.signOut();
+  openGaleri();
 }
 async function cekStorage(){
   const el=document.getElementById("storageStatus");if(!el)return;

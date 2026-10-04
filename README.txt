@@ -46,3 +46,9 @@ SUPABASE ADMIN
 --------------
 Buat user admin di Supabase Authentication > Users.
 Jangan masukkan password admin ke apps.js.
+
+
+PERBAIKAN V2.2.1
+----------------
+Galeri & Arsip sekarang juga wajib login menggunakan akun admin Supabase.
+Tidak ada password yang disimpan di JavaScript.
