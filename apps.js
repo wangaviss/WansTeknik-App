@@ -1,84 +1,112 @@
+// WansTeknik V1 - fungsi menu + Supabase Jadwal
 const SUPABASE_URL = "https://kxdqviatkjonsfqywgwy.supabase.co";
 const SUPABASE_KEY = "sb_publishable_cdjpVfFpB7WK36DrVKlr6g_E4b9XM-2";
+const GOOGLE_FORM_PEMASUKAN = "https://docs.google.com/forms/d/e/1FAIpQLSccon3ljevYDcKWZTKpTjEoNzcf7NMDPxADMG-Wm9uuw4tmKA/viewform";
 
-const GOOGLE_FORM_PEMASUKAN =
-  "https://docs.google.com/forms/d/e/1FAIpQLSccon3ljevYDcKWZTKpTjEoNzcf7NMDPxADMG-Wm9uuw4tmKA/viewform";
-
-const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let db = null;
 let alarmTimer = null;
 
-function openPage(page) {
-  const content = document.getElementById("content");
+// Supabase hanya diinisialisasi kalau library berhasil dimuat.
+if (window.supabase && window.supabase.createClient) {
+  db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+}
 
-  if (page === "home") {
-    content.innerHTML = "<h3>🏠 Home</h3><p>Selamat datang di sistem WansTeknik.</p>";
-  }
+function setContent(html) {
+  document.getElementById("content").innerHTML = html;
+}
 
-  if (page === "jadwal") showJadwal();
-
-  if (page === "pengajuan") {
-    content.innerHTML = "<h3>📝 Pengajuan</h3><p>Area khusus admin untuk melihat data pengajuan.</p>";
-  }
-
-  if (page === "galeri") {
-    content.innerHTML = "<h3>🗂️ Galeri & Arsip</h3><p>Sejarah WansTeknik, logo, foto dan dokumen penting.</p>";
-  }
+function openHome() {
+  setContent(`
+    <h3>🏠 Home</h3>
+    <p>Selamat datang di sistem WansTeknik.</p>
+    <p>Semua menu sudah siap digunakan.</p>
+  `);
 }
 
 function openPemasukan() {
   window.open(GOOGLE_FORM_PEMASUKAN, "_blank");
 }
 
-async function showJadwal() {
-  const content = document.getElementById("content");
+function openPengajuan() {
+  setContent(`
+    <h3>📝 Pengajuan</h3>
+    <p>Menu pengajuan WansTeknik.</p>
+    <p>Bagian ini akan kita hubungkan ke Google Sheet pada tahap berikutnya.</p>
+  `);
+}
 
-  content.innerHTML = `
+function openGaleri() {
+  setContent(`
+    <h3>🗂️ Galeri & Arsip</h3>
+    <p>Tempat sejarah WansTeknik, logo, foto dan dokumen penting.</p>
+    <p>Akses admin akan ditambahkan pada tahap berikutnya.</p>
+  `);
+}
+
+async function openJadwal() {
+  setContent(`
     <h3>📅 Jadwal & Alarm</h3>
-    <p>Jadwal tersimpan di Supabase.</p>
+    <p>Data jadwal tersimpan di Supabase.</p>
 
-    <form class="schedule-form" id="scheduleForm">
+    <form id="jadwalForm" class="form">
       <input id="judul" type="text" placeholder="Contoh: Service AC Eva" required>
       <input id="waktu" type="datetime-local" required>
       <textarea id="catatan" placeholder="Catatan pekerjaan"></textarea>
       <label><input id="alarm" type="checkbox" checked> Aktifkan alarm</label>
-      <button class="primary-btn" type="submit">💾 Simpan Jadwal</button>
+      <button type="submit">💾 Simpan Jadwal</button>
     </form>
 
-    <div id="scheduleStatus"></div>
-    <div id="scheduleList"><p>Memuat...</p></div>
-  `;
+    <div id="jadwalStatus"></div>
+    <div id="jadwalList"><p>Memuat jadwal...</p></div>
+  `);
 
-  document.getElementById("scheduleForm").addEventListener("submit", saveJadwal);
-  await loadJadwal();
+  document.getElementById("jadwalForm").addEventListener("submit", simpanJadwal);
+  await muatJadwal();
 }
 
-async function saveJadwal(event) {
-  event.preventDefault();
+async function simpanJadwal(e) {
+  e.preventDefault();
 
-  const status = document.getElementById("scheduleStatus");
-  const waktu = new Date(document.getElementById("waktu").value).toISOString();
-
-  const { error } = await db.from("jadwal").insert({
-    judul: document.getElementById("judul").value.trim(),
-    waktu: waktu,
-    alarm: document.getElementById("alarm").checked,
-    catatan: document.getElementById("catatan").value.trim()
-  });
-
-  if (error) {
-    status.innerHTML = `<div class="status error">Gagal: ${escapeHtml(error.message)}</div>`;
+  if (!db) {
+    tampilStatus("Supabase belum termuat. Coba refresh aplikasi.", true);
     return;
   }
 
-  status.innerHTML = '<div class="status ok">Jadwal tersimpan di Supabase.</div>';
-  document.getElementById("scheduleForm").reset();
+  const judul = document.getElementById("judul").value.trim();
+  const waktuInput = document.getElementById("waktu").value;
+  const catatan = document.getElementById("catatan").value.trim();
+  const alarm = document.getElementById("alarm").checked;
+
+  const waktu = new Date(waktuInput).toISOString();
+
+  tampilStatus("Menyimpan...");
+
+  const { error } = await db.from("jadwal").insert({
+    judul: judul,
+    waktu: waktu,
+    alarm: alarm,
+    catatan: catatan
+  });
+
+  if (error) {
+    tampilStatus("Gagal menyimpan: " + error.message, true);
+    return;
+  }
+
+  tampilStatus("Jadwal berhasil disimpan ke Supabase.");
+  document.getElementById("jadwalForm").reset();
   document.getElementById("alarm").checked = true;
-  await loadJadwal();
+  await muatJadwal();
 }
 
-async function loadJadwal() {
-  const list = document.getElementById("scheduleList");
+async function muatJadwal() {
+  const list = document.getElementById("jadwalList");
   if (!list) return;
+
+  if (!db) {
+    list.innerHTML = '<div class="status error">Supabase belum terhubung.</div>';
+    return;
+  }
 
   const { data, error } = await db
     .from("jadwal")
@@ -86,31 +114,32 @@ async function loadJadwal() {
     .order("waktu", { ascending: true });
 
   if (error) {
-    list.innerHTML = `<div class="status error">Supabase: ${escapeHtml(error.message)}</div>`;
+    list.innerHTML = '<div class="status error">Tidak bisa membaca jadwal: ' + escapeHtml(error.message) + '</div>';
     return;
   }
 
-  if (!data.length) {
+  if (!data || data.length === 0) {
     list.innerHTML = '<div class="status">Belum ada jadwal.</div>';
     return;
   }
 
   list.innerHTML = data.map(item => `
-    <div class="schedule-item">
+    <div class="schedule">
       <strong>📌 ${escapeHtml(item.judul)}</strong>
-      <div class="schedule-meta">
+      <div class="meta">
         🕐 ${new Date(item.waktu).toLocaleString("id-ID")}<br>
         🔔 Alarm: ${item.alarm ? "Aktif" : "Tidak aktif"}
         ${item.catatan ? "<br>📝 " + escapeHtml(item.catatan) : ""}
       </div>
-      <button class="delete-btn" onclick="hapusJadwal('${item.id}')">Hapus</button>
+      <button class="delete" type="button" onclick="hapusJadwal('${item.id}')">Hapus</button>
     </div>
   `).join("");
 
-  setAlarm(data);
+  pasangAlarm(data);
 }
 
 async function hapusJadwal(id) {
+  if (!db) return;
   if (!confirm("Hapus jadwal ini?")) return;
 
   const { error } = await db.from("jadwal").delete().eq("id", id);
@@ -120,30 +149,36 @@ async function hapusJadwal(id) {
     return;
   }
 
-  await loadJadwal();
+  await muatJadwal();
 }
 
-function setAlarm(data) {
+function pasangAlarm(data) {
   if (alarmTimer) clearTimeout(alarmTimer);
 
-  const next = data
-    .filter(item => item.alarm && new Date(item.waktu).getTime() > Date.now())
-    .sort((a, b) => new Date(a.waktu) - new Date(b.waktu))[0];
+  const berikutnya = data
+    .filter(x => x.alarm && new Date(x.waktu).getTime() > Date.now())
+    .sort((a,b) => new Date(a.waktu) - new Date(b.waktu))[0];
 
-  if (!next) return;
+  if (!berikutnya) return;
 
-  const delay = new Date(next.waktu).getTime() - Date.now();
+  const delay = new Date(berikutnya.waktu).getTime() - Date.now();
 
-  alarmTimer = setTimeout(() => {
-    alert("🔔 WansTeknik\n\nSaatnya: " + next.judul);
+  alarmTimer = setTimeout(function() {
+    alert("🔔 WansTeknik\n\nSaatnya: " + berikutnya.judul);
   }, Math.min(delay, 2147483647));
+}
+
+function tampilStatus(pesan, error = false) {
+  const el = document.getElementById("jadwalStatus");
+  if (!el) return;
+  el.innerHTML = '<div class="status ' + (error ? 'error' : 'ok') + '">' + escapeHtml(pesan) + '</div>';
 }
 
 function escapeHtml(value) {
   return String(value ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
 }
