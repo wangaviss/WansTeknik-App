@@ -1,55 +1,51 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WansTeknik</title>
-  <link rel="stylesheet" href="style.css?v=3">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WansTeknik</title>
+<link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
-  <header class="header">
-    <div class="brand">
-      <div class="logo">WT</div>
-      <div>
-        <h1>WansTeknik</h1>
-        <p>Service and Repair</p>
-      </div>
-    </div>
-  </header>
+<header class="header">
+  <div class="brand">
+    <div class="logo">WT</div>
+    <div><h1>WansTeknik</h1><p>Engineering & Service</p></div>
+  </div>
+</header>
 
-  <main>
-    <section class="welcome">
-      <h2>Selamat Datang 👋</h2>
-      <p>WansTeknik Business System</p>
-    </section>
+<main>
+<section class="welcome">
+  <h2>Selamat Datang 👋</h2>
+  <p>WansTeknik Business System</p>
+</section>
 
-    <section class="menu-grid">
-      <button class="menu-card" onclick="openPage('home')">
-        <span>🏠</span><strong>Home</strong><small>Beranda WansTeknik</small>
-      </button>
-      <button class="menu-card" onclick="openPage('jadwal')">
-        <span>📅</span><strong>Jadwal & Alarm</strong><small>Atur jadwal pekerjaan</small>
-      </button>
-      <button class="menu-card" onclick="openPemasukan()">
-        <span>💰</span><strong>Pemasukan</strong><small>Input melalui Google Form</small>
-      </button>
-      <button class="menu-card" onclick="openPage('pengajuan')">
-        <span>📝</span><strong>Pengajuan</strong><small>Data pengajuan admin</small>
-      </button>
-      <button class="menu-card" onclick="openPage('galeri')">
-        <span>🗂️</span><strong>Galeri & Arsip</strong><small>Sejarah & dokumen penting</small>
-      </button>
-    </section>
+<section class="menu-grid">
+  <button class="menu-card" type="button" onclick="openHome()">
+    <span>🏠</span><strong>Home</strong><small>Beranda WansTeknik</small>
+  </button>
+  <button class="menu-card" type="button" onclick="openJadwal()">
+    <span>📅</span><strong>Jadwal & Alarm</strong><small>Atur jadwal pekerjaan</small>
+  </button>
+  <button class="menu-card" type="button" onclick="openPemasukan()">
+    <span>💰</span><strong>Pemasukan</strong><small>Input melalui Google Form</small>
+  </button>
+  <button class="menu-card" type="button" onclick="openPengajuan()">
+    <span>📝</span><strong>Pengajuan</strong><small>Data pengajuan admin</small>
+  </button>
+  <button class="menu-card" type="button" onclick="openGaleri()">
+    <span>🗂️</span><strong>Galeri & Arsip</strong><small>Sejarah & dokumen penting</small>
+  </button>
+</section>
 
-    <section id="content" class="content">
-      <h3>WansTeknik</h3>
-      <p>Pilih menu untuk mulai.</p>
-    </section>
-  </main>
+<section id="content" class="content">
+  <h3>WansTeknik</h3><p>Pilih menu untuk mulai.</p>
+</section>
+</main>
 
-  <footer>© 2026 WansTeknik</footer>
+<footer>© 2026 WansTeknik</footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="apps.js?v=3"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="apps.js?v=4"></script>
 </body>
 </html>
