@@ -1,0 +1,132 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+  color: #222;
+}
+
+.header {
+  background: #111827;
+  color: white;
+  padding: 18px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  background: #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.brand h1 {
+  font-size: 21px;
+}
+
+.brand p {
+  font-size: 12px;
+  opacity: .75;
+  margin-top: 3px;
+}
+
+main {
+  max-width: 700px;
+  margin: auto;
+  padding: 18px;
+}
+
+.welcome {
+  background: white;
+  border-radius: 16px;
+  padding: 22px;
+  margin-bottom: 18px;
+  box-shadow: 0 3px 12px rgba(0,0,0,.06);
+}
+
+.welcome h2 {
+  margin-bottom: 6px;
+}
+
+.welcome p {
+  color: #666;
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.menu-card {
+  border: none;
+  background: white;
+  border-radius: 16px;
+  padding: 20px 12px;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: 0 3px 12px rgba(0,0,0,.06);
+}
+
+.menu-card:hover {
+  transform: translateY(-2px);
+}
+
+.menu-card span {
+  display: block;
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.menu-card strong {
+  display: block;
+  font-size: 15px;
+  margin-bottom: 5px;
+}
+
+.menu-card small {
+  color: #777;
+}
+
+.content {
+  background: white;
+  margin-top: 18px;
+  padding: 20px;
+  border-radius: 16px;
+  min-height: 130px;
+}
+
+.content h3 {
+  margin-bottom: 8px;
+}
+
+.content p {
+  color: #666;
+}
+
+footer {
+  text-align: center;
+  color: #888;
+  padding: 25px;
+  font-size: 12px;
+}
+
+@media (max-width: 450px) {
+  .menu-grid {
+    grid-template-columns: 1fr;
+  }
+}
