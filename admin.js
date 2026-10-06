@@ -26,8 +26,8 @@ async function loadCustomers(){
   const {data,error}=await db.from("customers").select("*").order("name");
   if(error){msg("#customerStatus",error.message);return}
   customers=data||[];
-  $("#serviceCustomer").innerHTML=customers.map(c=>`<option value="${c.id}">${esc(c.wt_code)} — ${esc(c.name)}</option>`).join("");
-  $("#customerRows").innerHTML=customers.map(c=>`<tr><td>${esc(c.wt_code)}</td><td>${esc(c.name)}</td><td>${esc(c.phone||"-")}</td><td>${esc(c.address||"-")}</td><td><button class="row-btn" onclick="editCustomer('${c.id}')">Edit</button></td></tr>`).join("");
+$("#serviceCustomer").innerHTML=customers.map(c=>`<option value="${c.id}">WT-${esc(c.wt_code)} — ${esc(c.name)}</option>`).join("");
+  $("#customerRows").innerHTML=customers.map(c=>`<tr><td>WT-${esc(c.wt_code)}</td><td>${esc(c.name)}</td><td>${esc(c.phone||"-")}</td><td>${esc(c.address||"-")}</td><td><button class="row-btn" onclick="editCustomer('${c.id}')">Edit</button></td></tr>`).join("");
 }
 window.editCustomer = id=>{
   const c=customers.find(x=>x.id===id); if(!c)return;
@@ -38,7 +38,19 @@ $("#newCustomer").onclick=()=>{$("#customerEditor").reset();$("#customerId").val
 
 $("#customerEditor").addEventListener("submit",async e=>{
   e.preventDefault();
-  const payload={wt_code:$("#wtCode").value.trim().toUpperCase(),name:$("#name").value.trim(),phone:$("#adminPhone").value.trim()||null,address:$("#address").value.trim()||null};
+  const wtCode = $("#wtCode").value.trim();
+
+if(!/^\d{4}$/.test(wtCode)){
+  msg("#customerStatus","Kode WT harus tepat 4 angka. Contoh: 0001");
+  return;
+}
+
+const payload = {
+  wt_code: wtCode,
+  name: $("#name").value.trim(),
+  phone: $("#adminPhone").value.trim() || null,
+  address: $("#address").value.trim() || null
+};
   const id=$("#customerId").value;
   const q=id?db.from("customers").update(payload).eq("id",id):db.from("customers").insert(payload);
   const {error}=await q;
