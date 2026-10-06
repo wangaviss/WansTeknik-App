@@ -37,7 +37,8 @@
         <form id="customerEditor">
           <input id="customerId" type="hidden">
           <label>Kode WT</label>
-          <input id="wtCode" placeholder="WT-000001" required>
+          <input id="wtCode" placeholder="0001" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" required>
+<small>Kode pelanggan 4 digit. Contoh: 0001</small>
           <label>Nama</label>
           <input id="name" required>
           <label>No. HP</label>
