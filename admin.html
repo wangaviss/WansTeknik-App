@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>WansTeknik — Admin</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">Wans<span>Teknik</span> <small>ADMIN</small></div>
+  <a href="index.html" class="admin-link">Pelanggan</a>
+</header>
+
+<main class="container admin">
+  <section id="loginCard" class="card">
+    <h2>Login Admin</h2>
+    <form id="loginForm">
+      <label>Email</label>
+      <input id="email" type="email" required>
+      <label>Password</label>
+      <input id="password" type="password" required>
+      <button>Masuk</button>
+      <p id="loginStatus" class="status"></p>
+    </form>
+  </section>
+
+  <section id="adminApp" class="hidden">
+    <div class="admin-actions">
+      <h1>Data Pelanggan & Riwayat</h1>
+      <button id="logout" class="secondary">Keluar</button>
+    </div>
+
+    <div class="grid2">
+      <section class="card">
+        <h2>Tambah / Edit Pelanggan</h2>
+        <form id="customerEditor">
+          <input id="customerId" type="hidden">
+          <label>Kode WT</label>
+          <input id="wtCode" placeholder="WT-000001" required>
+          <label>Nama</label>
+          <input id="name" required>
+          <label>No. HP</label>
+          <input id="adminPhone" inputmode="tel">
+          <label>Alamat</label>
+          <textarea id="address"></textarea>
+          <button>Simpan Pelanggan</button>
+          <button type="button" id="newCustomer" class="secondary">Form Baru</button>
+        </form>
+        <p id="customerStatus" class="status"></p>
+      </section>
+
+      <section class="card">
+        <h2>Tambah Riwayat Service</h2>
+        <form id="serviceEditor">
+          <input id="serviceId" type="hidden">
+          <label>Pilih Pelanggan</label>
+          <select id="serviceCustomer" required></select>
+          <label>Tanggal</label>
+          <input id="serviceDate" type="date" required>
+          <label>Yang dicek / unit</label>
+          <input id="checked" placeholder="AC Split / Kulkas / Mesin Cuci">
+          <label>Kendala</label>
+          <textarea id="problem" placeholder="Keluhan pelanggan / hasil pengecekan"></textarea>
+          <label>Diperbaiki / tindakan</label>
+          <textarea id="repair" placeholder="Cleaning, ganti kapasitor, isi freon, dll."></textarea>
+          <label>Catatan</label>
+          <textarea id="notes"></textarea>
+          <label>Biaya</label>
+          <input id="cost" type="number" min="0" step="1000" value="0">
+          <button>Simpan Riwayat</button>
+        </form>
+        <p id="serviceStatus" class="status"></p>
+      </section>
+    </div>
+
+    <section class="card">
+      <div class="table-head">
+        <h2>Daftar Pelanggan</h2>
+        <input id="search" placeholder="Cari nama / HP / kode WT">
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Kode</th><th>Nama</th><th>No. HP</th><th>Alamat</th><th>Aksi</th></tr></thead>
+          <tbody id="customerRows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Import Data Lama</h2>
+      <p class="muted">
+        Gunakan <b>import-template.csv</b>. Data dari PDF yang belum punya No. HP
+        dapat dimasukkan dahulu dengan kolom phone kosong. Setelah itu petakan ke pelanggan.
+      </p>
+      <input id="csvFile" type="file" accept=".csv">
+      <button id="importCsv" class="secondary">Import CSV</button>
+      <p id="importStatus" class="status"></p>
+    </section>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="admin.js"></script>
+</body>
+</html>

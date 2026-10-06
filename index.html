@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>WansTeknik — Riwayat Service</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">Wans<span>Teknik</span></div>
+  <a href="admin.html" class="admin-link">Admin</a>
+</header>
+
+<main class="container">
+  <section class="hero">
+    <p class="eyebrow">LAYANAN PELANGGAN</p>
+    <h1>Cek Riwayat Service</h1>
+    <p>Masukkan nomor HP yang terdaftar dan kode WT Anda.</p>
+  </section>
+
+  <section class="card">
+    <form id="customerForm">
+      <label>No. HP</label>
+      <input id="phone" inputmode="tel" autocomplete="tel"
+             placeholder="Contoh: 081234567890" required>
+
+      <label>Kode WT</label>
+      <input id="code" autocomplete="off"
+             placeholder="Contoh: WT-000001" required>
+
+      <button type="submit">Lihat Riwayat</button>
+      <p id="status" class="status"></p>
+    </form>
+  </section>
+
+  <section id="result" class="hidden">
+    <div class="customer-head card">
+      <div>
+        <p class="muted">PELANGGAN</p>
+        <h2 id="customerName">-</h2>
+        <p id="customerAddress">-</p>
+      </div>
+      <div class="code-badge" id="customerCode">WT-000000</div>
+    </div>
+
+    <div id="history" class="history"></div>
+  </section>
+</main>
+
+<footer>WansTeknik • Riwayat service pelanggan</footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app.js"></script>
+</body>
+</html>
