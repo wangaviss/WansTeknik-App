@@ -30,7 +30,8 @@
       <small>Gunakan nomor HP yang didaftarkan ke WansTeknik.</small>
 
       <label for="code">Kode WT</label>
-      <input id="code" type="text" inputmode="text" autocapitalize="characters" autocomplete="off" placeholder="Contoh: WT-000001" required>
+      <input id="code" type="text" inputmode="numeric" autocomplete="off" placeholder="Contoh: 0001" maxlength="4" pattern="[0-9]{4}" required>
+      <small>Masukkan 4 angka kode pelanggan.</small>
       <small>Kode WT diberikan oleh WansTeknik.</small>
 
       <button id="submitBtn" type="submit">Lihat Riwayat Service</button>
