@@ -192,7 +192,53 @@ async function loadServiceRecords() {
   }
 
   const rows = data || [];
+  serviceRecord = rows; 
+  let serviceRecords = [];
 
+window.editService = id => {
+  const r = serviceRecords.find(x => x.id === id);
+
+  if (!r) {
+    msg("#serviceStatus", "Data service tidak ditemukan.");
+    return;
+  }
+
+  $("#serviceId").value = r.id;
+  $("#serviceCustomer").value = r.customer_id;
+  $("#serviceDate").value = r.service_date || "";
+  $("#checked").value = r.checked || "";
+  $("#problem").value = r.problem || "";
+  $("#repair").value = r.repair || "";
+  $("#notes").value = r.notes || "";
+  $("#cost").value = r.cost || 0;
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+  msg("#serviceStatus", "Mode edit riwayat service.");
+};
+window.deleteService = async id => {
+  const yakin = confirm("Hapus riwayat service ini?");
+
+  if (!yakin) return;
+
+  const { error } = await db
+    .from("service_records")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    console.error(error);
+    msg("#serviceListStatus", error.message);
+    return;
+  }
+
+  msg("#serviceListStatus", "Riwayat service berhasil dihapus.");
+
+  await loadServiceRecords();
+};
   $("#serviceRows").innerHTML = rows.map(r => `
     <tr>
       <td>${esc(r.service_date || "-")}</td>
@@ -202,6 +248,14 @@ async function loadServiceRecords() {
       <td>${esc(r.problem || "-")}</td>
       <td>${esc(r.repair || "-")}</td>
       <td>Rp ${Number(r.cost || 0).toLocaleString("id-ID")}</td>
+   <td>
+  <button class="row-btn" onclick="editService('${r.id}')">
+    Edit
+  </button>
+  <button class="row-btn" onclick="deleteService('${r.id}')">
+    Hapus
+  </button>
+</td>
     </tr>
   `).join("");
 
