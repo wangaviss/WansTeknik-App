@@ -1,117 +1,63 @@
 wt_code,name,phone,address,service_date,checked,problem,repair,notes,cost
 0001,Kak Perdi,,Jl. Arimbi,2026-01-03,AC/Split/SHARP/SAMSUNG,,Cuci AC 2 Unit Rp 120.000; Tambah Freon AC Sharp Rp 100.000,Data rekap 2026,220000
-0002,Yuk Putri,,Perum Majasari,2026-01-05,AcSplit/PANASONIC/R32,,Borngkar Pasang Rp 200.000; Tambah Freon Rp 200.000,Data rekap 2026,400000
+0002,Yuk Putri,083862116421,Perum Majasari,2026-01-05,AcSplit/PANASONIC/R32,,Borngkar Pasang Rp 200.000; Tambah Freon Rp 200.000,Data rekap 2026,400000
 0003,Bik Yus,,Bakaran,2026-01-05,Kulkas/LG/DuaPintu,,Isi Tabung Freon R32 1kg; Heater Kulkas Rp 85.000; Jasa Pergantian,Data rekap 2026,150000
-0004,Yuk Yani,,Jl. Arimbi,2026-01-05,,Pengecekan Raket Nyamuk,,Data rekap 2026,10000
-0005,Pak Lani,,Jl. Cahaya Pelangi Padat Karya,2026-01-05,Mesin Cuci/SHARP/Dua Tabung,,Dinamo Wash Rp 320.000,Data rekap 2026,350000
+0004,Yuk Yani,0895803194291,Jl. Arimbi,2026-01-05,,Pengecekan Raket Nyamuk,,Data rekap 2026,10000
+0005,Pak Lani,08985386442,Jl. Cahaya Pelangi Padat Karya,2026-01-05,Mesin Cuci/SHARP/Dua Tabung,,Dinamo Wash Rp 320.000,Data rekap 2026,350000
 0006,Yuk Dara,,Cahaya Pelangi Padat Karya,2026-01-10,Magicom/MIYAKO,,Pergantian Heater Tutup,Data rekap 2026,20000
 0007,Cek Rina,,Bakaran,2026-01-12,Speaker,,Set Modul Blueth Speaker Mic; Modul Speaker Rp 80.000,Data rekap 2026,180000
-0008,Bunda Eneng,,Cahaya Pelangi Padat Karya,2026-01-17,Magicom,,Sambung Kabel Warm Tutup,Data rekap 2026,15000
+0008,Bunda Eneng,08561019846,Cahaya Pelangi Padat Karya,2026-01-17,Magicom,,Sambung Kabel Warm Tutup,Data rekap 2026,15000
 0009,Yuk Novi,,Cahaya Pelagi Padat Karya,2026-01-17,Setrika,,Pergantian Kabel Listrik Setrika,Data rekap 2026,30000
-0005,Pak Lani,,Cahaya Pelagi Padat Karya,2026-01-17,Magicom,,Pergantian Fuse Magicom,Data rekap 2026,20000
+0005,Pak Lani,08985386442,Cahaya Pelagi Padat Karya,2026-01-17,Magicom,,Pergantian Fuse Magicom,Data rekap 2026,20000
 0010,Masjid Nurul Islam,,Bakaran,2026-01-22,Ac/Split/Panasonic,,Cleaning Ac Kode B1 & C1; Timer Wash; Tali Katup,Data rekap 2026,100000
 0011,Kak Randi,,GPI 2 Padat Karya Blok CC12,2026-01-24,Mesin Cuci/LG/Dua Tabung,,Jasa Oprasional,Data rekap 2026,160000
-0012,Ayu,,Bakaran,2025-01-31,Mesin Cuci/LG/Dua Tabung,,Kapasitor Rp 50.000; Jasa Oprasional Rp 100.000,Data rekap 2026,135000
+0012,Ayu,083862116421,Bakaran,2025-01-31,Mesin Cuci/LG/Dua Tabung,,Kapasitor Rp 50.000; Jasa Oprasional Rp 100.000,Data rekap 2026,135000
 0013,Yuk Santi,,Grand Musindo Blok A02,2026-02-04,Mesin Cuci/SHARP/Dua Tabung,,Jasa Oprasional Pemasangan; Dinamo Spin; Seal Pengering,Data rekap 2026,75000
-0014,Cek Wiwin,,Dekat Sabian Cell Karang Rajo,2025-02-06,AcSplit/SAMSUNG/0.5Pk,,Jasa Oprasional Pergantian Kapasitor Dari Konsumen 15+1.5 Kapasitor,Data rekap 2026,70000
-0015,Tante Ital,,Talang Minang,2026-02-08,Modul/Bluetooth,,Ralut Modul Bluetooth,Data rekap 2026,180000
-0004,Yuk Yani,,Bakaran Belakang Masjid MNI,2026-02-11,Mesin Cuci/LG/14kg,,Jasa Perbaikan Kabel; Seal Pembuangan Rp 75.000; Tali Pembuangan Rp 15.000,Data rekap 2026,135000
-0016,Pak Wahyuzi,,Tanjung Raman Proyek KAt,2026-02-11,Kipas Angin,,Jasa Pengecekan,Data rekap 2026,30000
-0017,Pak Harry,,Bedeng Prabu Jaya,2026-02-13,LampuJalan,,Jasa Pergantian lampu jalan,Data rekap 2026,100000
-0018,Kak Didin,,Tanjung Raman Sebelah SMA 2,2026-02-14,AcSplit/AQUA/0.5pk,,Jasa Oprasional Cleaning Ac; Jasa Oprasional Rp 70.000; Kabel Colokan Rp 10.000,Data rekap 2026,60000
-0019,Bik Yansi,,Bakaran,2026-02-15,Magicom/MIYAKO,,2 unit Thermostat Rp 50.000; Lem Altico Rp 10.000,Data rekap 2026,110000
-0020,MNI,,Bakaran,2026-02-16,AcSplit/PANASONIC,,Cleaning Ac. Kode A1 dan C2,Data rekap 2026,100000
-0021,Bik Rismala,,Bakaran,2026-02-18,Kulkas Dua Pintu/SHARP,Kompresi bermasalah GMCC,Jasa pengecekan kondisi kulkas,Data rekap 2026,15000
-0022,Yuk Gresi,,Belakang Studio Ratu Rumdin,2026-02-21,AcSplit/SHARP/DAIKIN,,Cleaning Ac Split,Data rekap 2026,120000
-0023,Tanpa Nama,,Cahaya Pelagi Sebelah Mushola,2026-02-26,MesinCuci/SHARP/Dua Tabung,,Jasa Oprasional Rp 50.000; Untung Barang Rp 20.000; Kapasitor 12+4 Rp 30.000 Jual Rp 50.000,Data rekap 2026,70000
-0024,Kak Aji,,J. Arimbi,2026-02-26,AcSplit/LG,,Jasa Cleaning Ac,Data rekap 2026,50000
-0025,Yuk Dela,,Cahaya Pelangi Padat Karya,2026-03-02,Mesin Cuci/SHARP/Dua Tabung,,Per Pengering Rp 20.000x2; Sell Rp 35.000/pcs; Seal Ori Sharp Rp 120.000; Sell Rp 145.000,Data rekap 2026,293000
-0026,Buk Yusliana,,Gunung kemalo,2026-03-02,AcSplit/LG,Kendala Rernot AC,Jasa Oprasional Pengecekan,Data rekap 2026,40000
-0027,Kak Hendri,,Padat Karya,2026-03-02,AcSplit/LG,,Jasa Cleaning Ac Split,Data rekap 2026,60000
-0012,Yuk Ayu,,Cahaya Pelangi,2026-03-04,Mesin Cuci/SHARP/Dua Tabung,,Kapasitor Rp 30.000 Sell Rp 50.000; Jasa Oprasional Rp 50.000,Data rekap 2026,100000
-0028,Agus,,Bakaran,2026-03-05,SpeakerAktif ADVANCE,,Baterry Li-ion Rp 33.871; Jasa Oprasional Modif Supply Aki,Data rekap 2026,100000
-0029,Yuk dewi,,Legok,2026-03-06,FitnessGym,,jasa oprasional bantuan rakit,Data rekap 2026,50000
-0029,Yuk Dewi,,Go Ali Adam Legok,2026-03-07,FitnessGym,,Jasa Oprasional Perakitan,Data rekap 2026,50000
-0005,Pak Lani,,Cahaya Pelangi,2026-03-14,Mesin Cuci/AQUA/Dua Tabung,,Jasa Oprasional Mesin Cuci Perbaikan Kabel Jalur Wash; Jasa Oprasional Instalasi Pergantian Stopkontak,Data rekap 2026,100000
-0030,Wak Yansi,,Tanpa Alamat,2026-03-14,Kipas Angin/MASPION/Stand,,Dinamo Kipas Rp 90.000 Kekonsumen Rp 120.000,Data rekap 2026,150000
-0031,Yuk Sinta,,perumnas Musindo,2026-03-28,AcSplit/Panasonic,,Jasa Cleaning Ac,Data rekap 2026,60000
-0032,Bik Amoy,,Bakaran,2026-03-28,AcSplit/Panasonic,,Jasa Cleaning Ac,Data rekap 2026,50000
-0033,Kak Ade,,Relly TVRI,2026-04-02,TV/SHARP/32inch,,Pengecekan dan Perawatan TV,Data rekap 2026,50000
-0034,Kak Sefri,,Tanjung Raman Arah LDII,2026-04-03,Mesin Cuci/SHARP/Dua Tabung,,Pergantian Seal Pembuangan; Pengecekan Dinamo Spin dan Seal,Data rekap 2026,70000
-0029,Yuk Dewi,,Legak,2026-04-04,Instalasi Listrik,,Ubah Jalur Ac Belakang,Data rekap 2026,100000
-0005,Pak Lani,,Cahaya Pelangi Padat Karya,2026-04-07,Blender/Kipas Angin,,Perawatan Blender; Tuker Baling' Kipas,Data rekap 2026,40000
-0035,Kak Rivan,,Sebelah Kuburan Muara Dua,2026-04-09,AcSplit/DAIKIN/TigalUnit,,Pasang Ac Vacuum Rp210.000; Wawan Rp-310.000; Bahan Rp-2.562.500,Data rekap 2026,3786500
-0032,Bik Amoy,,Bakaran,2026-04-10,RemotAc/PANASONIC,,Remot Ac Panasonic Rp-75.000,Data rekap 2026,85000
-0017,Pak Harry,,Dekat Smp Muhammadiyah,2026-04-11,SaklarLampu,,Jasa Pergantian Saklar Lama,Data rekap 2026,50000
-0008,Bunda Eneng,,Cahaya Pelangi,2025-04-12,Blender/PHILIPS,,Perbaikan Blender Mati,Data rekap 2026,30000
-0036,Yuk Asi,,Sebelah Sd 05 Kebun Duren,2026-04-13,AcSplit/SHARP,,Cuci Ac Split,Data rekap 2026,70000
-0011,Kak Randi,,Belakang CPI Padat Karya,2026-04-14,Mesin Cuci/LG/Dua Tabung,,Jasa Ganti TimerWash Rp 50.000; Untung Barang Rp 25.000,Data rekap 2026,75000
-0017,Pak Harry,,Dekat Smp Muh,2026-04-19,ChagerAki/KRISBOW,,Jasa Perbaikan Modul,Data rekap 2026,100000
-0023,Tanpa Nama,,Cahaya Pelangi B04,2026-04-23,Kipas Angin/SANEX/Dinding,,Jasa Perbaikan Dinamo,Data rekap 2026,30000
-0037,Kak Hadi,,Komplek Durian 135E,2026-05-02,AcSplit/LG/PANASONIC,,Cleaning Ac Split,Data rekap 2026,120000
-0029,Yuk Dewi,,Legok,2026-05-04,Instalasi Listrik,,Jasa Pasang 65k; Untung Bahan 19k; Perbaikan Modul,Data rekap 2026,148000
-0029,Yuk Dewi,,Legok,2026-05-05,Dispenser/Denpoo,,Cleaning Dispenser,Data rekap 2026,150000
-0038,Yuk Tri,,Mr DIY PrabuJaya,2026-05-07,AcSplit/DAIKIN,,Pengecekan Ac Jalur Ac Panel Ac,Data rekap 2026,70000
-0029,Yuk Dewi,,Legok,2026-05-09,FilterAir/NANOTEC/1054,,Pemasangan dan Cleaning Filter Air,Data rekap 2026,150000
-0039,Yuk Bunga,,Prumnas GSS,2026-05-10,Mesin Cuci/POLYTRON/Dua Tabung,,Pergantian Per dan Seal Pembuangan; Bayar Seal dan Per Rp 28.000,Data rekap 2026,115000
-0040,Kak Hervin,,Tanpa Alamat,2026-05-15,PedalMesin Jahit,,Pemindahan part pedal jadi bagus,Data rekap 2026,30000
-0041,Mr diy,,PrabuJaya,2026-05-16,AcSplit/DAIKIN,,Pemindahan modul Ac 03 ke 04; Pemindahan skun outdoor Ac 03 ke 04,Data rekap 2026,130000
-0042,Kak Dedy,,Arah Sumi Catering,2026-05-17,AcSplit LG,,Pasang Ac Split Rp 180.000; Perbaikan Sensor remot Free; Pengecekan kondisi Ac Free; Pengisian Freon R22 Rp 150.000 60 psi/1.3 A,Data rekap 2026,330000
-0032,Bik Amoy,,Bakaran,2026-05-18,Kipas Dinding/Miyako.,,Bushing Bulat 1 Bh Rp 6.000; Perbaikan Dinamo,Data rekap 2026,80000
-0043,Kak Memet Bik Ris,,Arda ke GMR B3,2026-05-20,AcSplit/CHANGHONG,,Kabel Rp 14.000x5; Bongkar Pasang Ac -Bongkar Rp 70.000 -Pasang Rp 180.000,Data rekap 2026,320000
-0024,Kak Aji,,Arimbi,2026-05-24,AcSplitLG/,,Cleaning Ac,Data rekap 2026,50000
-0005,Pak Lani,,Cahaya Pelangi,2026-05-26,Magicom/Mixer/Kipas/Stopkontak,,Perbaikan Ringan.,Data rekap 2026,50000
-0044,Yuk Wulan,,Mahardika Resident,2025-05-30,Funiture,,Jasa Oprasional Pasang Funiture,Data rekap 2026,120000
-0045,Pak Wayan,,Lorong Gereja BLK,2026-05-30,AcSplit/Daikin,,Ganti Thermis Ori; Jasa Oprasional,Data rekap 2026,240000
-0046,FDA Laundry,,Sukajadi,2026-05-31,Kipas Angin/Cosmos,,Ganti Bushing Set; Perawatan Dinamo,Data rekap 2026,125000
-0047,Pak Sismono,,Seberang Zipur,2026-05-31,Kipas Angin/LimalUnit,,Unit Pertama Dinamo (95.000) 110.000 Jasa Oprasional 30.000; Unit Kedua Perbaikan Dinamo 30.000; Unit Ketiga Bushing Kipas 50.000; Unit Keempat Dinamo (85.000) 110.000 Jasa Oprasional 30.000; Unit Kelima Perbaikan Gearbox 35.000 Jasa Oprasional 15.000,Data rekap 2026,410000
-0048,Yuk Melly Bik Amay,,Gg. Damai Nasional 243,2026-06-02,AcSplit/LG/Hercules Mini,,Cleaning Ac Split,Data rekap 2026,50000
-0049,Kak Tio Bik Amoy,,Sebelah Bengkel,2026-06-04,AcSplit/Midea/KipasBesiMaspion/,,Cleaning Ac Split Rp 60.000; Perbaikan Dinamo Kipas Rp 50.000,Data rekap 2026,110000
-0045,Pak Wayan,,Belakang Gereja BLK,2025-06-04,AcSplit/Daikin,,Cleaning Ac Split,Data rekap 2026,60000
-0050,Dapur Bali Nusantara,,Depan Tarnan Siswa,2026-06-04,AcSplit/LG/R22,,Perbaikan Outdoor Overload Rp 120.000 (100.000) 20.000; Kapasitor 15+2 Rp 75.000 (60.000) 15.000; Perbaikan Kabel; Pengecekan Freon (kurangin) 90 Psi 1.92 A,Data rekap 2026,295000
-0010,Masjid Nurul Islam,,Bakaran,2026-06-05,AcSplit/Panasonic,,Cleaning Ac kode A1 B1 C1 dan C2; Cleaning Ac,Data rekap 2026,200000
-0022,Yuk Gresi,,Seberang Rumah Dinas,2026-06-06,AcSplit/DAIKIN/SHARP,,Upah Helper Rp 60.000; Cleaning Ac,Data rekap 2026,60000
-0002,Ibu Yuk Putri,,Sumi Catering,2026-06-07,AcSplit/SHARP,,Cleaning Ac,Data rekap 2026,120000
-0050,Dapur Bali Nusantara,,Depan Tarnan Siswa,2026-06-07,AcSplit/LG,,Cleaning Ac; Bayar Helper,Data rekap 2026,60000
-0008,Bunda Neng,,Cahaya Pelangi,2026-06-11,Blender/Philips,,Service Blender,Data rekap 2026,50000
-0018,Kak Didin,,Samping SMA 2,2026-06-15,AcSplit/AQUA,,Cleaning Ac,Data rekap 2026,60000
-0005,Pak Lani,,Cahaya Pelangi,2026-06-15,MicWirless/Setrika,,Solder Jeck Mic; Ganti Kabel Setrika,Data rekap 2026,30000
-0050,Dapur Bali Nusantara,,Depan Tarnan Siswa,2026-06-20,AcSplit/Sharp,,Depan Pergantian Pipa Drain Ac Kamar; Pengecekan Ac Kamar Pojok,Data rekap 2026,70000
-0051,Buk Rini,,Depan Mang Endai,2026-06-21,Setrika,,Pergantian Puteran Thermostat; Pindah Jalur Pipa Ac; Pindah Jalur Drain Ac Depan,Data rekap 2026,50000
-0005,Pak Lani,,Cahaya Pelangi,2026-06-22,AcSplit/SHARP/Belakang,,Dan Belakang,Data rekap 2026,200000
-0037,Yuk Ratih/Kak Hadi,,Puskes Poli Gigi Mangga Besar,2026-06-25,AcSplit Changhong,,Cuci Ac Split,Data rekap 2026,60000
-0008,Yuk Neng,,Jus Buah. Padat Karya,2026-06-28,Blender/Mesin Cuci,,Blender Pergantian Arang dan Clenaning; Mesin cuci Jasa Pergantian Kabel Power,Data rekap 2026,100000
-0008,Yuk Neng,,Jus Buah Padat Karya,2026-07-01,Mp3,,Perbaikan Slot Memory Card,Data rekap 2026,20000
-0052,Kak Bibi Bik Ris,,Taman Wonosari,2026-07-02,AcSplit/Samsung,,Cleaning Ac Split +15.000,Data rekap 2026,75000
-0022,Yuk Gresi,,Seberang Rumdin,2026-07-06,AcSplit/Daikin/,,Pergantian Stopkontak Ac Barang Dari Konsumen,Data rekap 2026,80000
-0053,Kak Memet,,Perumnas GMR B3,2026-07-13,AcSplit/Changhong/0.5pk,,Cleaning ac; Perbaikan pembuangan ac,Data rekap 2026,75000
-0054,Depan Wawan,,Rumah Ayuk Lorong Sd 35,2026-07-17,AcSplit/Sharp/0.5pk,,Cuci Ac SHARP; Cek Ac LG Rumah Ibu; Pengecekan Kebocoran Nihil Rp 75.000; Penambahan Freon R22,Data rekap 2026,80000
-0050,Dapur Bali Nusantara,,Depan Taman Siswa,2026-07-20,AcSplit/SHARP,,Rp 120.000,Data rekap 2026,195000
-0055,Seli,,Bakaran depan masjid nurul iman,2026-07-21,AcSplit/BEKO,,Cuci ac,Data rekap 2026,60000
-0054,Kak Wawan,,Bangsal,2026-07-23,Mesin Cuci/SHARP/Dua Tabung,,Pergantian Per Tutup Spin,Data rekap 2026,30000
-0056,Kak Riki,,Perumnas Mahardika D20 Sindur,2026-07-28,AcSplit/TCL,,Cuci Ac,Data rekap 2026,60000
-0057,Yuk lin,,Perumnas Sukajadi 82 40,2026-08-03,AcSplit/LG,,Cleaning Ac Split,Data rekap 2026,60000
-0023,Tanpa Nama,,Oh Some,2026-08-04,,,Jasa Cap Dan Nota,Data rekap 2026,50000
-0058,Mbak ena,,Rumah Ibu,2026-08-05,MajicomMiyako/,,Pergantian Element Penghangat,Data rekap 2026,50000
-0059,Boss Yayan,,Area  tromol TB,2026-08-06,AcSplit/Daikin/Aqua,,Cleaning Cuci ac,Data rekap 2026,180000
-0059,Oma boss yayan,,Jl tromol depan jual pinang simpang 5,2026-08-08,AcSplit/Daikin,,Cleaning ac,Data rekap 2026,60000
-0044,Yuk Wulan,,Mahardika resident sindur,2026-08-09,AcSplit/Sharp,,Cleaning Ac,Data rekap 2026,60000
-0023,Tanpa Nama,,Depan Prabujaya,2026-08-13,PompaAir/Shimizu,,Pengecekan Pompa,Data rekap 2026,30000
-0013,Yuk Santi,,Perumnas Musindo A02,2026-08-19,AcSplit/Panasonic,,Cleaning Ac,Data rekap 2026,60000
-0010,Masjid Nurul Islam,,Bakaran,2026-08-20,AcSplit/Panasonic,,Cleaning ac 4 unit A1 B1 C1 & C2,Data rekap 2026,200000
-0005,Pak Lani,,Cahaya Pelangi Padat Karya,2026-08-22,AcSplit/AQUA,,Kk hervin Rp 100.000; Cleaning Ac Dua Unit Rp; Perbaikan Saklar Rp 30.000; Kak Hervin Rp 70.000,Data rekap 2026,150000
-0060,Kk samaul,,Bedeng kost ali adam legok,2025-08-28,Kipas Angin/Maspion,,Perbaikan sementara Rotor,Data rekap 2026,30000
-0061,Wisnu,,Sebelah Masjid Nurul Islam Bakaran.,2026-08-30,TV/POLYTRON,,Jasa Oprasional Rp 120.000; Modul PSU (Konsumen) 120.000 dinamo,Data rekap 2026,120000
-0022,Yuk Gresi,,Seberang Rumdin,2026-08-31,AcSplit/DAIKIN,,Untung Bell Obat Ac Rp 25.000; Cuci Ac Rp 60.000,Data rekap 2026,85000
-0062,Mang Galon,,Dekat Rumah Ibu,2026-09-04,ArSplit/LG/R22,Kompresor Rusak,Pengecekan Unit Ac,Data rekap 2026,50000
-0037,Kak Hadi,,Komplek Duren 135E,2026-09-05,AcSplit/LG/PANASONIC,,Cleaning Ac Dua Unit,Data rekap 2026,120000
-0037,Kak Hadi,,Komplek Duren 135E,2026-09-05,Mesin Cuci/LG/Dua Tabung,,Pergantian Timer Pencuci; Uritung Barang Rp 20.000; Jasa Oprasional Rp 30.000,Data rekap 2026,115000
-0050,Dapur Ball,,Depan Taman Siswa,2026-09-07,AcSplit/SHARP,,Cleaning Ac Split Kamar Depan; Cek Ac Sharp Kamar Belakang (Beku),Data rekap 2026,60000
-0063,Mang Sardi,,Sebrang Mang Idruson Bakaran,2026-09-11,AcSplit/CHANGHONG,,Cleaning Ac,Data rekap 2026,60000
-0064,Yuk Septi,,Sebelah Kak Bambang,2026-09-13,Kipas Angin,,Pergantian Kapasitor Rp 20.000; Jasa Oprasional Rp 30.000,Data rekap 2026,50000
-0005,Pak Lani,,Cahaya Pelangi Padat Karya,2026-09-18,AcSplit/AQUA,,Bongkar Pasang Outdoor Ac Kamar Depan,Data rekap 2026,200000
-0065,Yuk Dian Kak Iffanto,,Belakang TK,2026-09-19,AcSplitSHARP/,,Cleaning Ac,Data rekap 2026,50000
-0017,Pak Harry,,Kontrakan Arah Prabujaya,2026-09-20,InstalasiListrik,,Perbaikan Instalasi Tiga Titik,Data rekap 2026,100000
-0024,Kak Aji,,JArimbi,2026-09-21,AcSplitLG/,,Cleaning Ac,Data rekap 2026,50000
-0066,Yuk Mika,,Jl. Singgalang Muara Duo Dekat Voly Warna Hijau,2026-09-28,Mesin Cuci/MIDEA/Dua Tabung,,Perbaikan Tali Rem Pengering,Data rekap 2026,30000
-0067,Kak Adi,,Dekat Masjid Baitul Jarum,2026-09-30,Mesin Cuci/PANASONIC/Dua Tabung,,Dinamo Pengering Rp 225.000 Konsumen Rp 250.000; Seal Pengering Rp 25.000 Konsumen Rp 40.000; Jasa Oprasional Rp 70.000,Data rekap 2026,360000
+0014,Cek Wiwin,,Dekat Sabian Cell Karang Raja,2026-02-06,Kulkas/SHARP/SatuPintu,,Las Kebocoran Kondensor; Filter Kulkas; Freon R134,Data rekap 2026,300000
+0015,Tante Ital,,Talang Minang,2026-02-08,Kulkas/LG/Satu Pintu,,Bongkar Pasang Mesin Kulkas; Overload,Data rekap 2026,200000
+0016,Pak Harry,082257002003,Talang Sako Sukajadi,2026-02-09,AC/Split/SHARP/1/2PK,,Jasa Cuci AC Split,Data rekap 2026,60000
+0017,Kak Didin,081366504647,Tanjung Raman,2026-02-09,Kulkas/LG/DuaPintu,,Pemberian Timah Las Kebocoran; Pergantian Filter Kulkas; Pengisian Freon R134a; Jasa Perbaikan,Data rekap 2026,300000
+0018,MNI,081272809844,Bakaran,2026-02-09,Mesin Cuci/SHARP/Dua Tabung,,Timer Wash; Tali Katup,Data rekap 2026,100000
+0019,Kak Aji,0895706494093,Jl. Arimbi,2026-02-10,Kipas Angin,,Lilit Ulang Dinamo Kipas Angin,Data rekap 2026,60000
+0020,Agus,085340513856,Bakaran,2026-02-12,Pompa Air,,Jual Pompa Air Bekas Shimizu,Data rekap 2026,200000
+0021,Yuk dewi,085735401714,Jl. Cahaya Pelangi C2,2026-02-12,AC/Split/SHARP/SAMSUNG,,Jasa Service Cuci AC,Data rekap 2026,60000
+0022,Yuk Dewi,085735401714,Jl. Cahaya Pelangi C2,2026-02-12,Magicom/MIYAKO,,Pergantian Termostat,Data rekap 2026,35000
+0005,Pak Lani,08985386442,Jl. Cahaya Pelangi Padat Karya,2026-02-12,Kulkas/SHARP/DuaPintu,,Pergantian Defrost; Fuse Kulkas; Timer Defrost,Data rekap 2026,200000
+0023,Bik Amoy,082377471945,Bakaran Depan Rumah,2026-02-12,Setrika/MIYAKO,,Bongkar Pasang Kabel Flexibel Setrika,Data rekap 2026,15000
+0024,Kak Sefri,081373234885,Tanjung Raman Belakang Balai LDII,2026-02-13,AC/Split/SHARP/R32,,Tambah Freon R32; Jasa Cuci AC,Data rekap 2026,160000
+0022,Yuk Dewi,085735401714,Jl. Cahaya Pelangi C2,2026-02-15,Kulkas/SHARP/DuaPintu,,Jasa Perbaikan Kebocoran Freon; Pengisian Freon R134a; Pergantian Filter,Data rekap 2026,300000
+0005,Pak Lani,08985386442,Jl. Cahaya Pelangi Padat Karya,2026-02-16,Kipas Angin,,Bongkar Pasang Spul Dinamo,Data rekap 2026,45000
+0023,Bik Amoy,082377471945,Bakaran Depan Rumah,2026-02-16,Mesin Cuci/POLYTRON/1Tabung,,Jasa Pengecekan Mesin Cuci,Data rekap 2026,30000
+0016,Pak Harry,082257002003,Talang Sako Sukajadi,2026-02-18,Kulkas/POLYTRON/1Pintu,,Pemberian Timah Las Kebocoran; Pergantian Filter Kulkas; Pengisian Freon R134a; Jasa Perbaikan,Data rekap 2026,300000
+0008,Bunda Eneng,08561019846,Cahaya Pelangi Padat Karya,2026-02-19,Kulkas/LG/1Pintu,,Pengisian Freon R134a; Pergantian Filter Kulkas,Data rekap 2026,250000
+0016,Pak Harry,082257002003,Talang Sako Sukajadi,2026-02-20,AC/Split/SHARP/1/2PK,,Tambah Freon R32,Data rekap 2026,100000
+0025,Kak Hadi,081273130916,Duren 135E,2026-02-20,AC/Split/PANASONIC/R22,,Tambah Freon R22; Jasa Cuci AC,Data rekap 2026,160000
+0022,Yuk Dewi,085735401714,Jl. Cahaya Pelangi C2,2026-02-20,Kipas Angin/KOSMOS,,Pergantian Kapasitor Kipas,Data rekap 2026,35000
+0022,Yuk Dewi,085735401714,Jl. Cahaya Pelangi C2,2026-02-20,Magicom/MIYAKO,,Pergantian Termostat,Data rekap 2026,35000
+0022,Yuk Dewi,085735401714,Jl. Cahaya Pelangi C2,2026-02-21,Mesin Cuci/SHARP/1Tabung,,Jasa Pengecekan Mesin Cuci,Data rekap 2026,30000
+0026,Yuk Bunga,082258388668,Bakaran,2026-02-21,Kipas Angin/KOSMOS,,Bongkar Pasang Spul Dinamo,Data rekap 2026,45000
+0027,Kak Hervin,082178333132,City Mall,2026-02-22,Kulkas/SANKEN/1Pintu,,Pemberian Timah Las Kebocoran; Pergantian Filter Kulkas; Pengisian Freon R134a,Data rekap 2026,300000
+0028,Mr diy,082235563611,Prabujaya,2026-02-22,Vakum Cleaner/DIY,,Pergantian Kabel Power,Data rekap 2026,400000
+0029,Kak Dedy,085357298689,C7 GMR,2026-02-23,AC/Split/SHARP/1/2PK,,Jasa Cuci AC Split; Tambah Freon R32,Data rekap 2026,160000
+0023,Bik Amoy,082377471945,Bakaran Depan Rumah,2026-02-23,Mesin Cuci/SHARP/Dua Tabung,,Pergantian Timer Spin,Data rekap 2026,85000
+0030,Kak Memet Bik Ris,081367422070,B3 GMR,2026-02-24,Kulkas/POLYTRON/2Pintu,,Pergantian Defrost; Fuse Kulkas,Data rekap 2026,180000
+0019,Kak Aji,0895706494093,Jl. Arimbi,2026-02-24,Magicom/MIYAKO,,Pergantian Termostat,Data rekap 2026,35000
+0005,Pak Lani,08985386442,Jl. Cahaya Pelangi Padat Karya,2026-02-25,AC/Split/PANASONIC/R22,,Jasa Cuci AC Split,Data rekap 2026,60000
+0031,Yuk Wulan,08137997307,City Mall,2026-02-25,Mesin Cuci/SHARP/Dua Tabung,,Pergantian Dinamo Spin,Data rekap 2026,300000
+0032,Pak Sismono,089670605463,Depan Koprasi Zipur,2026-02-25,Mesin Cuci/LG/1Tabung,,Jasa Perbaikan Modul Mesin Cuci,Data rekap 2026,250000
+0017,Kak Didin,081366504647,Tanjung Raman,2026-02-26,Kipas Angin/KOSMOS,,Bongkar Pasang Dinamo Kipas,Data rekap 2026,50000
+0005,Pak Lani,08985386442,Jl. Cahaya Pelangi Padat Karya,2026-02-26,TV/LG/24Inch,,Jasa Perbaikan Power Supply TV,Data rekap 2026,150000
+0005,Pak Lani,08985386442,Jl. Cahaya Pelangi Padat Karya,2026-02-26,Magicom/MIYAKO,,Pergantian Elemen Pemanas,Data rekap 2026,40000
+0030,Kak Memet,081367422070,B3 GMR,2026-02-27,AC/Split/SHARP/1/2PK,,Jasa Cuci AC Split,Data rekap 2026,60000
+0033,Kak Riki,085273374527,D7 GMR,2026-02-27,AC/Split/PANASONIC/R32,,Tambah Freon R32; Jasa Cuci AC,Data rekap 2026,160000
+0034,Mbak ena,082289679781,Yuk ipar,2026-02-27,Kulkas/LG/2Pintu,,Pergantian Fan Motor Kulkas,Data rekap 2026,175000
+0031,Yuk Wulan,08137997307,City Mall,2026-02-28,Kipas Angin,,Pergantian Kapasitor,Data rekap 2026,30000
+0005,Pak Lani,08985386442,Jl. Cahaya Pelangi Padat Karya,2026-02-28,Mesin Cuci/SHARP/Dua Tabung,,Pergantian Seal Pengering,Data rekap 2026,75000
+0035,Mang Galon,085268019582,Dekat Rumah Ibu,2026-03-01,Pompa Air/SHIMIZU,,Pergantian Kapasitor Pompa,Data rekap 2026,65000
+0025,Kak Hadi,081273130916,Duren 135E,2026-03-01,AC/Split/SHARP/R32,,Jasa Cuci AC Split,Data rekap 2026,60000
+0025,Kak Hadi,081273130916,Duren 135E,2026-03-01,AC/Split/PANASONIC/R22,,Jasa Cuci AC Split,Data rekap 2026,60000
+0005,Pak Lani,08985386442,Jl. Cahaya Pelangi Padat Karya,2026-03-02,AC/Split/SHARP/SAMSUNG,,Jasa Cuci AC Split,Data rekap 2026,60000
+0016,Pak Harry,082257002003,Talang Sako Sukajadi,2026-03-02,AC/Split/SHARP/1/2PK,,Jasa Cuci AC Split,Data rekap 2026,60000
+0019,Kak Aji,0895706494093,Jl. Arimbi,2026-03-03,Kipas Angin,,Bongkar Pasang Dinamo,Data rekap 2026,45000
+0036,Yuk Mika,083130871182,City Mall,2026-03-03,Kulkas/SHARP/1Pintu,,Pengisian Freon R134a; Filter,Data rekap 2026,250000
+0037,Kak Adi,082180856332,GMR D2,2026-03-04,AC/Split/SHARP/1/2PK,,Jasa Cuci AC; Tambah Freon,Data rekap 2026,160000
