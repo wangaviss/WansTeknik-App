@@ -1,5 +1,5 @@
 wt_code,name,phone,address,service_date,checked,problem,repair,notes,cost
-WT-000001,Pak Anwar,,Dempo Dalam,2025-01-30,AC/Split,AC perlu perawatan / sesuai catatan lama,Isi Freon R22; Cuci AC Split 2 Unit; Pergantian Kapasitor,Data awal dari rekap WansTeknik,280000
-WT-000001,Pak Anwar,,Dempo Dalam,2025-02-24,Kulkas/DuaPintu,,Pergantian Heater 12 Inch,Data awal dari rekap WansTeknik,50000
-WT-000001,Pak Anwar,,Dempo Dalam,2025-03-19,AC/LG/Split,,Isi Freon R22; Pergantian Pipa AC,Data awal dari rekap WansTeknik,170000
-WT-000001,Pak Anwar,,Dempo Dalam,2025-03-19,AC/LG/Split,,Freon R22,Catatan transaksi terpisah pada rekap,30000
+0001,Pak Anwar,,Dempo Dalam,2025-01-30,AC/Split,AC perlu perawatan / sesuai catatan lama,Isi Freon R22; Cuci AC Split 2 Unit; Pergantian Kapasitor,Data awal dari rekap WansTeknik,280000
+0001,Pak Anwar,,Dempo Dalam,2025-02-24,Kulkas/DuaPintu,,Pergantian Heater 12 Inch,Data awal dari rekap WansTeknik,50000
+0001,Pak Anwar,,Dempo Dalam,2025-03-19,AC/LG/Split,,Isi Freon R22; Pergantian Pipa AC,Data awal dari rekap WansTeknik,170000
+0001,Pak Anwar,,Dempo Dalam,2025-03-19,AC/LG/Split,,Freon R22,Catatan transaksi terpisah pada rekap,30000
