@@ -77,6 +77,7 @@ async function boot() {
   $("#adminApp").classList.remove("hidden");
 
   await loadCustomers();
+  await loadServiceRecords();
 }
 
 
@@ -163,6 +164,54 @@ async function loadCustomers() {
   msg("#customerStatus", "");
 }
 
+async function loadServiceRecords() {
+  msg("#serviceListStatus", "Memuat riwayat service...");
+
+  const { data, error } = await db
+    .from("service_records")
+    .select(`
+      id,
+      customer_id,
+      service_date,
+      checked,
+      problem,
+      repair,
+      notes,
+      cost,
+      customers (
+        wt_code,
+        name
+      )
+    `)
+    .order("service_date", { ascending: false });
+
+  if (error) {
+    console.error("Gagal memuat service:", error);
+    msg("#serviceListStatus", error.message);
+    return;
+  }
+
+  const rows = data || [];
+
+  $("#serviceRows").innerHTML = rows.map(r => `
+    <tr>
+      <td>${esc(r.service_date || "-")}</td>
+      <td>WT-${esc(r.customers?.wt_code || "-")}</td>
+      <td>${esc(r.customers?.name || "-")}</td>
+      <td>${esc(r.checked || "-")}</td>
+      <td>${esc(r.problem || "-")}</td>
+      <td>${esc(r.repair || "-")}</td>
+      <td>Rp ${Number(r.cost || 0).toLocaleString("id-ID")}</td>
+    </tr>
+  `).join("");
+
+  msg(
+    "#serviceListStatus",
+    rows.length
+      ? `${rows.length} riwayat service ditemukan.`
+      : "Belum ada riwayat service."
+  );
+}
 
 /* =========================
    EDIT CUSTOMER
