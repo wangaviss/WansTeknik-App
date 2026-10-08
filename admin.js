@@ -691,6 +691,13 @@ function renderServiceRecords() {
           <button
             type="button"
             class="row-btn"
+            onclick="printInvoice('${r.id}')">
+            🧾 Nota
+          </button>
+
+          <button
+            type="button"
+            class="row-btn"
             onclick="deleteService('${r.id}')">
             Hapus
           </button>
@@ -931,6 +938,472 @@ window.deleteService = async id => {
 
 
 /* =========================
+   PRINT INVOICE
+========================= */
+
+window.printInvoice = id => {
+
+  const r =
+    serviceRecords.find(
+      x => x.id === id
+    );
+
+
+  if (!r) {
+
+    msg(
+      "#serviceListStatus",
+      "Data service tidak ditemukan."
+    );
+
+    return;
+  }
+
+
+  const customer =
+    r.customers || {};
+
+
+  const invoiceNo =
+    r.invoice_no || "-";
+
+
+  const serviceDate =
+    r.service_date || "-";
+
+
+  const customerCode =
+    customer.wt_code
+      ? `WT-${customer.wt_code}`
+      : "-";
+
+
+  const customerName =
+    customer.name || "-";
+
+
+  const cost =
+    Number(r.cost || 0)
+      .toLocaleString("id-ID");
+
+
+  const printWindow =
+    window.open(
+      "",
+      "_blank",
+      "width=800,height=900"
+    );
+
+
+  if (!printWindow) {
+
+    alert(
+      "Popup diblokir browser. Izinkan popup untuk mencetak nota."
+    );
+
+    return;
+  }
+
+
+  printWindow.document.write(`
+
+    <!doctype html>
+
+    <html lang="id">
+
+    <head>
+
+      <meta charset="utf-8">
+
+      <meta
+        name="viewport"
+        content="width=device-width,initial-scale=1"
+      >
+
+      <title>
+        Nota ${esc(invoiceNo)}
+      </title>
+
+
+      <style>
+
+        * {
+          box-sizing: border-box;
+        }
+
+
+        body {
+
+          font-family:
+            Arial,
+            Helvetica,
+            sans-serif;
+
+          margin: 0;
+
+          padding: 30px;
+
+          color: #111;
+
+          background: #fff;
+
+        }
+
+
+        .nota {
+
+          max-width: 700px;
+
+          margin: auto;
+
+        }
+
+
+        .header {
+
+          text-align: center;
+
+          border-bottom:
+            2px solid #111;
+
+          padding-bottom: 15px;
+
+          margin-bottom: 20px;
+
+        }
+
+
+        .header h1 {
+
+          margin: 0;
+
+          font-size: 28px;
+
+        }
+
+
+        .header p {
+
+          margin: 5px 0 0;
+
+          font-size: 14px;
+
+        }
+
+
+        .invoice {
+
+          display: flex;
+
+          justify-content:
+            space-between;
+
+          gap: 20px;
+
+          margin-bottom: 20px;
+
+        }
+
+
+        .invoice div {
+
+          flex: 1;
+
+        }
+
+
+        .label {
+
+          font-size: 11px;
+
+          color: #555;
+
+          text-transform:
+            uppercase;
+
+          margin-bottom: 4px;
+
+        }
+
+
+        .value {
+
+          font-weight: bold;
+
+          font-size: 15px;
+
+        }
+
+
+        table {
+
+          width: 100%;
+
+          border-collapse:
+            collapse;
+
+          margin-top: 15px;
+
+        }
+
+
+        td {
+
+          border:
+            1px solid #ccc;
+
+          padding: 10px;
+
+          vertical-align:
+            top;
+
+        }
+
+
+        td:first-child {
+
+          width: 150px;
+
+          font-weight: bold;
+
+          background: #f5f5f5;
+
+        }
+
+
+        .total {
+
+          margin-top: 20px;
+
+          display: flex;
+
+          justify-content:
+            flex-end;
+
+          font-size: 20px;
+
+          font-weight: bold;
+
+        }
+
+
+        .footer {
+
+          margin-top: 40px;
+
+          text-align: center;
+
+          border-top:
+            1px solid #ccc;
+
+          padding-top: 15px;
+
+          font-size: 13px;
+
+        }
+
+
+        @media print {
+
+          body {
+            padding: 0;
+          }
+
+
+          .nota {
+            max-width: none;
+          }
+
+        }
+
+      </style>
+
+    </head>
+
+
+    <body>
+
+      <div class="nota">
+
+
+        <div class="header">
+
+          <h1>
+            WansTeknik
+          </h1>
+
+          <p>
+            Service & Perbaikan
+            Peralatan Rumah Tangga
+          </p>
+
+        </div>
+
+
+        <div class="invoice">
+
+
+          <div>
+
+            <div class="label">
+              No. Nota
+            </div>
+
+            <div class="value">
+              ${esc(invoiceNo)}
+            </div>
+
+          </div>
+
+
+          <div>
+
+            <div class="label">
+              Tanggal
+            </div>
+
+            <div class="value">
+              ${esc(serviceDate)}
+            </div>
+
+          </div>
+
+
+        </div>
+
+
+        <table>
+
+
+          <tr>
+
+            <td>
+              Kode Pelanggan
+            </td>
+
+            <td>
+              ${esc(customerCode)}
+            </td>
+
+          </tr>
+
+
+          <tr>
+
+            <td>
+              Nama Pelanggan
+            </td>
+
+            <td>
+              ${esc(customerName)}
+            </td>
+
+          </tr>
+
+
+          <tr>
+
+            <td>
+              Unit / Dicek
+            </td>
+
+            <td>
+              ${esc(r.checked || "-")}
+            </td>
+
+          </tr>
+
+
+          <tr>
+
+            <td>
+              Kendala
+            </td>
+
+            <td>
+              ${esc(r.problem || "-")}
+            </td>
+
+          </tr>
+
+
+          <tr>
+
+            <td>
+              Tindakan / Perbaikan
+            </td>
+
+            <td>
+              ${esc(r.repair || "-")}
+            </td>
+
+          </tr>
+
+
+          <tr>
+
+            <td>
+              Catatan
+            </td>
+
+            <td>
+              ${esc(r.notes || "-")}
+            </td>
+
+          </tr>
+
+
+        </table>
+
+
+        <div class="total">
+
+          Total:
+          &nbsp;
+
+          Rp ${cost}
+
+        </div>
+
+
+        <div class="footer">
+
+          Terima kasih telah menggunakan
+          layanan WansTeknik.
+
+          <br>
+
+          Nota ini merupakan bukti
+          transaksi service.
+
+        </div>
+
+
+      </div>
+
+
+      <script>
+
+        window.onload = function() {
+          window.print();
+        };
+
+      <\/script>
+
+
+    </body>
+
+    </html>
+
+  `);
+
+
+  printWindow.document.close();
+
+};
+
+
+/* =========================
    DATE CHECK
 ========================= */
 
@@ -1146,6 +1619,7 @@ $("#importCsv").onclick = async () => {
 
 
   let ok = 0;
+
   let fail = 0;
 
 
