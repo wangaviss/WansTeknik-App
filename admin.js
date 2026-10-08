@@ -194,10 +194,6 @@ async function loadCustomers() {
   }
 
 
-  /* =========================
-     TABEL PELANGGAN
-  ========================= */
-
   renderCustomers();
 
   msg("#customerStatus", "");
@@ -477,6 +473,7 @@ async function loadServiceRecords() {
       repair,
       notes,
       cost,
+      invoice_no,
       customers (
         wt_code,
         name
@@ -545,11 +542,11 @@ function renderServiceRecords() {
     serviceRecords.filter(r => {
 
 
-      /* SEARCH */
-
       const searchText = [
 
         r.service_date,
+
+        r.invoice_no,
 
         r.customers?.wt_code,
 
@@ -577,8 +574,6 @@ function renderServiceRecords() {
       }
 
 
-      /* DATE FROM */
-
       if (
         dateFrom &&
         r.service_date < dateFrom
@@ -587,8 +582,6 @@ function renderServiceRecords() {
       }
 
 
-      /* DATE TO */
-
       if (
         dateTo &&
         r.service_date > dateTo
@@ -596,8 +589,6 @@ function renderServiceRecords() {
         return false;
       }
 
-
-      /* TYPE */
 
       if (type) {
 
@@ -668,6 +659,10 @@ function renderServiceRecords() {
 
         <td>
           ${esc(r.checked || "-")}
+        </td>
+
+        <td>
+          ${esc(r.invoice_no || "-")}
         </td>
 
         <td>
