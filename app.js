@@ -2,10 +2,12 @@
 const SUPABASE_URL = "https://kxdqviatkjonsfqywgwy.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_cdjpVfFpB7WK36DrVKlr6g_E4b9XM-2";
 
-const db = supabase.createClient(
+const db = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_PUBLISHABLE_KEY
 );
+
+console.log("Supabase berhasil dibuat:", db);
 
 const form = document.querySelector("#customerForm");
 const statusEl = document.querySelector("#status");
