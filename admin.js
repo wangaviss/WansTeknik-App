@@ -1,15 +1,22 @@
-const SUPABASE_URL = "https://kxdqviatkjonsfqywgwy.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_cdjpVfFpB7WK36DrVKlr6g_E4b9XM-2";
+const SUPABASE_URL =
+  "https://kxdqviatkjonsfqywgwy.supabase.co";
+
+const SUPABASE_ANON_KEY =
+  "sb_publishable_cdjpVfFpB7WK36DrVKlr6g_E4b9XM-2";
+
 
 const db = supabase.createClient(
   SUPABASE_URL,
   SUPABASE_ANON_KEY
 );
 
+
 let customers = [];
 let serviceRecords = [];
 
-const $ = s => document.querySelector(s);
+
+const $ = s =>
+  document.querySelector(s);
 
 
 /* =========================
@@ -17,25 +24,43 @@ const $ = s => document.querySelector(s);
 ========================= */
 
 function esc(v = "") {
-  return String(v).replace(/[&<>"']/g, m => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#039;"
-  }[m]));
+
+  return String(v).replace(
+    /[&<>"']/g,
+    m => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
+    }[m])
+  );
+
 }
+
 
 function msg(id, text) {
+
   const el = $(id);
-  if (el) el.textContent = text;
+
+  if (el) {
+    el.textContent = text;
+  }
+
 }
+
 
 function formatRupiah(value) {
-  return "Rp " + Number(value || 0).toLocaleString("id-ID");
+
+  return "Rp " +
+    Number(value || 0)
+      .toLocaleString("id-ID");
+
 }
 
+
 function formatDate(value) {
+
   if (!value) return "-";
 
   return new Date(
@@ -48,6 +73,7 @@ function formatDate(value) {
       year: "numeric"
     }
   );
+
 }
 
 
@@ -66,6 +92,7 @@ $("#loginForm").addEventListener(
       "Memproses login..."
     );
 
+
     const { error } =
       await db.auth.signInWithPassword({
 
@@ -76,6 +103,7 @@ $("#loginForm").addEventListener(
           $("#password").value
 
       });
+
 
     if (error) {
 
@@ -92,6 +120,7 @@ $("#loginForm").addEventListener(
       return;
     }
 
+
     await boot();
 
   }
@@ -102,13 +131,14 @@ $("#loginForm").addEventListener(
    LOGOUT
 ========================= */
 
-$("#logout").onclick = async () => {
+$("#logout").onclick =
+  async () => {
 
-  await db.auth.signOut();
+    await db.auth.signOut();
 
-  location.reload();
+    location.reload();
 
-};
+  };
 
 
 /* =========================
@@ -121,6 +151,7 @@ async function boot() {
     data: { user },
     error
   } = await db.auth.getUser();
+
 
   if (error) {
 
@@ -137,15 +168,19 @@ async function boot() {
     return;
   }
 
+
   if (!user) return;
+
 
   $("#loginCard")
     .classList
     .add("hidden");
 
+
   $("#adminApp")
     .classList
     .remove("hidden");
+
 
   await loadCustomers();
 
@@ -165,6 +200,7 @@ async function loadCustomers() {
     "Memuat data pelanggan..."
   );
 
+
   const {
     data,
     error
@@ -172,6 +208,7 @@ async function loadCustomers() {
     .from("customers")
     .select("*")
     .order("name");
+
 
   if (error) {
 
@@ -189,6 +226,7 @@ async function loadCustomers() {
     return;
   }
 
+
   customers =
     data || [];
 
@@ -196,7 +234,9 @@ async function loadCustomers() {
   const customerSelect =
     $("#serviceCustomer");
 
-  customerSelect.innerHTML = "";
+
+  customerSelect.innerHTML =
+    "";
 
 
   if (customers.length === 0) {
@@ -205,6 +245,7 @@ async function loadCustomers() {
       document.createElement(
         "option"
       );
+
 
     option.value = "";
 
@@ -215,8 +256,10 @@ async function loadCustomers() {
 
     option.selected = true;
 
+
     customerSelect
       .appendChild(option);
+
 
   } else {
 
@@ -224,6 +267,7 @@ async function loadCustomers() {
       document.createElement(
         "option"
       );
+
 
     first.value = "";
 
@@ -233,6 +277,7 @@ async function loadCustomers() {
     first.disabled = true;
 
     first.selected = true;
+
 
     customerSelect
       .appendChild(first);
@@ -245,10 +290,14 @@ async function loadCustomers() {
           "option"
         );
 
-      option.value = c.id;
+
+      option.value =
+        c.id;
+
 
       option.textContent =
         `${c.wt_code} — ${c.name}`;
+
 
       customerSelect
         .appendChild(option);
@@ -259,6 +308,7 @@ async function loadCustomers() {
 
 
   renderCustomers();
+
 
   msg(
     "#customerStatus",
@@ -343,6 +393,7 @@ function renderCustomers() {
   const status =
     $("#customerFilterStatus");
 
+
   if (status) {
 
     status.textContent =
@@ -366,22 +417,29 @@ window.editCustomer = id => {
       x => x.id === id
     );
 
+
   if (!c) return;
+
 
   $("#customerId").value =
     c.id;
 
+
   $("#wtCode").value =
     c.wt_code;
+
 
   $("#name").value =
     c.name;
 
+
   $("#adminPhone").value =
     c.phone || "";
 
+
   $("#address").value =
     c.address || "";
+
 
   window.scrollTo({
     top: 0,
@@ -400,6 +458,7 @@ $("#newCustomer").onclick = () => {
   $("#customerEditor").reset();
 
   $("#customerId").value = "";
+
 
   msg(
     "#customerStatus",
@@ -512,11 +571,13 @@ $("#customerEditor")
           result.error
         );
 
+
         msg(
           "#customerStatus",
           "Gagal menyimpan: " +
           result.error.message
         );
+
 
         return;
       }
@@ -530,6 +591,7 @@ $("#customerEditor")
 
       $("#customerEditor")
         .reset();
+
 
       $("#customerId")
         .value = "";
@@ -598,10 +660,12 @@ async function loadServiceRecords() {
       error
     );
 
+
     msg(
       "#serviceListStatus",
       error.message
     );
+
 
     return;
   }
@@ -629,11 +693,13 @@ function renderServiceRecords() {
 
 
   const dateFrom =
-    $("#serviceDateFrom")?.value || "";
+    $("#serviceDateFrom")?.value ||
+    "";
 
 
   const dateTo =
-    $("#serviceDateTo")?.value || "";
+    $("#serviceDateTo")?.value ||
+    "";
 
 
   const type =
@@ -666,7 +732,9 @@ function renderServiceRecords() {
         keyword &&
         !searchText.includes(keyword)
       ) {
+
         return false;
+
       }
 
 
@@ -674,7 +742,9 @@ function renderServiceRecords() {
         dateFrom &&
         r.service_date < dateFrom
       ) {
+
         return false;
+
       }
 
 
@@ -682,7 +752,9 @@ function renderServiceRecords() {
         dateTo &&
         r.service_date > dateTo
       ) {
+
         return false;
+
       }
 
 
@@ -713,15 +785,20 @@ function renderServiceRecords() {
 
 
           if (isKnown) {
+
             return false;
+
           }
+
 
         } else {
 
           if (
             !unit.includes(type)
           ) {
+
             return false;
+
           }
 
         }
@@ -797,6 +874,7 @@ function renderServiceRecords() {
             Edit
           </button>
 
+
           <button
             type="button"
             class="row-btn"
@@ -804,6 +882,7 @@ function renderServiceRecords() {
           >
             🧾 Nota
           </button>
+
 
           <button
             type="button"
@@ -865,15 +944,18 @@ $("#serviceSearch").addEventListener(
   renderServiceRecords
 );
 
+
 $("#serviceDateFrom").addEventListener(
   "change",
   renderServiceRecords
 );
 
+
 $("#serviceDateTo").addEventListener(
   "change",
   renderServiceRecords
 );
+
 
 $("#serviceTypeFilter").addEventListener(
   "change",
@@ -939,23 +1021,30 @@ window.editService = id => {
   $("#serviceId").value =
     r.id;
 
+
   $("#serviceCustomer").value =
     r.customer_id || "";
+
 
   $("#serviceDate").value =
     r.service_date || "";
 
+
   $("#checked").value =
     r.checked || "";
+
 
   $("#problem").value =
     r.problem || "";
 
+
   $("#repair").value =
     r.repair || "";
 
+
   $("#notes").value =
     r.notes || "";
+
 
   $("#cost").value =
     r.cost || 0;
@@ -979,47 +1068,50 @@ window.editService = id => {
    DELETE SERVICE
 ========================= */
 
-window.deleteService = async id => {
+window.deleteService =
+  async id => {
 
-  const yakin =
-    confirm(
-      "Hapus riwayat service ini?"
-    );
-
-
-  if (!yakin) return;
+    const yakin =
+      confirm(
+        "Hapus riwayat service ini?"
+      );
 
 
-  const { error } =
-    await db
-      .from("service_records")
-      .delete()
-      .eq("id", id);
+    if (!yakin) return;
 
 
-  if (error) {
+    const { error } =
+      await db
+        .from("service_records")
+        .delete()
+        .eq("id", id);
 
-    console.error(error);
+
+    if (error) {
+
+      console.error(error);
+
+
+      msg(
+        "#serviceListStatus",
+        "Gagal menghapus: " +
+        error.message
+      );
+
+
+      return;
+    }
+
 
     msg(
       "#serviceListStatus",
-      "Gagal menghapus: " +
-      error.message
+      "Riwayat service berhasil dihapus."
     );
 
-    return;
-  }
 
+    await loadServiceRecords();
 
-  msg(
-    "#serviceListStatus",
-    "Riwayat service berhasil dihapus."
-  );
-
-
-  await loadServiceRecords();
-
-};
+  };
 
 
 /* =========================
@@ -1068,533 +1160,6 @@ window.printInvoice = id => {
       r.service_date
     );
 
-
-  const cost =
-    Number(r.cost || 0)
-      .toLocaleString("id-ID");
-
-
-  const logoWtUrl =
-    new URL(
-      "./logo-wt.png",
-      window.location.href
-    ).href;
-
-
-  const logoBrandUrl =
-    new URL(
-      "./logo-brand.png",
-      window.location.href
-    ).href;
-
-
-  const printWindow =
-    window.open(
-      "",
-      "_blank",
-      "width=800,height=900"
-    );
-
-
-  if (!printWindow) {
-
-    alert(
-      "Popup diblokir browser. Izinkan popup untuk mencetak nota."
-    );
-
-    return;
-  }
-
-
-  printWindow.document.write(`
-
-    <!doctype html>
-
-    <html lang="id">
-
-    <head>
-
-      <meta charset="utf-8">
-
-      <meta
-        name="viewport"
-        content="width=device-width,initial-scale=1"
-      >
-
-      <title>
-        Nota ${esc(invoiceNo)}
-      </title>
-
-
-      <style>
-
-        * {
-          box-sizing: border-box;
-        }
-
-
-        body {
-
-          font-family:
-            Arial,
-            Helvetica,
-            sans-serif;
-
-          margin: 0;
-
-          padding: 30px;
-
-          color: #111;
-
-          background: #fff;
-
-        }
-
-
-        .nota {
-
-          max-width: 750px;
-
-          margin: auto;
-
-        }
-
-.header {
-  display: grid;
-  grid-template-columns: 90px 1fr 90px;
-  align-items: center;
-  gap: 12px;
-
-  background: #000;
-  padding: 18px 20px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-}
-
-.logo-box {
-  width: 90px;
-  height: 75px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  background: #000;
-  overflow: hidden;
-}
-
-.logo-box img {
-  max-width: 85px;
-  max-height: 70px;
-  width: auto;
-  height: auto;
-  object-fit: contain;
-}
-
-.brand-center {
-  text-align: center;
-}
-
-.brand-center h1 {
-  margin: 0;
-  color: #1683ff;
-  font-size: 30px;
-  font-weight: 800;
-  letter-spacing: 1px;
-}
-
-.brand-center p {
-  margin: 6px 0 0;
-  color: #ffffff;
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.5px;
-}
-        .invoice-info {
-
-          display: grid;
-
-          grid-template-columns:
-            1fr 1fr;
-
-          gap: 20px;
-
-          margin-bottom: 22px;
-
-        }
-
-
-        .info-box {
-
-          border:
-            1px solid #ccc;
-
-          padding: 12px;
-
-          border-radius: 6px;
-
-        }
-
-
-        .label {
-
-          font-size: 10px;
-
-          color: #666;
-
-          text-transform:
-            uppercase;
-
-          margin-bottom: 5px;
-
-        }
-
-
-        .value {
-
-          font-size: 15px;
-
-          font-weight: bold;
-
-        }
-
-
-        table {
-
-          width: 100%;
-
-          border-collapse:
-            collapse;
-
-          margin-top: 10px;
-
-        }
-
-
-        td {
-
-          border:
-            1px solid #ccc;
-
-          padding: 11px;
-
-          vertical-align:
-            top;
-
-          font-size: 14px;
-
-        }
-
-
-        td:first-child {
-
-          width: 170px;
-
-          font-weight: bold;
-
-          background: #f5f5f5;
-
-        }
-
-
-        .total-box {
-
-          display: flex;
-
-          justify-content:
-            flex-end;
-
-          margin-top: 20px;
-
-        }
-
-
-        .total {
-
-          min-width: 240px;
-
-          border:
-            2px solid #111;
-
-          padding: 14px;
-
-          text-align: right;
-
-          font-size: 20px;
-
-          font-weight: bold;
-
-        }
-
-
-        .footer {
-
-          margin-top: 45px;
-
-          padding-top: 15px;
-
-          border-top:
-            1px solid #ccc;
-
-          text-align: center;
-
-          font-size: 12px;
-
-          color: #555;
-
-          line-height: 1.6;
-
-        }
-
-
-        .footer strong {
-          color: #111;
-        }
-
-
-        @media print {
-
-          body {
-            padding: 0;
-          }
-
-          .nota {
-            max-width: none;
-          }
-
-        }
-
-      </style>
-
-    </head>
-
-
-    <body>
-
-      <div class="nota">
-
-
-        <div class="header">
-
-
-          <div class="logo-box">
-
-            <img
-              src="${logoWtUrl}"
-              alt="Logo WansTeknik"
-              onerror="this.style.display='none'"
-            >
-
-          </div>
-
-
-          <div class="brand-center">
-
-            <h1>
-              WansTeknik
-            </h1>
-
-            <p>
-              Service, Maintenance, Repair
-            </p>
-
-          </div>
-
-
-          <div class="logo-box">
-
-            <img
-              src="${logoBrandUrl}"
-              alt="Brand WansTeknik"
-              onerror="this.style.display='none'"
-            >
-
-          </div>
-
-
-        </div>
-
-
-        <div class="invoice-info">
-
-
-          <div class="info-box">
-
-            <div class="label">
-              No. Nota
-            </div>
-
-            <div class="value">
-              ${esc(invoiceNo)}
-            </div>
-
-          </div>
-
-
-          <div class="info-box">
-
-            <div class="label">
-              Tanggal Service
-            </div>
-
-            <div class="value">
-              ${esc(formattedDate)}
-            </div>
-
-          </div>
-
-
-        </div>
-
-
-        <table>
-
-
-          <tr>
-
-            <td>
-              Kode Pelanggan
-            </td>
-
-            <td>
-              ${esc(customerCode)}
-            </td>
-
-          </tr>
-
-
-          <tr>
-
-            <td>
-              Nama Pelanggan
-            </td>
-
-            <td>
-              ${esc(customerName)}
-            </td>
-
-          </tr>
-
-
-          <tr>
-
-            <td>
-              Unit / Dicek
-            </td>
-
-            <td>
-              ${esc(r.checked || "-")}
-            </td>
-
-          </tr>
-
-
-          <tr>
-
-            <td>
-              Kendala
-            </td>
-
-            <td>
-              ${esc(r.problem || "-")}
-            </td>
-
-          </tr>
-
-
-          <tr>
-
-            <td>
-              Tindakan / Perbaikan
-            </td>
-
-            <td>
-              ${esc(r.repair || "-")}
-            </td>
-
-          </tr>
-
-
-          <tr>
-
-            <td>
-              Catatan
-            </td>
-
-            <td>
-              ${esc(r.notes || "-")}
-            </td>
-
-          </tr>
-
-
-        </table>
-
-
-        <div class="total-box">
-
-          <div class="total">
-
-            Total:
-            Rp ${cost}
-
-          </div>
-
-        </div>
-
-
-        <div class="footer">
-
-          <strong>
-            WansTeknik
-          </strong>
-
-          <br>
-
-          Terima kasih telah menggunakan
-          layanan WansTeknik.
-
-          <br>
-
-/* =========================
-   PRINT INVOICE
-========================= */
-
-window.printInvoice = id => {
-
-  const r =
-    serviceRecords.find(
-      x => x.id === id
-    );
-
-  if (!r) {
-
-    msg(
-      "#serviceListStatus",
-      "Data service tidak ditemukan."
-    );
-
-    return;
-  }
-
-  const customer =
-    r.customers || {};
-
-  const invoiceNo =
-    r.invoice_no || "-";
-
-  const customerCode =
-    customer.wt_code
-      ? `WT-${customer.wt_code}`
-      : "-";
-
-  const customerName =
-    customer.name || "-";
-
-  const formattedDate =
-    formatDate(
-      r.service_date
-    );
 
   const cost =
     Number(r.cost || 0)
@@ -1610,6 +1175,7 @@ window.printInvoice = id => {
       "./logo-wt-nota.png",
       window.location.href
     ).href;
+
 
   const logoBrandUrl =
     new URL(
@@ -1650,6 +1216,7 @@ window.printInvoice = id => {
         name="viewport"
         content="width=device-width,initial-scale=1"
       >
+
 
       <title>
         Nota ${esc(invoiceNo)}
@@ -1976,7 +1543,13 @@ window.printInvoice = id => {
 
             padding: 0;
 
-            background: #fff;
+            background: #fff !important;
+
+            -webkit-print-color-adjust:
+              exact !important;
+
+            print-color-adjust:
+              exact !important;
 
           }
 
@@ -1990,30 +1563,35 @@ window.printInvoice = id => {
 
           .header {
 
-            background: #fff !important;
+            background:
+              #ffffff !important;
 
-            color: #111 !important;
+            color:
+              #111111 !important;
 
           }
 
 
           .logo-box {
 
-            background: #fff !important;
+            background:
+              #ffffff !important;
 
           }
 
 
           .brand-center h1 {
 
-            color: #111 !important;
+            color:
+              #111111 !important;
 
           }
 
 
           .brand-center p {
 
-            color: #444 !important;
+            color:
+              #444444 !important;
 
           }
 
@@ -2029,7 +1607,9 @@ window.printInvoice = id => {
       <div class="nota">
 
 
-        <!-- HEADER -->
+        <!-- =========================
+             HEADER
+        ========================= -->
 
         <div class="header">
 
@@ -2050,6 +1630,7 @@ window.printInvoice = id => {
             <h1>
               WansTeknik
             </h1>
+
 
             <p>
               Service, Maintenance, Repair
@@ -2072,7 +1653,9 @@ window.printInvoice = id => {
         </div>
 
 
-        <!-- INFO NOTA -->
+        <!-- =========================
+             INFO NOTA
+        ========================= -->
 
         <div class="invoice-info">
 
@@ -2082,6 +1665,7 @@ window.printInvoice = id => {
             <div class="label">
               No. Nota
             </div>
+
 
             <div class="value">
               ${esc(invoiceNo)}
@@ -2096,6 +1680,7 @@ window.printInvoice = id => {
               Tanggal Service
             </div>
 
+
             <div class="value">
               ${esc(formattedDate)}
             </div>
@@ -2106,7 +1691,9 @@ window.printInvoice = id => {
         </div>
 
 
-        <!-- DETAIL SERVICE -->
+        <!-- =========================
+             DETAIL SERVICE
+        ========================= -->
 
         <table>
 
@@ -2192,7 +1779,9 @@ window.printInvoice = id => {
         </table>
 
 
-        <!-- TOTAL -->
+        <!-- =========================
+             TOTAL
+        ========================= -->
 
         <div class="total-box">
 
@@ -2206,7 +1795,9 @@ window.printInvoice = id => {
         </div>
 
 
-        <!-- FOOTER -->
+        <!-- =========================
+             FOOTER
+        ========================= -->
 
         <div class="footer">
 
@@ -2216,10 +1807,13 @@ window.printInvoice = id => {
 
           <br>
 
+
           Terima kasih telah menggunakan
           layanan WansTeknik.
 
+
           <br>
+
 
           Nota ini merupakan bukti
           transaksi service.
@@ -2233,7 +1827,9 @@ window.printInvoice = id => {
       <script>
 
         window.onload = function() {
+
           window.print();
+
         };
 
       <\/script>
@@ -2249,6 +1845,7 @@ window.printInvoice = id => {
   printWindow.document.close();
 
 };
+
 
 /* =========================
    DATE CHECK
@@ -2400,11 +1997,13 @@ $("#serviceEditor")
           result.error
         );
 
+
         msg(
           "#serviceStatus",
           "Gagal menyimpan riwayat: " +
           result.error.message
         );
+
 
         return;
       }
@@ -2419,8 +2018,10 @@ $("#serviceEditor")
       $("#serviceEditor")
         .reset();
 
+
       $("#serviceId")
         .value = "";
+
 
       $("#cost")
         .value = 0;
@@ -2706,6 +2307,7 @@ function parseCSV(text) {
 
       const v =
         parse(line);
+
 
       const o = {};
 
