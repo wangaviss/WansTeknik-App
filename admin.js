@@ -1159,83 +1159,57 @@ window.printInvoice = id => {
 
         }
 
+.header {
+  display: grid;
+  grid-template-columns: 90px 1fr 90px;
+  align-items: center;
+  gap: 12px;
 
-        .header {
+  background: #000;
+  padding: 18px 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
 
-          display: flex;
+.logo-box {
+  width: 90px;
+  height: 75px;
 
-          align-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-          justify-content:
-            space-between;
+  background: #000;
+  overflow: hidden;
+}
 
-          gap: 20px;
+.logo-box img {
+  max-width: 85px;
+  max-height: 70px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
 
-          padding-bottom: 18px;
+.brand-center {
+  text-align: center;
+}
 
-          border-bottom:
-            2px solid #111;
+.brand-center h1 {
+  margin: 0;
+  color: #1683ff;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
 
-          margin-bottom: 22px;
-
-        }
-
-
-        .logo-box {
-
-          width: 90px;
-
-          display: flex;
-
-          align-items: center;
-
-          justify-content: center;
-
-        }
-
-
-        .logo-box img {
-
-          max-width: 85px;
-
-          max-height: 75px;
-
-          object-fit: contain;
-
-        }
-
-
-        .brand-center {
-
-          flex: 1;
-
-          text-align: center;
-
-        }
-
-
-        .brand-center h1 {
-
-          margin: 0;
-
-          font-size: 30px;
-
-          letter-spacing: 1px;
-
-        }
-
-
-        .brand-center p {
-
-          margin: 6px 0 0;
-
-          font-size: 14px;
-
-          color: #444;
-
-        }
-
-
+.brand-center p {
+  margin: 6px 0 0;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
         .invoice-info {
 
           display: grid;
@@ -1421,8 +1395,7 @@ window.printInvoice = id => {
             </h1>
 
             <p>
-              Service & Perbaikan
-              Peralatan Rumah Tangga
+              Service, Maintenance, Repair
             </p>
 
           </div>
