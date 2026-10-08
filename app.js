@@ -196,60 +196,33 @@ form.addEventListener("submit", async e => {
     `${data.length} riwayat service`;
 
   // Tampilkan riwayat
-  document.querySelector("#history").innerHTML =
-    data.map(r => `
-      <article class="service">
+document.querySelector("#history").innerHTML = data.map(r => `
+  <article class="service">
+    <div class="service-top">
+      <div>
+        <span class="date">${formatDate(r.service_date)}</span>
+        <h3>${esc(r.checked || "Service")}</h3>
+        ${r.invoice_no ? `<small class="invoice-no">Nota: ${esc(r.invoice_no)}</small>` : ""}
+      </div>
 
-        <div class="service-top">
+      ${r.cost ? `<strong class="cost">${formatRupiah(r.cost)}</strong>` : ""}
+    </div>
 
-          <div>
-            <span class="date">
-              ${formatDate(r.service_date)}
-            </span>
+    <div class="service-grid">
+      <div>
+        <b>KENDALA</b>
+        <span>${esc(r.problem || "-")}</span>
+      </div>
 
-            <h3>
-              ${esc(r.checked || "Service")}
-            </h3>
-          </div>
+      <div>
+        <b>DIPERBAIKI</b>
+        <span>${esc(r.repair || "-")}</span>
+      </div>
+    </div>
 
-          ${
-            r.cost
-              ? `<strong class="cost">
-                  ${formatRupiah(r.cost)}
-                </strong>`
-              : ""
-          }
-
-        </div>
-
-        <div class="service-grid">
-
-          <div>
-            <b>KENDALA</b>
-            <span>
-              ${esc(r.problem || "-")}
-            </span>
-          </div>
-
-          <div>
-            <b>DIPERBAIKI</b>
-            <span>
-              ${esc(r.repair || "-")}
-            </span>
-          </div>
-
-        </div>
-
-        ${
-          r.notes
-            ? `<p class="notes">
-                ${esc(r.notes)}
-              </p>`
-            : ""
-        }
-
-      </article>
-    `).join("");
+    ${r.notes ? `<p class="notes">${esc(r.notes)}</p>` : ""}
+  </article>
+`).join("");
 
   statusEl.className = "status success";
   statusEl.textContent =
