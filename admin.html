@@ -3,137 +3,591 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+
   <title>WansTeknik — Admin</title>
+
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
+
 <header class="topbar">
+
   <div class="brand">
-    <img src="logo-brand.png" alt="WansTeknik" class="brand-logo">
+    <img
+      src="logo-brand.png"
+      alt="WansTeknik"
+      class="brand-logo"
+    >
+
     <small>ADMIN</small>
   </div>
 
   <a href="index.html" class="admin-link">
-    <img src="logo-wt.png" alt="WT" class="wt-icon">
+
+    <img
+      src="logo-wt.png"
+      alt="WT"
+      class="wt-icon"
+    >
+
     Pelanggan
+
   </a>
+
 </header>
 
+
 <main class="container admin">
+
+  <!-- =========================
+       LOGIN
+  ========================== -->
+
   <section id="loginCard" class="card">
+
     <h2>Login Admin</h2>
+
     <form id="loginForm">
+
       <label>Email</label>
-      <input id="email" type="email" required>
+
+      <input
+        id="email"
+        type="email"
+        autocomplete="username"
+        required
+      >
+
       <label>Password</label>
-      <input id="password" type="password" required>
-      <button>Masuk</button>
+
+      <input
+        id="password"
+        type="password"
+        autocomplete="current-password"
+        required
+      >
+
+      <button type="submit">
+        Masuk
+      </button>
+
       <p id="loginStatus" class="status"></p>
+
     </form>
+
   </section>
+
+
+  <!-- =========================
+       ADMIN APP
+  ========================== -->
 
   <section id="adminApp" class="hidden">
+
+    <!-- HEADER ADMIN -->
+
     <div class="admin-actions">
+
       <h1>Data Pelanggan & Riwayat</h1>
-      <button id="logout" class="secondary">Keluar</button>
+
+      <button
+        id="logout"
+        type="button"
+        class="secondary"
+      >
+        Keluar
+      </button>
+
     </div>
+
+
+    <!-- =========================
+         FORM PELANGGAN & SERVICE
+    ========================== -->
 
     <div class="grid2">
-      <section class="card">
-        <h2>Tambah / Edit Pelanggan</h2>
-        <form id="customerEditor">
-          <input id="customerId" type="hidden">
-          <label>Kode WT</label>
-          <input id="wtCode" placeholder="0001" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" required>
-<small>Kode pelanggan 4 digit. Contoh: 0001</small>
-          <label>Nama</label>
-          <input id="name" required>
-          <label>No. HP</label>
-          <input id="adminPhone" inputmode="tel">
-          <label>Alamat</label>
-          <textarea id="address"></textarea>
-          <button>Simpan Pelanggan</button>
-          <button type="button" id="newCustomer" class="secondary">Form Baru</button>
-        </form>
-        <p id="customerStatus" class="status"></p>
-      </section>
+
+      <!-- PELANGGAN -->
 
       <section class="card">
-        <h2>Tambah Riwayat Service</h2>
-        <form id="serviceEditor">
-          <input id="serviceId" type="hidden">
-          <label>Pilih Pelanggan</label>
-          <select id="serviceCustomer" required></select>
-          <label>Tanggal</label>
-          <input id="serviceDate" type="date" required>
-          <label>Yang dicek / unit</label>
-          <input id="checked" placeholder="AC Split / Kulkas / Mesin Cuci">
-          <label>Kendala</label>
-          <textarea id="problem" placeholder="Keluhan pelanggan / hasil pengecekan"></textarea>
-          <label>Diperbaiki / tindakan</label>
-          <textarea id="repair" placeholder="Cleaning, ganti kapasitor, isi freon, dll."></textarea>
-          <label>Catatan</label>
-          <textarea id="notes"></textarea>
-          <label>Biaya</label>
-          <input id="cost" type="number" min="0" step="1000" value="0">
-          <button>Simpan Riwayat</button>
+
+        <h2>Tambah / Edit Pelanggan</h2>
+
+        <form id="customerEditor">
+
+          <input
+            id="customerId"
+            type="hidden"
+          >
+
+          <label>Kode WT</label>
+
+          <input
+            id="wtCode"
+            placeholder="0001"
+            inputmode="numeric"
+            maxlength="4"
+            pattern="[0-9]{4}"
+            required
+          >
+
+          <small>
+            Kode pelanggan 4 digit. Contoh: 0001
+          </small>
+
+
+          <label>Nama</label>
+
+          <input
+            id="name"
+            required
+          >
+
+
+          <label>No. HP</label>
+
+          <input
+            id="adminPhone"
+            inputmode="tel"
+          >
+
+
+          <label>Alamat</label>
+
+          <textarea
+            id="address"
+          ></textarea>
+
+
+          <button type="submit">
+            Simpan Pelanggan
+          </button>
+
+          <button
+            type="button"
+            id="newCustomer"
+            class="secondary"
+          >
+            Form Baru
+          </button>
+
         </form>
-        <p id="serviceStatus" class="status"></p>
+
+        <p
+          id="customerStatus"
+          class="status"
+        ></p>
+
       </section>
+
+
+      <!-- RIWAYAT SERVICE -->
+
+      <section class="card">
+
+        <h2>Tambah Riwayat Service</h2>
+
+        <form id="serviceEditor">
+
+          <input
+            id="serviceId"
+            type="hidden"
+          >
+
+
+          <label>Pilih Pelanggan</label>
+
+          <select
+            id="serviceCustomer"
+            required
+          ></select>
+
+
+          <label>Tanggal</label>
+
+          <input
+            id="serviceDate"
+            type="date"
+            required
+          >
+
+
+          <label>Yang dicek / unit</label>
+
+          <input
+            id="checked"
+            placeholder="AC Split / Kulkas / Mesin Cuci"
+          >
+
+
+          <label>Kendala</label>
+
+          <textarea
+            id="problem"
+            placeholder="Keluhan pelanggan / hasil pengecekan"
+          ></textarea>
+
+
+          <label>Diperbaiki / tindakan</label>
+
+          <textarea
+            id="repair"
+            placeholder="Cleaning, ganti kapasitor, isi freon, dll."
+          ></textarea>
+
+
+          <label>Catatan</label>
+
+          <textarea
+            id="notes"
+          ></textarea>
+
+
+          <label>Biaya</label>
+
+          <input
+            id="cost"
+            type="number"
+            min="0"
+            step="1000"
+            value="0"
+          >
+
+
+          <button type="submit">
+            Simpan Riwayat
+          </button>
+
+        </form>
+
+        <p
+          id="serviceStatus"
+          class="status"
+        ></p>
+
+      </section>
+
     </div>
 
+
+    <!-- =========================
+         DAFTAR PELANGGAN
+    ========================== -->
+
     <section class="card">
+
       <div class="table-head">
-        <h2>Daftar Pelanggan</h2>
-        <input id="search" placeholder="Cari nama / HP / kode WT">
+
+        <div>
+
+          <h2>Daftar Pelanggan</h2>
+
+          <p class="muted">
+            Cari berdasarkan kode WT, nama, nomor HP, atau alamat.
+          </p>
+
+        </div>
+
+
+        <div class="filter-group">
+
+          <input
+            id="search"
+            type="search"
+            placeholder="🔎 Cari pelanggan..."
+            autocomplete="off"
+          >
+
+          <button
+            id="clearCustomerSearch"
+            type="button"
+            class="secondary"
+          >
+            Reset
+          </button>
+
+        </div>
+
       </div>
+
+
       <div class="table-wrap">
+
         <table>
-          <thead><tr><th>Kode</th><th>Nama</th><th>No. HP</th><th>Alamat</th><th>Aksi</th></tr></thead>
+
+          <thead>
+
+            <tr>
+              <th>Kode</th>
+              <th>Nama</th>
+              <th>No. HP</th>
+              <th>Alamat</th>
+              <th>Aksi</th>
+            </tr>
+
+          </thead>
+
           <tbody id="customerRows"></tbody>
+
         </table>
+
       </div>
+
+
+      <p
+        id="customerFilterStatus"
+        class="status"
+      ></p>
+
     </section>
-<section class="card">
-  <div class="table-head">
-    <h2>Riwayat Service</h2>
-    <input id="serviceSearch" placeholder="Cari kode WT / nama / tanggal">
-  </div>
 
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Tanggal</th>
-          <th>Kode</th>
-          <th>Pelanggan</th>
-          <th>Unit / Dicek</th>
-          <th>Kendala</th>
-          <th>Tindakan</th>
-          <th>Biaya</th>
-          <th>Aksi</th>
-        </tr>
-      </thead>
-      <tbody id="serviceRows"></tbody>
-    </table>
-  </div>
 
-  <p id="serviceListStatus" class="status"></p>
-</section>
+
+    <!-- =========================
+         RIWAYAT SERVICE
+    ========================== -->
+
     <section class="card">
-      <h2>Import Data Lama</h2>
-      <p class="muted">
-        Gunakan <b>import-template.csv</b>. Data dari PDF yang belum punya No. HP
-        dapat dimasukkan dahulu dengan kolom phone kosong. Setelah itu petakan ke pelanggan.
-      </p>
-      <input id="csvFile" type="file" accept=".csv">
-      <button id="importCsv" class="secondary">Import CSV</button>
-      <p id="importStatus" class="status"></p>
+
+      <div class="table-head">
+
+        <div>
+
+          <h2>Riwayat Service</h2>
+
+          <p class="muted">
+            Cari transaksi berdasarkan pelanggan, unit, kendala,
+            tindakan, atau tanggal.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- FILTER SERVICE -->
+
+      <div class="service-filters">
+
+
+        <!-- SEARCH -->
+
+        <div class="filter-item">
+
+          <label for="serviceSearch">
+            Pencarian
+          </label>
+
+          <input
+            id="serviceSearch"
+            type="search"
+            placeholder="🔎 Kode WT / nama / unit / kendala..."
+            autocomplete="off"
+          >
+
+        </div>
+
+
+        <!-- TANGGAL MULAI -->
+
+        <div class="filter-item">
+
+          <label for="serviceDateFrom">
+            Dari tanggal
+          </label>
+
+          <input
+            id="serviceDateFrom"
+            type="date"
+          >
+
+        </div>
+
+
+        <!-- TANGGAL SAMPAI -->
+
+        <div class="filter-item">
+
+          <label for="serviceDateTo">
+            Sampai tanggal
+          </label>
+
+          <input
+            id="serviceDateTo"
+            type="date"
+          >
+
+        </div>
+
+
+        <!-- JENIS UNIT -->
+
+        <div class="filter-item">
+
+          <label for="serviceTypeFilter">
+            Jenis unit
+          </label>
+
+          <select id="serviceTypeFilter">
+
+            <option value="">
+              Semua unit
+            </option>
+
+            <option value="ac">
+              AC
+            </option>
+
+            <option value="kulkas">
+              Kulkas
+            </option>
+
+            <option value="mesin cuci">
+              Mesin Cuci
+            </option>
+
+            <option value="freezer">
+              Freezer
+            </option>
+
+            <option value="lainnya">
+              Lainnya
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- RESET -->
+
+        <div class="filter-item filter-reset">
+
+          <label>&nbsp;</label>
+
+          <button
+            id="clearServiceFilters"
+            type="button"
+            class="secondary"
+          >
+            Reset Filter
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- RINGKASAN FILTER -->
+
+      <div
+        id="serviceFilterSummary"
+        class="filter-summary"
+      >
+
+        <span>
+          Menampilkan <b id="serviceFilterCount">0</b> transaksi
+        </span>
+
+        <span>
+          Total:
+          <b id="serviceFilterTotal">Rp 0</b>
+        </span>
+
+      </div>
+
+
+      <!-- TABEL -->
+
+      <div class="table-wrap">
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th>Tanggal</th>
+              <th>Kode</th>
+              <th>Pelanggan</th>
+              <th>Unit / Dicek</th>
+              <th>Kendala</th>
+              <th>Tindakan</th>
+              <th>Biaya</th>
+              <th>Aksi</th>
+            </tr>
+
+          </thead>
+
+          <tbody id="serviceRows"></tbody>
+
+        </table>
+
+      </div>
+
+
+      <p
+        id="serviceListStatus"
+        class="status"
+      ></p>
+
     </section>
+
+
+
+    <!-- =========================
+         IMPORT DATA LAMA
+    ========================== -->
+
+    <section class="card">
+
+      <h2>Import Data Lama</h2>
+
+      <p class="muted">
+
+        Gunakan <b>import-template.csv</b>.
+
+        Data dari PDF yang belum punya No. HP
+        dapat dimasukkan dahulu dengan kolom phone kosong.
+
+        Setelah itu petakan ke pelanggan.
+
+      </p>
+
+
+      <input
+        id="csvFile"
+        type="file"
+        accept=".csv"
+      >
+
+
+      <button
+        id="importCsv"
+        type="button"
+        class="secondary"
+      >
+        Import CSV
+      </button>
+
+
+      <p
+        id="importStatus"
+        class="status"
+      ></p>
+
+    </section>
+
   </section>
+
 </main>
 
+
+<!-- SUPABASE -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script src="admin.js"></script>
+
 </body>
-</html>
+                        </html>
