@@ -66,78 +66,90 @@ function formatDate(value) {
    LOGIN
 ========================= */
 
-$("#loginForm").addEventListener(
-  "submit",
-  async e => {
+const loginForm = $("#loginForm");
 
-    e.preventDefault();
+if (loginForm) {
 
-    msg(
-      "#loginStatus",
-      "Memproses login..."
-    );
+  loginForm.addEventListener(
+    "submit",
+    async e => {
 
-    const email =
-      $("#email").value.trim();
-
-    const password =
-      $("#password").value;
-
-    if (!email || !password) {
+      e.preventDefault();
 
       msg(
         "#loginStatus",
-        "Email dan password wajib diisi."
+        "Memproses login..."
       );
 
-      return;
-    }
+      const email =
+        $("#email").value.trim();
 
-    const { error } =
-      await db.auth.signInWithPassword({
-        email,
-        password
-      });
+      const password =
+        $("#password").value;
 
-    if (error) {
+      if (!email || !password) {
 
-      console.error(
-        "Login error:",
-        error
-      );
+        msg(
+          "#loginStatus",
+          "Email dan password wajib diisi."
+        );
+
+        return;
+      }
+
+      const { error } =
+        await db.auth.signInWithPassword({
+          email,
+          password
+        });
+
+      if (error) {
+
+        console.error(
+          "Login error:",
+          error
+        );
+
+        msg(
+          "#loginStatus",
+          "Login gagal: " +
+          error.message
+        );
+
+        return;
+      }
 
       msg(
         "#loginStatus",
-        "Login gagal: " +
-        error.message
+        "Login berhasil..."
       );
 
-      return;
+      await boot();
+
     }
+  );
 
-    msg(
-      "#loginStatus",
-      "Login berhasil..."
-    );
-
-    await boot();
-
-  }
-);
+}
 
 
 /* =========================
    LOGOUT
 ========================= */
 
-$("#logout").onclick =
-  async () => {
+const logoutButton = $("#logout");
 
-    await db.auth.signOut();
+if (logoutButton) {
 
-    location.reload();
+  logoutButton.onclick =
+    async () => {
 
-  };
+      await db.auth.signOut();
+
+      location.reload();
+
+    };
+
+}
 
 
 /* =========================
@@ -169,24 +181,40 @@ async function boot() {
 
   if (!user) {
 
-    $("#loginCard")
-      .classList
-      .remove("hidden");
+    if ($("#loginCard")) {
 
-    $("#adminApp")
-      .classList
-      .add("hidden");
+      $("#loginCard")
+        .classList
+        .remove("hidden");
+
+    }
+
+    if ($("#adminApp")) {
+
+      $("#adminApp")
+        .classList
+        .add("hidden");
+
+    }
 
     return;
   }
 
-  $("#loginCard")
-    .classList
-    .add("hidden");
+  if ($("#loginCard")) {
 
-  $("#adminApp")
-    .classList
-    .remove("hidden");
+    $("#loginCard")
+      .classList
+      .add("hidden");
+
+  }
+
+  if ($("#adminApp")) {
+
+    $("#adminApp")
+      .classList
+      .remove("hidden");
+
+  }
 
   await loadCustomers();
 
@@ -439,26 +467,37 @@ window.editCustomer = id => {
    NEW CUSTOMER
 ========================= */
 
-$("#newCustomer").onclick = () => {
+const newCustomerButton =
+  $("#newCustomer");
 
-  $("#customerEditor").reset();
+if (newCustomerButton) {
 
-  $("#customerId").value = "";
+  newCustomerButton.onclick = () => {
 
-  msg(
-    "#customerStatus",
-    "Form pelanggan baru."
-  );
+    $("#customerEditor").reset();
 
-};
+    $("#customerId").value = "";
+
+    msg(
+      "#customerStatus",
+      "Form pelanggan baru."
+    );
+
+  };
+
+}
 
 
 /* =========================
    SAVE CUSTOMER
 ========================= */
 
-$("#customerEditor")
-  .addEventListener(
+const customerEditor =
+  $("#customerEditor");
+
+if (customerEditor) {
+
+  customerEditor.addEventListener(
     "submit",
     async e => {
 
@@ -572,15 +611,24 @@ $("#customerEditor")
     }
   );
 
+}
+
 
 /* =========================
    SEARCH CUSTOMER
 ========================= */
 
-$("#search").addEventListener(
-  "input",
-  renderCustomers
-);
+const customerSearch =
+  $("#search");
+
+if (customerSearch) {
+
+  customerSearch.addEventListener(
+    "input",
+    renderCustomers
+  );
+
+}
 
 
 /* =========================
@@ -886,57 +934,99 @@ function renderServiceRecords() {
    SERVICE FILTER EVENTS
 ========================= */
 
-$("#serviceSearch").addEventListener(
-  "input",
-  renderServiceRecords
-);
+const serviceSearch =
+  $("#serviceSearch");
 
-$("#serviceDateFrom").addEventListener(
-  "change",
-  renderServiceRecords
-);
+if (serviceSearch) {
 
-$("#serviceDateTo").addEventListener(
-  "change",
-  renderServiceRecords
-);
+  serviceSearch.addEventListener(
+    "input",
+    renderServiceRecords
+  );
 
-$("#serviceTypeFilter").addEventListener(
-  "change",
-  renderServiceRecords
-);
+}
+
+const serviceDateFrom =
+  $("#serviceDateFrom");
+
+if (serviceDateFrom) {
+
+  serviceDateFrom.addEventListener(
+    "change",
+    renderServiceRecords
+  );
+
+}
+
+const serviceDateTo =
+  $("#serviceDateTo");
+
+if (serviceDateTo) {
+
+  serviceDateTo.addEventListener(
+    "change",
+    renderServiceRecords
+  );
+
+}
+
+const serviceTypeFilter =
+  $("#serviceTypeFilter");
+
+if (serviceTypeFilter) {
+
+  serviceTypeFilter.addEventListener(
+    "change",
+    renderServiceRecords
+  );
+
+}
 
 
 /* =========================
    RESET CUSTOMER SEARCH
 ========================= */
 
-$("#clearCustomerSearch").onclick = () => {
+const clearCustomerSearch =
+  $("#clearCustomerSearch");
 
-  $("#search").value = "";
+if (clearCustomerSearch) {
 
-  renderCustomers();
+  clearCustomerSearch.onclick = () => {
 
-};
+    $("#search").value = "";
+
+    renderCustomers();
+
+  };
+
+}
 
 
 /* =========================
    RESET SERVICE FILTER
 ========================= */
 
-$("#clearServiceFilters").onclick = () => {
+const clearServiceFilters =
+  $("#clearServiceFilters");
 
-  $("#serviceSearch").value = "";
+if (clearServiceFilters) {
 
-  $("#serviceDateFrom").value = "";
+  clearServiceFilters.onclick = () => {
 
-  $("#serviceDateTo").value = "";
+    $("#serviceSearch").value = "";
 
-  $("#serviceTypeFilter").value = "";
+    $("#serviceDateFrom").value = "";
 
-  renderServiceRecords();
+    $("#serviceDateTo").value = "";
 
-};
+    $("#serviceTypeFilter").value = "";
+
+    renderServiceRecords();
+
+  };
+
+}
 
 
 /* =========================
@@ -1112,637 +1202,867 @@ window.printInvoice = id => {
     return;
   }
 
-  printWindow.document.write(`
 
-    <!doctype html>
+  /* =========================
+     HTML NOTA
+  ========================= */
 
-    <html lang="id">
+  const notaHTML = `
 
-    <head>
+<!doctype html>
 
-      <meta charset="utf-8">
+<html lang="id">
 
-      <meta
-        name="viewport"
-        content="width=device-width,initial-scale=1"
+<head>
+
+<meta charset="utf-8">
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1"
+>
+
+<title>
+  Nota ${esc(invoiceNo)}
+</title>
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  color: #111;
+
+  background: #fff;
+
+  padding: 30px;
+
+  -webkit-print-color-adjust:
+    exact !important;
+
+  print-color-adjust:
+    exact !important;
+}
+
+.nota {
+
+  width: 100%;
+
+  max-width: 750px;
+
+  margin: 0 auto;
+}
+
+
+/* =========================
+   PRINT BAR
+========================= */
+
+.print-bar {
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 10px;
+
+  margin-bottom: 25px;
+}
+
+.print-btn,
+.close-btn {
+
+  border: none;
+
+  padding: 12px 22px;
+
+  border-radius: 7px;
+
+  font-size: 15px;
+
+  font-weight: bold;
+
+  cursor: pointer;
+
+  color: #fff;
+}
+
+.print-btn {
+
+  background: #111;
+}
+
+.print-btn:hover {
+
+  background: #333;
+}
+
+.close-btn {
+
+  background: #777;
+}
+
+.close-btn:hover {
+
+  background: #555;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header {
+
+  display: grid;
+
+  grid-template-columns:
+    90px
+    1fr
+    90px;
+
+  align-items: center;
+
+  gap: 12px;
+
+  background: #fff;
+
+  padding: 18px 20px;
+
+  margin-bottom: 22px;
+
+  border-bottom:
+    2px solid #111;
+}
+
+.logo-box {
+
+  width: 90px;
+
+  height: 75px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background: #fff;
+
+  overflow: hidden;
+}
+
+.logo-box img {
+
+  display: block;
+
+  max-width: 85px;
+
+  max-height: 70px;
+
+  width: auto;
+
+  height: auto;
+
+  object-fit: contain;
+}
+
+.brand-center {
+
+  text-align: center;
+}
+
+.brand-center h1 {
+
+  margin: 0;
+
+  color: #111;
+
+  font-size: 30px;
+
+  font-weight: 800;
+
+  letter-spacing: 1px;
+}
+
+.brand-center p {
+
+  margin: 6px 0 0;
+
+  color: #444;
+
+  font-size: 13px;
+
+  font-weight: 500;
+
+  letter-spacing: .5px;
+}
+
+
+/* =========================
+   INVOICE INFO
+========================= */
+
+.invoice-info {
+
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    1fr;
+
+  gap: 20px;
+
+  margin-bottom: 22px;
+}
+
+.info-box {
+
+  border:
+    1px solid #ccc;
+
+  padding: 12px;
+
+  border-radius: 6px;
+}
+
+.label {
+
+  font-size: 10px;
+
+  color: #666;
+
+  text-transform:
+    uppercase;
+
+  margin-bottom: 5px;
+}
+
+.value {
+
+  font-size: 15px;
+
+  font-weight: bold;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+table {
+
+  width: 100%;
+
+  border-collapse:
+    collapse;
+
+  margin-top: 10px;
+}
+
+td {
+
+  border:
+    1px solid #ccc;
+
+  padding: 11px;
+
+  vertical-align:
+    top;
+
+  font-size: 14px;
+}
+
+td:first-child {
+
+  width: 170px;
+
+  font-weight: bold;
+
+  background: #f5f5f5;
+}
+
+
+/* =========================
+   TOTAL
+========================= */
+
+.total-box {
+
+  display: flex;
+
+  justify-content:
+    flex-end;
+
+  margin-top: 20px;
+}
+
+.total {
+
+  min-width: 240px;
+
+  border:
+    2px solid #111;
+
+  padding: 14px;
+
+  text-align: right;
+
+  font-size: 20px;
+
+  font-weight: bold;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer {
+
+  margin-top: 45px;
+
+  padding-top: 15px;
+
+  border-top:
+    1px solid #ccc;
+
+  text-align: center;
+
+  font-size: 12px;
+
+  color: #555;
+
+  line-height: 1.6;
+}
+
+.footer strong {
+
+  color: #111;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+  body {
+
+    padding: 15px;
+  }
+
+  .print-bar {
+
+    flex-direction: column;
+
+    margin-bottom: 20px;
+  }
+
+  .print-btn,
+  .close-btn {
+
+    width: 100%;
+
+    max-width: 300px;
+  }
+
+  .header {
+
+    grid-template-columns:
+      65px
+      1fr
+      65px;
+
+    padding:
+      12px 8px;
+  }
+
+  .logo-box {
+
+    width: 65px;
+
+    height: 60px;
+  }
+
+  .logo-box img {
+
+    max-width: 60px;
+
+    max-height: 55px;
+  }
+
+  .brand-center h1 {
+
+    font-size: 22px;
+  }
+
+  .brand-center p {
+
+    font-size: 10px;
+  }
+
+  .invoice-info {
+
+    grid-template-columns:
+      1fr;
+
+    gap: 10px;
+  }
+
+  td:first-child {
+
+    width: 120px;
+  }
+
+}
+
+
+/* =========================
+   PRINT
+========================= */
+
+@media print {
+
+  html,
+  body {
+
+    width: 100%;
+
+    margin: 0 !important;
+
+    padding: 0 !important;
+
+    background: #fff !important;
+  }
+
+  body {
+
+    -webkit-print-color-adjust:
+      exact !important;
+
+    print-color-adjust:
+      exact !important;
+  }
+
+  .print-bar {
+
+    display: none !important;
+  }
+
+  .nota {
+
+    width: 100% !important;
+
+    max-width: none !important;
+
+    margin: 0 !important;
+  }
+
+  .header {
+
+    background:
+      #fff !important;
+
+    color:
+      #111 !important;
+  }
+
+  .logo-box {
+
+    background:
+      #fff !important;
+  }
+
+  .brand-center h1 {
+
+    color:
+      #111 !important;
+  }
+
+  .brand-center p {
+
+    color:
+      #444 !important;
+  }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="nota">
+
+
+  <!-- PRINT BAR -->
+
+  <div class="print-bar">
+
+    <button
+      type="button"
+      class="print-btn"
+      id="printButton"
+    >
+      🖨️ Print Nota
+    </button>
+
+    <button
+      type="button"
+      class="close-btn"
+      id="closeButton"
+    >
+      ✕ Tutup
+    </button>
+
+  </div>
+
+
+  <!-- HEADER -->
+
+  <div class="header">
+
+    <div class="logo-box">
+
+      <img
+        src="${logoWtUrl}"
+        alt="Logo WansTeknik"
+        onerror="this.style.display='none'"
       >
 
-      <title>
-        Nota ${esc(invoiceNo)}
-      </title>
+    </div>
 
-      <style>
 
-        * {
-          box-sizing: border-box;
-        }
+    <div class="brand-center">
 
-        body {
+      <h1>
+        WansTeknik
+      </h1>
 
-          font-family:
-            Arial,
-            Helvetica,
-            sans-serif;
+      <p>
+        Service, Maintenance, Repair
+      </p>
 
-          margin: 0;
+    </div>
 
-          padding: 30px;
 
-          color: #111;
+    <div class="logo-box">
 
-          background: #fff;
+      <img
+        src="${logoBrandUrl}"
+        alt="Brand WansTeknik"
+        onerror="this.style.display='none'"
+      >
 
-          -webkit-print-color-adjust:
-            exact !important;
+    </div>
 
-          print-color-adjust:
-            exact !important;
+  </div>
 
-        }
 
-        .nota {
+  <!-- INVOICE INFO -->
 
-          max-width: 750px;
+  <div class="invoice-info">
 
-          margin: auto;
+    <div class="info-box">
 
-        }
-
-        .print-bar {
-
-          text-align: center;
-
-          margin-bottom: 25px;
-
-        }
-
-        .print-btn {
-
-          border: none;
-
-          background: #111;
-
-          color: #fff;
-
-          padding: 12px 24px;
-
-          border-radius: 6px;
-
-          font-size: 15px;
-
-          font-weight: bold;
-
-          cursor: pointer;
-
-        }
-
-        .print-btn:hover {
-
-          background: #333;
-
-        }
-
-        .header {
-
-          display: grid;
-
-          grid-template-columns:
-            90px
-            1fr
-            90px;
-
-          align-items: center;
-
-          gap: 12px;
-
-          background: #fff;
-
-          padding: 18px 20px;
-
-          margin-bottom: 22px;
-
-          border-bottom:
-            2px solid #111;
-
-        }
-
-        .logo-box {
-
-          width: 90px;
-
-          height: 75px;
-
-          display: flex;
-
-          align-items: center;
-
-          justify-content: center;
-
-          background: #fff;
-
-          overflow: hidden;
-
-        }
-
-        .logo-box img {
-
-          display: block;
-
-          max-width: 85px;
-
-          max-height: 70px;
-
-          width: auto;
-
-          height: auto;
-
-          object-fit: contain;
-
-        }
-
-        .brand-center {
-
-          text-align: center;
-
-        }
-
-        .brand-center h1 {
-
-          margin: 0;
-
-          color: #111;
-
-          font-size: 30px;
-
-          font-weight: 800;
-
-          letter-spacing: 1px;
-
-        }
-
-        .brand-center p {
-
-          margin: 6px 0 0;
-
-          color: #444;
-
-          font-size: 13px;
-
-          font-weight: 500;
-
-          letter-spacing: .5px;
-
-        }
-
-        .invoice-info {
-
-          display: grid;
-
-          grid-template-columns:
-            1fr
-            1fr;
-
-          gap: 20px;
-
-          margin-bottom: 22px;
-
-        }
-
-        .info-box {
-
-          border:
-            1px solid #ccc;
-
-          padding: 12px;
-
-          border-radius: 6px;
-
-        }
-
-        .label {
-
-          font-size: 10px;
-
-          color: #666;
-
-          text-transform:
-            uppercase;
-
-          margin-bottom: 5px;
-
-        }
-
-        .value {
-
-          font-size: 15px;
-
-          font-weight: bold;
-
-        }
-
-        table {
-
-          width: 100%;
-
-          border-collapse:
-            collapse;
-
-          margin-top: 10px;
-
-        }
-
-        td {
-
-          border:
-            1px solid #ccc;
-
-          padding: 11px;
-
-          vertical-align:
-            top;
-
-          font-size: 14px;
-
-        }
-
-        td:first-child {
-
-          width: 170px;
-
-          font-weight: bold;
-
-          background: #f5f5f5;
-
-        }
-
-        .total-box {
-
-          display: flex;
-
-          justify-content:
-            flex-end;
-
-          margin-top: 20px;
-
-        }
-
-        .total {
-
-          min-width: 240px;
-
-          border:
-            2px solid #111;
-
-          padding: 14px;
-
-          text-align: right;
-
-          font-size: 20px;
-
-          font-weight: bold;
-
-        }
-
-        .footer {
-
-          margin-top: 45px;
-
-          padding-top: 15px;
-
-          border-top:
-            1px solid #ccc;
-
-          text-align: center;
-
-          font-size: 12px;
-
-          color: #555;
-
-          line-height: 1.6;
-
-        }
-
-        .footer strong {
-
-          color: #111;
-
-        }
-
-        @media (max-width: 600px) {
-
-          body {
-            padding: 15px;
-          }
-
-          .header {
-
-            grid-template-columns:
-              65px
-              1fr
-              65px;
-
-            padding:
-              12px 8px;
-
-          }
-
-          .logo-box {
-
-            width: 65px;
-
-            height: 60px;
-
-          }
-
-          .logo-box img {
-
-            max-width: 60px;
-
-            max-height: 55px;
-
-          }
-
-          .brand-center h1 {
-
-            font-size: 22px;
-
-          }
-
-          .brand-center p {
-
-            font-size: 10px;
-
-          }
-
-          .invoice-info {
-
-            grid-template-columns:
-              1fr;
-
-            gap: 10px;
-
-          }
-
-          td:first-child {
-
-            width: 120px;
-
-          }
-
-        }
-
-        @media print {
-
-          body {
-
-            padding: 0;
-
-            background: #fff !important;
-
-          }
-
-          .print-bar {
-
-            display: none !important;
-
-          }
-
-          .nota {
-
-            max-width: none;
-
-          }
-
-          .header {
-
-            background:
-              #fff !important;
-
-            color:
-              #111 !important;
-
-          }
-
-          .logo-box {
-
-            background:
-              #fff !important;
-
-          }
-
-          .brand-center h1 {
-
-            color:
-              #111 !important;
-
-          }
-
-          .brand-center p {
-
-            color:
-              #444 !important;
-
-          }
-
-        }
-
-      </style>
-
-    </head>
-
-    <body>
-
-      <div class="nota">
-
-        <div class="print-bar">
-
-          <button
-            class="print-btn"
-            onclick="window.print()"
-          >
-            🖨️ Print Nota
-          </button>
-
-        </div>
-
-        <div class="header">
-
-          <div class="logo-box">
-
-            <img
-              src="${logoWtUrl}"
-              alt="Logo WansTeknik"
-              onerror="this.style.display='none'"
-            >
-
-          </div>
-
-          <div class="brand-center">
-
-            <h1>
-              WansTeknik
-            </h1>
-
-            <p>
-              Service, Maintenance, Repair
-            </p>
-
-          </div>
-
-          <div class="logo-box">
-
-            <img
-              src="${logoBrandUrl}"
-              alt="Brand WansTeknik"
-              onerror="this.style.display='none'"
-            >
-
-          </div>
-
-        </div>
-
-        <div class="invoice-info">
-
-          <div class="info-box">
-
-            <div class="label">
-              No. Nota
-            </div>
-
-            <div class="value">
-              ${esc(invoiceNo)}
-            </div>
-
-          </div>
-
-          <div class="info-box">
-
-            <div class="label">
-              Tanggal Service
-            </div>
-
-            <div class="value">
-              ${esc(formattedDate)}
-            </div>
-
-          </div>
-
-        </div>
-
-        <table>
-
-          <tr>
-
-            <td>
-              Kode Pelanggan
-            </td>
-
-            <td>
-              ${esc(customerCode)}
-            </td>
-
-          </tr>
-
-          <tr>
-
-            <td>
-              Nama Pelanggan
-            </td>
-
-            <td>
-              ${esc(customerName)}
-            </td>
-
-          </tr>
-
-          <tr>
-
-            <td>
-              Unit / Dicek
-            </td>
-
-            <td>
-              ${esc(r.checked || "-")}
-            </td>
-
-          </tr>
-
-          <tr>
-
-            <td>
-              Kendala
-            </td>
-
-            <td>
-              ${esc(r.problem || "-")}
-            </td>
-
-          </tr>
-
-          <tr>
-
-            <td>
-              Tindakan / Perbaikan
-            </td>
-
-            <td>
-              ${esc(r.repair || "-")}
-            </td>
-
-          </tr>
-
-          <tr>
-
-            <td>
-              Catatan
-            </td>
-
-            <td>
-              ${esc(r.notes || "-")}
-            </td>
-
-          </tr>
-
-        </table>
-
-        <div class="total-box">
-
-          <div class="total">
-
-            Total:
-            Rp ${cost}
-
-          </div>
-
-        </div>
-
-        <div class="footer">
-
-          <strong>
-            WansTeknik
-          </strong>
-
-          <br>
-
-          Terima kasih telah menggunakan
-          layanan WansTeknik.
-
-          <br>
-
-          Nota ini merupakan bukti
-          transaksi service.
-
-        </div>
-
+      <div class="label">
+        No. Nota
       </div>
 
-    </body>
+      <div class="value">
+        ${esc(invoiceNo)}
+      </div>
 
-    </html>
+    </div>
 
-  `);
+
+    <div class="info-box">
+
+      <div class="label">
+        Tanggal Service
+      </div>
+
+      <div class="value">
+        ${esc(formattedDate)}
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- DETAIL -->
+
+  <table>
+
+    <tr>
+
+      <td>
+        Kode Pelanggan
+      </td>
+
+      <td>
+        ${esc(customerCode)}
+      </td>
+
+    </tr>
+
+
+    <tr>
+
+      <td>
+        Nama Pelanggan
+      </td>
+
+      <td>
+        ${esc(customerName)}
+      </td>
+
+    </tr>
+
+
+    <tr>
+
+      <td>
+        Unit / Dicek
+      </td>
+
+      <td>
+        ${esc(r.checked || "-")}
+      </td>
+
+    </tr>
+
+
+    <tr>
+
+      <td>
+        Kendala
+      </td>
+
+      <td>
+        ${esc(r.problem || "-")}
+      </td>
+
+    </tr>
+
+
+    <tr>
+
+      <td>
+        Tindakan / Perbaikan
+      </td>
+
+      <td>
+        ${esc(r.repair || "-")}
+      </td>
+
+    </tr>
+
+
+    <tr>
+
+      <td>
+        Catatan
+      </td>
+
+      <td>
+        ${esc(r.notes || "-")}
+      </td>
+
+    </tr>
+
+  </table>
+
+
+  <!-- TOTAL -->
+
+  <div class="total-box">
+
+    <div class="total">
+
+      Total:
+      Rp ${cost}
+
+    </div>
+
+  </div>
+
+
+  <!-- FOOTER -->
+
+  <div class="footer">
+
+    <strong>
+      WansTeknik
+    </strong>
+
+    <br>
+
+    Terima kasih telah menggunakan
+    layanan WansTeknik.
+
+    <br>
+
+    Nota ini merupakan bukti
+    transaksi service.
+
+  </div>
+
+
+</div>
+
+
+<script>
+
+(function() {
+
+  const printButton =
+    document.getElementById(
+      "printButton"
+    );
+
+  const closeButton =
+    document.getElementById(
+      "closeButton"
+    );
+
+
+  /* =========================
+     PRINT BUTTON
+  ========================= */
+
+  if (printButton) {
+
+    printButton.addEventListener(
+      "click",
+      function() {
+
+        window.focus();
+
+        setTimeout(
+          function() {
+
+            window.print();
+
+          },
+          150
+        );
+
+      }
+    );
+
+  }
+
+
+  /* =========================
+     CLOSE BUTTON
+  ========================= */
+
+  if (closeButton) {
+
+    closeButton.addEventListener(
+      "click",
+      function() {
+
+        window.close();
+
+      }
+    );
+
+  }
+
+
+  /* =========================
+     KEYBOARD CTRL + P
+  ========================= */
+
+  document.addEventListener(
+    "keydown",
+    function(e) {
+
+      if (
+        (e.ctrlKey || e.metaKey) &&
+        e.key.toLowerCase() === "p"
+      ) {
+
+        e.preventDefault();
+
+        window.print();
+
+      }
+
+    }
+  );
+
+})();
+
+</script>
+
+
+</body>
+
+</html>
+
+`;
+
+
+  /* =========================
+     WRITE NOTA
+  ========================= */
+
+  printWindow.document.open();
+
+  printWindow.document.write(
+    notaHTML
+  );
 
   printWindow.document.close();
+
+
+  /* =========================
+     FOCUS NOTA
+  ========================= */
+
+  setTimeout(
+    () => {
+
+      try {
+
+        printWindow.focus();
+
+      } catch (e) {
+
+        console.warn(
+          "Tidak dapat focus ke window nota:",
+          e
+        );
+
+      }
+
+    },
+    500
+  );
 
 };
 
@@ -1751,42 +2071,60 @@ window.printInvoice = id => {
    DATE CHECK
 ========================= */
 
-$("#serviceDate").addEventListener(
-  "change",
-  () => {
+const serviceDateInput =
+  $("#serviceDate");
 
-    console.log(
-      "Tanggal dipilih:",
-      $("#serviceDate").value
-    );
+if (serviceDateInput) {
 
-  }
-);
+  serviceDateInput.addEventListener(
+    "change",
+    () => {
+
+      console.log(
+        "Tanggal dipilih:",
+        $("#serviceDate").value
+      );
+
+    }
+  );
+
+}
 
 
 /* =========================
    CUSTOMER SELECT CHECK
 ========================= */
 
-$("#serviceCustomer").addEventListener(
-  "change",
-  () => {
+const serviceCustomerSelect =
+  $("#serviceCustomer");
 
-    console.log(
-      "Customer ID:",
-      $("#serviceCustomer").value
-    );
+if (serviceCustomerSelect) {
 
-  }
-);
+  serviceCustomerSelect.addEventListener(
+    "change",
+    () => {
+
+      console.log(
+        "Customer ID:",
+        $("#serviceCustomer").value
+      );
+
+    }
+  );
+
+}
 
 
 /* =========================
    SAVE SERVICE
 ========================= */
 
-$("#serviceEditor")
-  .addEventListener(
+const serviceEditor =
+  $("#serviceEditor");
+
+if (serviceEditor) {
+
+  serviceEditor.addEventListener(
     "submit",
     async e => {
 
@@ -1918,165 +2256,174 @@ $("#serviceEditor")
     }
   );
 
+}
+
 
 /* =========================
    CSV IMPORT
 ========================= */
 
-$("#importCsv").onclick =
-  async () => {
+const importCsvButton =
+  $("#importCsv");
 
-    const f =
-      $("#csvFile")
-        .files[0];
+if (importCsvButton) {
 
-    if (!f) {
+  importCsvButton.onclick =
+    async () => {
 
-      msg(
-        "#importStatus",
-        "Pilih CSV terlebih dahulu."
-      );
+      const f =
+        $("#csvFile")
+          .files[0];
 
-      return;
-    }
+      if (!f) {
 
-    const text =
-      await f.text();
+        msg(
+          "#importStatus",
+          "Pilih CSV terlebih dahulu."
+        );
 
-    const rows =
-      parseCSV(text);
+        return;
+      }
 
-    if (!rows.length) {
+      const text =
+        await f.text();
 
-      msg(
-        "#importStatus",
-        "CSV kosong."
-      );
+      const rows =
+        parseCSV(text);
 
-      return;
-    }
+      if (!rows.length) {
 
-    let ok = 0;
+        msg(
+          "#importStatus",
+          "CSV kosong."
+        );
 
-    let fail = 0;
+        return;
+      }
 
-    for (const r of rows) {
+      let ok = 0;
 
-      try {
+      let fail = 0;
 
-        const wtCode =
-          String(
-            r.wt_code || ""
-          ).trim();
+      for (const r of rows) {
 
-        let c =
-          customers.find(
-            x =>
-              String(
-                x.wt_code
-              ) === wtCode
-          );
+        try {
 
-        if (
-          !c &&
-          wtCode &&
-          r.name
-        ) {
+          const wtCode =
+            String(
+              r.wt_code || ""
+            ).trim();
+
+          let c =
+            customers.find(
+              x =>
+                String(
+                  x.wt_code
+                ) === wtCode
+            );
+
+          if (
+            !c &&
+            wtCode &&
+            r.name
+          ) {
+
+            const ins =
+              await db
+                .from("customers")
+                .insert({
+
+                  wt_code:
+                    wtCode,
+
+                  name:
+                    r.name,
+
+                  phone:
+                    r.phone || null,
+
+                  address:
+                    r.address || null
+
+                })
+                .select()
+                .single();
+
+            if (ins.error)
+              throw ins.error;
+
+            c = ins.data;
+
+          }
+
+          if (!c) {
+
+            throw new Error(
+              "Pelanggan WT tidak ditemukan"
+            );
+
+          }
 
           const ins =
             await db
-              .from("customers")
+              .from("service_records")
               .insert({
 
-                wt_code:
-                  wtCode,
+                customer_id:
+                  c.id,
 
-                name:
-                  r.name,
+                service_date:
+                  r.service_date,
 
-                phone:
-                  r.phone || null,
+                checked:
+                  r.checked || null,
 
-                address:
-                  r.address || null
+                problem:
+                  r.problem || null,
 
-              })
-              .select()
-              .single();
+                repair:
+                  r.repair || null,
+
+                notes:
+                  r.notes || null,
+
+                cost:
+                  Number(
+                    r.cost || 0
+                  )
+
+              });
 
           if (ins.error)
             throw ins.error;
 
-          c = ins.data;
+          ok++;
 
-        }
+        } catch (e) {
 
-        if (!c) {
-
-          throw new Error(
-            "Pelanggan WT tidak ditemukan"
+          console.error(
+            "Import gagal:",
+            e
           );
 
+          fail++;
+
         }
-
-        const ins =
-          await db
-            .from("service_records")
-            .insert({
-
-              customer_id:
-                c.id,
-
-              service_date:
-                r.service_date,
-
-              checked:
-                r.checked || null,
-
-              problem:
-                r.problem || null,
-
-              repair:
-                r.repair || null,
-
-              notes:
-                r.notes || null,
-
-              cost:
-                Number(
-                  r.cost || 0
-                )
-
-            });
-
-        if (ins.error)
-          throw ins.error;
-
-        ok++;
-
-      } catch (e) {
-
-        console.error(
-          "Import gagal:",
-          e
-        );
-
-        fail++;
 
       }
 
-    }
+      msg(
+        "#importStatus",
+        `Selesai: ${ok} berhasil, ${fail} gagal.`
+      );
 
-    msg(
-      "#importStatus",
-      `Selesai: ${ok} berhasil, ${fail} gagal.`
-    );
+      await loadCustomers();
 
-    await loadCustomers();
+      await loadServiceRecords();
 
-    await loadServiceRecords();
+    };
 
-  };
+}
 
 
 /* =========================
