@@ -1800,6 +1800,791 @@ window.printInvoice = id => {
         ========================= -->
 
         <div class="footer">
+/* =========================
+   PRINT INVOICE
+========================= */
+
+window.printInvoice = id => {
+
+  const r =
+    serviceRecords.find(
+      x => x.id === id
+    );
+
+  if (!r) {
+
+    msg(
+      "#serviceListStatus",
+      "Data service tidak ditemukan."
+    );
+
+    return;
+  }
+
+
+  const customer =
+    r.customers || {};
+
+  const invoiceNo =
+    r.invoice_no || "-";
+
+  const customerCode =
+    customer.wt_code
+      ? `WT-${customer.wt_code}`
+      : "-";
+
+  const customerName =
+    customer.name || "-";
+
+  const formattedDate =
+    formatDate(
+      r.service_date
+    );
+
+  const cost =
+    Number(r.cost || 0)
+      .toLocaleString("id-ID");
+
+
+  /* =========================
+     LOGO KHUSUS NOTA
+  ========================= */
+
+  const logoWtUrl =
+    new URL(
+      "./logo-wt-nota.png",
+      window.location.href
+    ).href;
+
+  const logoBrandUrl =
+    new URL(
+      "./logo-brand-nota.png",
+      window.location.href
+    ).href;
+
+
+  const printWindow =
+    window.open(
+      "",
+      "_blank",
+      "width=800,height=900"
+    );
+
+
+  if (!printWindow) {
+
+    alert(
+      "Popup diblokir browser. Izinkan popup untuk membuka nota."
+    );
+
+    return;
+  }
+
+
+  printWindow.document.write(`
+
+    <!doctype html>
+
+    <html lang="id">
+
+    <head>
+
+      <meta charset="utf-8">
+
+      <meta
+        name="viewport"
+        content="width=device-width,initial-scale=1"
+      >
+
+      <title>
+        Nota ${esc(invoiceNo)}
+      </title>
+
+
+      <style>
+
+        * {
+          box-sizing: border-box;
+        }
+
+
+        body {
+
+          font-family:
+            Arial,
+            Helvetica,
+            sans-serif;
+
+          margin: 0;
+
+          padding: 30px;
+
+          color: #111;
+
+          background: #fff;
+
+        }
+
+
+        .nota {
+
+          max-width: 750px;
+
+          margin: auto;
+
+        }
+
+
+        /* =========================
+           TOMBOL PRINT
+        ========================= */
+
+        .print-bar {
+
+          text-align: center;
+
+          margin-bottom: 25px;
+
+        }
+
+
+        .print-btn {
+
+          border: none;
+
+          background: #111;
+
+          color: #fff;
+
+          padding: 12px 24px;
+
+          border-radius: 6px;
+
+          font-size: 15px;
+
+          font-weight: bold;
+
+          cursor: pointer;
+
+        }
+
+
+        .print-btn:hover {
+
+          background: #333;
+
+        }
+
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .header {
+
+          display: grid;
+
+          grid-template-columns:
+            90px
+            1fr
+            90px;
+
+          align-items: center;
+
+          gap: 12px;
+
+          background: #fff;
+
+          padding: 18px 20px;
+
+          margin-bottom: 22px;
+
+          border-bottom:
+            2px solid #111;
+
+        }
+
+
+        .logo-box {
+
+          width: 90px;
+
+          height: 75px;
+
+          display: flex;
+
+          align-items: center;
+
+          justify-content: center;
+
+          background: #fff;
+
+          overflow: hidden;
+
+        }
+
+
+        .logo-box img {
+
+          display: block;
+
+          max-width: 85px;
+
+          max-height: 70px;
+
+          width: auto;
+
+          height: auto;
+
+          object-fit: contain;
+
+        }
+
+
+        .brand-center {
+
+          text-align: center;
+
+        }
+
+
+        .brand-center h1 {
+
+          margin: 0;
+
+          color: #111;
+
+          font-size: 30px;
+
+          font-weight: 800;
+
+          letter-spacing: 1px;
+
+        }
+
+
+        .brand-center p {
+
+          margin: 6px 0 0;
+
+          color: #444;
+
+          font-size: 13px;
+
+          font-weight: 500;
+
+          letter-spacing: .5px;
+
+        }
+
+
+        /* =========================
+           INFO NOTA
+        ========================= */
+
+        .invoice-info {
+
+          display: grid;
+
+          grid-template-columns:
+            1fr 1fr;
+
+          gap: 20px;
+
+          margin-bottom: 22px;
+
+        }
+
+
+        .info-box {
+
+          border:
+            1px solid #ccc;
+
+          padding: 12px;
+
+          border-radius: 6px;
+
+        }
+
+
+        .label {
+
+          font-size: 10px;
+
+          color: #666;
+
+          text-transform:
+            uppercase;
+
+          margin-bottom: 5px;
+
+        }
+
+
+        .value {
+
+          font-size: 15px;
+
+          font-weight: bold;
+
+        }
+
+
+        /* =========================
+           TABLE
+        ========================= */
+
+        table {
+
+          width: 100%;
+
+          border-collapse:
+            collapse;
+
+          margin-top: 10px;
+
+        }
+
+
+        td {
+
+          border:
+            1px solid #ccc;
+
+          padding: 11px;
+
+          vertical-align:
+            top;
+
+          font-size: 14px;
+
+        }
+
+
+        td:first-child {
+
+          width: 170px;
+
+          font-weight: bold;
+
+          background: #f5f5f5;
+
+        }
+
+
+        /* =========================
+           TOTAL
+        ========================= */
+
+        .total-box {
+
+          display: flex;
+
+          justify-content:
+            flex-end;
+
+          margin-top: 20px;
+
+        }
+
+
+        .total {
+
+          min-width: 240px;
+
+          border:
+            2px solid #111;
+
+          padding: 14px;
+
+          text-align: right;
+
+          font-size: 20px;
+
+          font-weight: bold;
+
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        .footer {
+
+          margin-top: 45px;
+
+          padding-top: 15px;
+
+          border-top:
+            1px solid #ccc;
+
+          text-align: center;
+
+          font-size: 12px;
+
+          color: #555;
+
+          line-height: 1.6;
+
+        }
+
+
+        .footer strong {
+
+          color: #111;
+
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 600px) {
+
+          body {
+
+            padding: 15px;
+
+          }
+
+
+          .header {
+
+            grid-template-columns:
+              65px
+              1fr
+              65px;
+
+            padding:
+              12px 8px;
+
+          }
+
+
+          .logo-box {
+
+            width: 65px;
+
+            height: 60px;
+
+          }
+
+
+          .logo-box img {
+
+            max-width: 60px;
+
+            max-height: 55px;
+
+          }
+
+
+          .brand-center h1 {
+
+            font-size: 22px;
+
+          }
+
+
+          .brand-center p {
+
+            font-size: 10px;
+
+          }
+
+
+          .invoice-info {
+
+            grid-template-columns:
+              1fr;
+
+            gap: 10px;
+
+          }
+
+
+          td:first-child {
+
+            width: 120px;
+
+          }
+
+        }
+
+
+        /* =========================
+           PRINT
+        ========================= */
+
+        @media print {
+
+          body {
+
+            padding: 0;
+
+            background: #fff;
+
+          }
+
+
+          .print-bar {
+
+            display: none !important;
+
+          }
+
+
+          .nota {
+
+            max-width: none;
+
+          }
+
+
+          .header {
+
+            background: #fff !important;
+
+            color: #111 !important;
+
+          }
+
+
+          .brand-center h1 {
+
+            color: #111 !important;
+
+          }
+
+
+          .brand-center p {
+
+            color: #444 !important;
+
+          }
+
+        }
+
+      </style>
+
+    </head>
+
+
+    <body>
+
+
+      <div class="nota">
+
+
+        <!-- =========================
+             PRINT BUTTON
+        ========================= -->
+
+        <div class="print-bar">
+
+          <button
+            class="print-btn"
+            onclick="window.print()"
+          >
+            🖨️ Print Nota
+          </button>
+
+        </div>
+
+
+        <!-- =========================
+             HEADER
+        ========================= -->
+
+        <div class="header">
+
+
+          <div class="logo-box">
+
+            <img
+              src="${logoWtUrl}"
+              alt="Logo WansTeknik"
+              onerror="this.style.display='none'"
+            >
+
+          </div>
+
+
+          <div class="brand-center">
+
+            <h1>
+              WansTeknik
+            </h1>
+
+            <p>
+              Service, Maintenance, Repair
+            </p>
+
+          </div>
+
+
+          <div class="logo-box">
+
+            <img
+              src="${logoBrandUrl}"
+              alt="Brand WansTeknik"
+              onerror="this.style.display='none'"
+            >
+
+          </div>
+
+
+        </div>
+
+
+        <!-- =========================
+             INFO NOTA
+        ========================= -->
+
+        <div class="invoice-info">
+
+
+          <div class="info-box">
+
+            <div class="label">
+              No. Nota
+            </div>
+
+            <div class="value">
+              ${esc(invoiceNo)}
+            </div>
+
+          </div>
+
+
+          <div class="info-box">
+
+            <div class="label">
+              Tanggal Service
+            </div>
+
+            <div class="value">
+              ${esc(formattedDate)}
+            </div>
+
+          </div>
+
+
+        </div>
+
+
+        <!-- =========================
+             DETAIL SERVICE
+        ========================= -->
+
+        <table>
+
+
+          <tr>
+
+            <td>
+              Kode Pelanggan
+            </td>
+
+            <td>
+              ${esc(customerCode)}
+            </td>
+
+          </tr>
+
+
+          <tr>
+
+            <td>
+              Nama Pelanggan
+            </td>
+
+            <td>
+              ${esc(customerName)}
+            </td>
+
+          </tr>
+
+
+          <tr>
+
+            <td>
+              Unit / Dicek
+            </td>
+
+            <td>
+              ${esc(r.checked || "-")}
+            </td>
+
+          </tr>
+
+
+          <tr>
+
+            <td>
+              Kendala
+            </td>
+
+            <td>
+              ${esc(r.problem || "-")}
+            </td>
+
+          </tr>
+
+
+          <tr>
+
+            <td>
+              Tindakan / Perbaikan
+            </td>
+
+            <td>
+              ${esc(r.repair || "-")}
+            </td>
+
+          </tr>
+
+
+          <tr>
+
+            <td>
+              Catatan
+            </td>
+
+            <td>
+              ${esc(r.notes || "-")}
+            </td>
+
+          </tr>
+
+
+        </table>
+
+
+        <!-- =========================
+             TOTAL
+        ========================= -->
+
+        <div class="total-box">
+
+          <div class="total">
+
+            Total:
+            Rp ${cost}
+
+          </div>
+
+        </div>
+
+
+        <!-- =========================
+             FOOTER
+        ========================= -->
+
+        <div class="footer">
 
           <strong>
             WansTeknik
@@ -1807,13 +2592,10 @@ window.printInvoice = id => {
 
           <br>
 
-
           Terima kasih telah menggunakan
           layanan WansTeknik.
 
-
           <br>
-
 
           Nota ini merupakan bukti
           transaksi service.
@@ -1822,18 +2604,6 @@ window.printInvoice = id => {
 
 
       </div>
-
-
-      <script>
-
-        window.onload = function() {
-
-          window.print();
-
-        };
-
-      <\/script>
-
 
     </body>
 
