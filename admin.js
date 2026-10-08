@@ -1374,10 +1374,498 @@ window.printInvoice = id => {
           <br>
 
           Nota ini merupakan bukti
-          transaksi service.
+window.printInvoice = id => {
+
+  const r = serviceRecords.find(x => x.id === id);
+
+  if (!r) {
+    msg(
+      "#serviceListStatus",
+      "Data service tidak ditemukan."
+    );
+    return;
+  }
+
+  const customer = r.customers || {};
+
+  const invoiceNo = r.invoice_no || "-";
+  const serviceDate = r.service_date || "-";
+
+  const customerCode = customer.wt_code
+    ? `WT-${customer.wt_code}`
+    : "-";
+
+  const customerName = customer.name || "-";
+
+  const cost = Number(r.cost || 0)
+    .toLocaleString("id-ID");
+
+  // Lokasi logo mengikuti lokasi admin.html
+  const logoWtUrl =
+    new URL("logo-wt.png", window.location.href).href;
+
+  const logoBrandUrl =
+    new URL("logo-brand.png", window.location.href).href;
+
+  // Format tanggal Indonesia
+  let formattedDate = serviceDate;
+
+  if (serviceDate && serviceDate !== "-") {
+    formattedDate = new Date(
+      serviceDate + "T00:00:00"
+    ).toLocaleDateString("id-ID", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric"
+    });
+  }
+
+  const printWindow = window.open(
+    "",
+    "_blank",
+    "width=800,height=900"
+  );
+
+  if (!printWindow) {
+    alert(
+      "Popup diblokir browser. Izinkan popup untuk mencetak nota."
+    );
+    return;
+  }
+
+  printWindow.document.write(`
+    <!doctype html>
+
+    <html lang="id">
+
+    <head>
+
+      <meta charset="utf-8">
+
+      <meta
+        name="viewport"
+        content="width=device-width,initial-scale=1"
+      >
+
+      <title>
+        Nota ${esc(invoiceNo)}
+      </title>
+
+      <style>
+
+        * {
+          box-sizing: border-box;
+        }
+
+        body {
+          font-family:
+            Arial,
+            Helvetica,
+            sans-serif;
+
+          margin: 0;
+          padding: 30px;
+
+          color: #111;
+
+          background: #fff;
+        }
+
+        .nota {
+          max-width: 750px;
+          margin: auto;
+        }
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .header {
+          display: flex;
+
+          align-items: center;
+
+          justify-content: space-between;
+
+          gap: 20px;
+
+          padding-bottom: 18px;
+
+          border-bottom: 2px solid #111;
+
+          margin-bottom: 22px;
+        }
+
+        .logo-box {
+          width: 90px;
+
+          display: flex;
+
+          align-items: center;
+
+          justify-content: center;
+        }
+
+        .logo-box img {
+          max-width: 85px;
+
+          max-height: 75px;
+
+          object-fit: contain;
+        }
+
+        .brand-center {
+          flex: 1;
+
+          text-align: center;
+        }
+
+        .brand-center h1 {
+          margin: 0;
+
+          font-size: 30px;
+
+          letter-spacing: 1px;
+        }
+
+        .brand-center p {
+          margin: 6px 0 0;
+
+          font-size: 14px;
+
+          color: #444;
+        }
+
+        /* =========================
+           INFO NOTA
+        ========================= */
+
+        .invoice-info {
+          display: grid;
+
+          grid-template-columns:
+            1fr 1fr;
+
+          gap: 20px;
+
+          margin-bottom: 22px;
+        }
+
+        .info-box {
+          border: 1px solid #ccc;
+
+          padding: 12px;
+
+          border-radius: 6px;
+        }
+
+        .label {
+          font-size: 10px;
+
+          color: #666;
+
+          text-transform: uppercase;
+
+          margin-bottom: 5px;
+        }
+
+        .value {
+          font-size: 15px;
+
+          font-weight: bold;
+        }
+
+        /* =========================
+           DETAIL
+        ========================= */
+
+        table {
+          width: 100%;
+
+          border-collapse: collapse;
+
+          margin-top: 10px;
+        }
+
+        td {
+          border: 1px solid #ccc;
+
+          padding: 11px;
+
+          vertical-align: top;
+
+          font-size: 14px;
+        }
+
+        td:first-child {
+          width: 170px;
+
+          font-weight: bold;
+
+          background: #f5f5f5;
+        }
+
+        /* =========================
+           TOTAL
+        ========================= */
+
+        .total-box {
+          display: flex;
+
+          justify-content: flex-end;
+
+          margin-top: 20px;
+        }
+
+        .total {
+          min-width: 240px;
+
+          border: 2px solid #111;
+
+          padding: 14px;
+
+          text-align: right;
+
+          font-size: 20px;
+
+          font-weight: bold;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        .footer {
+          margin-top: 45px;
+
+          padding-top: 15px;
+
+          border-top: 1px solid #ccc;
+
+          text-align: center;
+
+          font-size: 12px;
+
+          color: #555;
+
+          line-height: 1.6;
+        }
+
+        .footer strong {
+          color: #111;
+        }
+
+        /* =========================
+           PRINT
+        ========================= */
+
+        @media print {
+
+          body {
+            padding: 0;
+          }
+
+          .nota {
+            max-width: none;
+          }
+
+          .header {
+            break-inside: avoid;
+          }
+
+          table {
+            break-inside: avoid;
+          }
+
+        }
+
+      </style>
+
+    </head>
+
+    <body>
+
+      <div class="nota">
+
+        <!-- HEADER LOGO -->
+
+        <div class="header">
+
+          <div class="logo-box">
+
+            <img
+              src="${logoWtUrl}"
+              alt="Logo WansTeknik"
+              onerror="this.style.display='none'"
+            >
+
+          </div>
+
+          <div class="brand-center">
+
+            <h1>WansTeknik</h1>
+
+            <p>
+              Service & Perbaikan
+              Peralatan Rumah Tangga
+            </p>
+
+          </div>
+
+          <div class="logo-box">
+
+            <img
+              src="${logoBrandUrl}"
+              alt="Brand WansTeknik"
+              onerror="this.style.display='none'"
+            >
+
+          </div>
 
         </div>
 
+
+        <!-- INFORMASI NOTA -->
+
+        <div class="invoice-info">
+
+          <div class="info-box">
+
+            <div class="label">
+              No. Nota
+            </div>
+
+            <div class="value">
+              ${esc(invoiceNo)}
+            </div>
+
+          </div>
+
+          <div class="info-box">
+
+            <div class="label">
+              Tanggal Service
+            </div>
+
+            <div class="value">
+              ${esc(formattedDate)}
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- DETAIL SERVICE -->
+
+        <table>
+
+          <tr>
+
+            <td>
+              Kode Pelanggan
+            </td>
+
+            <td>
+              ${esc(customerCode)}
+            </td>
+
+          </tr>
+
+          <tr>
+
+            <td>
+              Nama Pelanggan
+            </td>
+
+            <td>
+              ${esc(customerName)}
+            </td>
+
+          </tr>
+
+          <tr>
+
+            <td>
+              Unit / Dicek
+            </td>
+
+            <td>
+              ${esc(r.checked || "-")}
+            </td>
+
+          </tr>
+
+          <tr>
+
+            <td>
+              Kendala
+            </td>
+
+            <td>
+              ${esc(r.problem || "-")}
+            </td>
+
+          </tr>
+
+          <tr>
+
+            <td>
+              Tindakan / Perbaikan
+            </td>
+
+            <td>
+              ${esc(r.repair || "-")}
+            </td>
+
+          </tr>
+
+          <tr>
+
+            <td>
+              Catatan
+            </td>
+
+            <td>
+              ${esc(r.notes || "-")}
+            </td>
+
+          </tr>
+
+        </table>
+
+
+        <!-- TOTAL -->
+
+        <div class="total-box">
+
+          <div class="total">
+
+            Total:
+            Rp ${cost}
+
+          </div>
+
+        </div>
+
+
+        <!-- FOOTER -->
+
+        <div class="footer">
+
+          <strong>WansTeknik</strong>
+
+          <br>
+
+          Terima kasih telah menggunakan
+          layanan WansTeknik.
+
+          <br>
+
+          Nota ini merupakan bukti
+          transaksi service.
+
+        </div>
 
       </div>
 
@@ -1385,21 +1873,19 @@ window.printInvoice = id => {
       <script>
 
         window.onload = function() {
+
           window.print();
+
         };
 
       <\/script>
 
-
     </body>
 
     </html>
-
   `);
 
-
   printWindow.document.close();
-
 };
 
 
