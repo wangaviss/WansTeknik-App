@@ -4,19 +4,15 @@ const SUPABASE_URL =
 const SUPABASE_ANON_KEY =
   "sb_publishable_cdjpVfFpB7WK36DrVKlr6g_E4b9XM-2";
 
-
 const db = supabase.createClient(
   SUPABASE_URL,
   SUPABASE_ANON_KEY
 );
 
-
 let customers = [];
 let serviceRecords = [];
 
-
-const $ = s =>
-  document.querySelector(s);
+const $ = s => document.querySelector(s);
 
 
 /* =========================
@@ -24,7 +20,6 @@ const $ = s =>
 ========================= */
 
 function esc(v = "") {
-
   return String(v).replace(
     /[&<>"']/g,
     m => ({
@@ -35,32 +30,23 @@ function esc(v = "") {
       "'": "&#039;"
     }[m])
   );
-
 }
 
-
 function msg(id, text) {
-
   const el = $(id);
 
   if (el) {
     el.textContent = text;
   }
-
 }
 
-
 function formatRupiah(value) {
-
   return "Rp " +
     Number(value || 0)
       .toLocaleString("id-ID");
-
 }
 
-
 function formatDate(value) {
-
   if (!value) return "-";
 
   return new Date(
@@ -73,7 +59,6 @@ function formatDate(value) {
       year: "numeric"
     }
   );
-
 }
 
 
@@ -92,18 +77,27 @@ $("#loginForm").addEventListener(
       "Memproses login..."
     );
 
+    const email =
+      $("#email").value.trim();
+
+    const password =
+      $("#password").value;
+
+    if (!email || !password) {
+
+      msg(
+        "#loginStatus",
+        "Email dan password wajib diisi."
+      );
+
+      return;
+    }
 
     const { error } =
       await db.auth.signInWithPassword({
-
-        email:
-          $("#email").value.trim(),
-
-        password:
-          $("#password").value
-
+        email,
+        password
       });
-
 
     if (error) {
 
@@ -114,12 +108,17 @@ $("#loginForm").addEventListener(
 
       msg(
         "#loginStatus",
+        "Login gagal: " +
         error.message
       );
 
       return;
     }
 
+    msg(
+      "#loginStatus",
+      "Login berhasil..."
+    );
 
     await boot();
 
@@ -152,7 +151,6 @@ async function boot() {
     error
   } = await db.auth.getUser();
 
-
   if (error) {
 
     console.error(
@@ -162,25 +160,33 @@ async function boot() {
 
     msg(
       "#loginStatus",
+      "Gagal membaca sesi: " +
       error.message
     );
 
     return;
   }
 
+  if (!user) {
 
-  if (!user) return;
+    $("#loginCard")
+      .classList
+      .remove("hidden");
 
+    $("#adminApp")
+      .classList
+      .add("hidden");
+
+    return;
+  }
 
   $("#loginCard")
     .classList
     .add("hidden");
 
-
   $("#adminApp")
     .classList
     .remove("hidden");
-
 
   await loadCustomers();
 
@@ -200,7 +206,6 @@ async function loadCustomers() {
     "Memuat data pelanggan..."
   );
 
-
   const {
     data,
     error
@@ -208,7 +213,6 @@ async function loadCustomers() {
     .from("customers")
     .select("*")
     .order("name");
-
 
   if (error) {
 
@@ -226,89 +230,78 @@ async function loadCustomers() {
     return;
   }
 
-
   customers =
     data || [];
-
 
   const customerSelect =
     $("#serviceCustomer");
 
+  if (customerSelect) {
 
-  customerSelect.innerHTML =
-    "";
+    customerSelect.innerHTML =
+      "";
 
-
-  if (customers.length === 0) {
-
-    const option =
-      document.createElement(
-        "option"
-      );
-
-
-    option.value = "";
-
-    option.textContent =
-      "Belum ada pelanggan";
-
-    option.disabled = true;
-
-    option.selected = true;
-
-
-    customerSelect
-      .appendChild(option);
-
-
-  } else {
-
-    const first =
-      document.createElement(
-        "option"
-      );
-
-
-    first.value = "";
-
-    first.textContent =
-      "— Pilih pelanggan —";
-
-    first.disabled = true;
-
-    first.selected = true;
-
-
-    customerSelect
-      .appendChild(first);
-
-
-    customers.forEach(c => {
+    if (customers.length === 0) {
 
       const option =
         document.createElement(
           "option"
         );
 
-
-      option.value =
-        c.id;
-
+      option.value = "";
 
       option.textContent =
-        `${c.wt_code} — ${c.name}`;
+        "Belum ada pelanggan";
 
+      option.disabled = true;
+
+      option.selected = true;
 
       customerSelect
         .appendChild(option);
 
-    });
+    } else {
+
+      const first =
+        document.createElement(
+          "option"
+        );
+
+      first.value = "";
+
+      first.textContent =
+        "— Pilih pelanggan —";
+
+      first.disabled = true;
+
+      first.selected = true;
+
+      customerSelect
+        .appendChild(first);
+
+      customers.forEach(c => {
+
+        const option =
+          document.createElement(
+            "option"
+          );
+
+        option.value =
+          c.id;
+
+        option.textContent =
+          `${c.wt_code} — ${c.name}`;
+
+        customerSelect
+          .appendChild(option);
+
+      });
+
+    }
 
   }
 
-
   renderCustomers();
-
 
   msg(
     "#customerStatus",
@@ -329,70 +322,70 @@ function renderCustomers() {
       .toLowerCase()
       .trim();
 
-
   const filtered =
     customers.filter(c => {
 
       const text = [
-
         c.wt_code,
         c.name,
         c.phone,
         c.address
-
       ]
         .filter(Boolean)
         .join(" ")
         .toLowerCase();
-
 
       return !search ||
         text.includes(search);
 
     });
 
+  const rows =
+    $("#customerRows");
 
-  $("#customerRows").innerHTML =
-    filtered.map(c => `
+  if (rows) {
 
-      <tr>
+    rows.innerHTML =
+      filtered.map(c => `
 
-        <td>
-          ${esc(c.wt_code)}
-        </td>
+        <tr>
 
-        <td>
-          ${esc(c.name)}
-        </td>
+          <td>
+            ${esc(c.wt_code)}
+          </td>
 
-        <td>
-          ${esc(c.phone || "-")}
-        </td>
+          <td>
+            ${esc(c.name)}
+          </td>
 
-        <td>
-          ${esc(c.address || "-")}
-        </td>
+          <td>
+            ${esc(c.phone || "-")}
+          </td>
 
-        <td>
+          <td>
+            ${esc(c.address || "-")}
+          </td>
 
-          <button
-            type="button"
-            class="row-btn"
-            onclick="editCustomer('${c.id}')"
-          >
-            Edit
-          </button>
+          <td>
 
-        </td>
+            <button
+              type="button"
+              class="row-btn"
+              onclick="editCustomer('${c.id}')"
+            >
+              Edit
+            </button>
 
-      </tr>
+          </td>
 
-    `).join("");
+        </tr>
 
+      `).join("");
+
+  }
 
   const status =
     $("#customerFilterStatus");
-
 
   if (status) {
 
@@ -417,29 +410,22 @@ window.editCustomer = id => {
       x => x.id === id
     );
 
-
   if (!c) return;
-
 
   $("#customerId").value =
     c.id;
 
-
   $("#wtCode").value =
     c.wt_code;
-
 
   $("#name").value =
     c.name;
 
-
   $("#adminPhone").value =
     c.phone || "";
 
-
   $("#address").value =
     c.address || "";
-
 
   window.scrollTo({
     top: 0,
@@ -458,7 +444,6 @@ $("#newCustomer").onclick = () => {
   $("#customerEditor").reset();
 
   $("#customerId").value = "";
-
 
   msg(
     "#customerStatus",
@@ -479,12 +464,10 @@ $("#customerEditor")
 
       e.preventDefault();
 
-
       const wtCode =
         $("#wtCode")
           .value
           .trim();
-
 
       if (!/^\d{4}$/.test(wtCode)) {
 
@@ -496,12 +479,10 @@ $("#customerEditor")
         return;
       }
 
-
       const name =
         $("#name")
           .value
           .trim();
-
 
       if (!name) {
 
@@ -512,7 +493,6 @@ $("#customerEditor")
 
         return;
       }
-
 
       const payload = {
 
@@ -536,15 +516,12 @@ $("#customerEditor")
 
       };
 
-
       const id =
         $("#customerId")
           .value
           .trim();
 
-
       let result;
-
 
       if (id) {
 
@@ -563,7 +540,6 @@ $("#customerEditor")
 
       }
 
-
       if (result.error) {
 
         console.error(
@@ -571,31 +547,25 @@ $("#customerEditor")
           result.error
         );
 
-
         msg(
           "#customerStatus",
           "Gagal menyimpan: " +
           result.error.message
         );
 
-
         return;
       }
-
 
       msg(
         "#customerStatus",
         "Pelanggan tersimpan."
       );
 
-
       $("#customerEditor")
         .reset();
 
-
       $("#customerId")
         .value = "";
-
 
       await loadCustomers();
 
@@ -624,7 +594,6 @@ async function loadServiceRecords() {
     "Memuat riwayat service..."
   );
 
-
   const {
     data,
     error
@@ -652,7 +621,6 @@ async function loadServiceRecords() {
       }
     );
 
-
   if (error) {
 
     console.error(
@@ -660,20 +628,16 @@ async function loadServiceRecords() {
       error
     );
 
-
     msg(
       "#serviceListStatus",
       error.message
     );
 
-
     return;
   }
 
-
   serviceRecords =
     data || [];
-
 
   renderServiceRecords();
 
@@ -691,22 +655,18 @@ function renderServiceRecords() {
       .toLowerCase()
       .trim();
 
-
   const dateFrom =
     $("#serviceDateFrom")?.value ||
     "";
-
 
   const dateTo =
     $("#serviceDateTo")?.value ||
     "";
 
-
   const type =
     ($("#serviceTypeFilter")?.value || "")
       .toLowerCase()
       .trim();
-
 
   const filtered =
     serviceRecords.filter(r => {
@@ -727,7 +687,6 @@ function renderServiceRecords() {
         .join(" ")
         .toLowerCase();
 
-
       if (
         keyword &&
         !searchText.includes(keyword)
@@ -736,7 +695,6 @@ function renderServiceRecords() {
         return false;
 
       }
-
 
       if (
         dateFrom &&
@@ -747,7 +705,6 @@ function renderServiceRecords() {
 
       }
 
-
       if (
         dateTo &&
         r.service_date > dateTo
@@ -757,7 +714,6 @@ function renderServiceRecords() {
 
       }
 
-
       if (type) {
 
         const unit =
@@ -765,31 +721,23 @@ function renderServiceRecords() {
             r.checked || ""
           ).toLowerCase();
 
-
         if (type === "lainnya") {
 
           const known = [
-
             "ac",
             "kulkas",
             "mesin cuci",
             "freezer"
-
           ];
-
 
           const isKnown =
             known.some(
               x => unit.includes(x)
             );
 
-
           if (isKnown) {
-
             return false;
-
           }
-
 
         } else {
 
@@ -805,99 +753,101 @@ function renderServiceRecords() {
 
       }
 
-
       return true;
 
     });
 
+  const rows =
+    $("#serviceRows");
 
-  $("#serviceRows").innerHTML =
-    filtered.map(r => `
+  if (rows) {
 
-      <tr>
+    rows.innerHTML =
+      filtered.map(r => `
 
-        <td>
-          ${esc(
-            formatDate(
-              r.service_date
-            )
-          )}
-        </td>
+        <tr>
 
-        <td>
-          WT-${esc(
-            r.customers?.wt_code || "-"
-          )}
-        </td>
+          <td>
+            ${esc(
+              formatDate(
+                r.service_date
+              )
+            )}
+          </td>
 
-        <td>
-          ${esc(
-            r.customers?.name || "-"
-          )}
-        </td>
+          <td>
+            WT-${esc(
+              r.customers?.wt_code || "-"
+            )}
+          </td>
 
-        <td>
-          ${esc(
-            r.checked || "-"
-          )}
-        </td>
+          <td>
+            ${esc(
+              r.customers?.name || "-"
+            )}
+          </td>
 
-        <td>
-          ${esc(
-            r.invoice_no || "-"
-          )}
-        </td>
+          <td>
+            ${esc(
+              r.checked || "-"
+            )}
+          </td>
 
-        <td>
-          ${esc(
-            r.problem || "-"
-          )}
-        </td>
+          <td>
+            ${esc(
+              r.invoice_no || "-"
+            )}
+          </td>
 
-        <td>
-          ${esc(
-            r.repair || "-"
-          )}
-        </td>
+          <td>
+            ${esc(
+              r.problem || "-"
+            )}
+          </td>
 
-        <td>
-          ${formatRupiah(r.cost)}
-        </td>
+          <td>
+            ${esc(
+              r.repair || "-"
+            )}
+          </td>
 
-        <td>
+          <td>
+            ${formatRupiah(r.cost)}
+          </td>
 
-          <button
-            type="button"
-            class="row-btn"
-            onclick="editService('${r.id}')"
-          >
-            Edit
-          </button>
+          <td>
 
+            <button
+              type="button"
+              class="row-btn"
+              onclick="editService('${r.id}')"
+            >
+              Edit
+            </button>
 
-          <button
-            type="button"
-            class="row-btn"
-            onclick="printInvoice('${r.id}')"
-          >
-            🧾 Nota
-          </button>
+            <button
+              type="button"
+              class="row-btn"
+              onclick="printInvoice('${r.id}')"
+            >
+              🧾 Nota
+            </button>
 
+            <button
+              type="button"
+              class="row-btn"
+              onclick="deleteService('${r.id}')"
+            >
+              Hapus
+            </button>
 
-          <button
-            type="button"
-            class="row-btn"
-            onclick="deleteService('${r.id}')"
-          >
-            Hapus
-          </button>
+          </td>
 
-        </td>
+        </tr>
 
-      </tr>
+      `).join("");
 
-    `).join("");
-
+  }
 
   const total =
     filtered.reduce(
@@ -905,7 +855,6 @@ function renderServiceRecords() {
         sum + Number(r.cost || 0),
       0
     );
-
 
   if ($("#serviceFilterCount")) {
 
@@ -915,7 +864,6 @@ function renderServiceRecords() {
 
   }
 
-
   if ($("#serviceFilterTotal")) {
 
     $("#serviceFilterTotal")
@@ -923,7 +871,6 @@ function renderServiceRecords() {
       formatRupiah(total);
 
   }
-
 
   msg(
     "#serviceListStatus",
@@ -944,18 +891,15 @@ $("#serviceSearch").addEventListener(
   renderServiceRecords
 );
 
-
 $("#serviceDateFrom").addEventListener(
   "change",
   renderServiceRecords
 );
 
-
 $("#serviceDateTo").addEventListener(
   "change",
   renderServiceRecords
 );
-
 
 $("#serviceTypeFilter").addEventListener(
   "change",
@@ -1006,7 +950,6 @@ window.editService = id => {
       x => x.id === id
     );
 
-
   if (!r) {
 
     msg(
@@ -1017,44 +960,34 @@ window.editService = id => {
     return;
   }
 
-
   $("#serviceId").value =
     r.id;
-
 
   $("#serviceCustomer").value =
     r.customer_id || "";
 
-
   $("#serviceDate").value =
     r.service_date || "";
-
 
   $("#checked").value =
     r.checked || "";
 
-
   $("#problem").value =
     r.problem || "";
-
 
   $("#repair").value =
     r.repair || "";
 
-
   $("#notes").value =
     r.notes || "";
 
-
   $("#cost").value =
     r.cost || 0;
-
 
   window.scrollTo({
     top: 0,
     behavior: "smooth"
   });
-
 
   msg(
     "#serviceStatus",
@@ -1076,9 +1009,7 @@ window.deleteService =
         "Hapus riwayat service ini?"
       );
 
-
     if (!yakin) return;
-
 
     const { error } =
       await db
@@ -1086,11 +1017,9 @@ window.deleteService =
         .delete()
         .eq("id", id);
 
-
     if (error) {
 
       console.error(error);
-
 
       msg(
         "#serviceListStatus",
@@ -1098,16 +1027,13 @@ window.deleteService =
         error.message
       );
 
-
       return;
     }
-
 
     msg(
       "#serviceListStatus",
       "Riwayat service berhasil dihapus."
     );
-
 
     await loadServiceRecords();
 
@@ -1125,7 +1051,6 @@ window.printInvoice = id => {
       x => x.id === id
     );
 
-
   if (!r) {
 
     msg(
@@ -1136,39 +1061,28 @@ window.printInvoice = id => {
     return;
   }
 
-
   const customer =
     r.customers || {};
 
-
   const invoiceNo =
     r.invoice_no || "-";
-
 
   const customerCode =
     customer.wt_code
       ? `WT-${customer.wt_code}`
       : "-";
 
-
   const customerName =
     customer.name || "-";
-
 
   const formattedDate =
     formatDate(
       r.service_date
     );
 
-
   const cost =
     Number(r.cost || 0)
       .toLocaleString("id-ID");
-
-
-  /* =========================
-     LOGO KHUSUS NOTA
-  ========================= */
 
   const logoWtUrl =
     new URL(
@@ -1176,13 +1090,11 @@ window.printInvoice = id => {
       window.location.href
     ).href;
 
-
   const logoBrandUrl =
     new URL(
       "./logo-brand-nota.png",
       window.location.href
     ).href;
-
 
   const printWindow =
     window.open(
@@ -1191,16 +1103,14 @@ window.printInvoice = id => {
       "width=800,height=900"
     );
 
-
   if (!printWindow) {
 
     alert(
-      "Popup diblokir browser. Izinkan popup untuk mencetak nota."
+      "Popup diblokir browser. Izinkan popup untuk membuka nota."
     );
 
     return;
   }
-
 
   printWindow.document.write(`
 
@@ -1217,18 +1127,15 @@ window.printInvoice = id => {
         content="width=device-width,initial-scale=1"
       >
 
-
       <title>
         Nota ${esc(invoiceNo)}
       </title>
-
 
       <style>
 
         * {
           box-sizing: border-box;
         }
-
 
         body {
 
@@ -1253,7 +1160,6 @@ window.printInvoice = id => {
 
         }
 
-
         .nota {
 
           max-width: 750px;
@@ -1261,683 +1167,6 @@ window.printInvoice = id => {
           margin: auto;
 
         }
-
-
-        /* =========================
-           HEADER NOTA PUTIH
-        ========================= */
-
-        .header {
-
-          display: grid;
-
-          grid-template-columns:
-            90px
-            1fr
-            90px;
-
-          align-items: center;
-
-          gap: 12px;
-
-          background: #ffffff;
-
-          padding: 18px 20px;
-
-          margin-bottom: 22px;
-
-          border-bottom:
-            2px solid #111;
-
-        }
-
-
-        /* =========================
-           LOGO
-        ========================= */
-
-        .logo-box {
-
-          width: 90px;
-
-          height: 75px;
-
-          display: flex;
-
-          align-items: center;
-
-          justify-content: center;
-
-          background: #ffffff;
-
-          overflow: hidden;
-
-        }
-
-
-        .logo-box img {
-
-          display: block;
-
-          max-width: 85px;
-
-          max-height: 70px;
-
-          width: auto;
-
-          height: auto;
-
-          object-fit: contain;
-
-        }
-
-
-        /* =========================
-           BRAND
-        ========================= */
-
-        .brand-center {
-
-          text-align: center;
-
-        }
-
-
-        .brand-center h1 {
-
-          margin: 0;
-
-          color: #111111;
-
-          font-size: 30px;
-
-          font-weight: 800;
-
-          letter-spacing: 1px;
-
-        }
-
-
-        .brand-center p {
-
-          margin: 6px 0 0;
-
-          color: #444444;
-
-          font-size: 13px;
-
-          font-weight: 500;
-
-          letter-spacing: 0.5px;
-
-        }
-
-
-        /* =========================
-           INFO NOTA
-        ========================= */
-
-        .invoice-info {
-
-          display: grid;
-
-          grid-template-columns:
-            1fr 1fr;
-
-          gap: 20px;
-
-          margin-bottom: 22px;
-
-        }
-
-
-        .info-box {
-
-          border:
-            1px solid #ccc;
-
-          padding: 12px;
-
-          border-radius: 6px;
-
-        }
-
-
-        .label {
-
-          font-size: 10px;
-
-          color: #666;
-
-          text-transform:
-            uppercase;
-
-          margin-bottom: 5px;
-
-        }
-
-
-        .value {
-
-          font-size: 15px;
-
-          font-weight: bold;
-
-        }
-
-
-        /* =========================
-           DETAIL SERVICE
-        ========================= */
-
-        table {
-
-          width: 100%;
-
-          border-collapse:
-            collapse;
-
-          margin-top: 10px;
-
-        }
-
-
-        td {
-
-          border:
-            1px solid #ccc;
-
-          padding: 11px;
-
-          vertical-align:
-            top;
-
-          font-size: 14px;
-
-        }
-
-
-        td:first-child {
-
-          width: 170px;
-
-          font-weight: bold;
-
-          background: #f5f5f5;
-
-        }
-
-
-        /* =========================
-           TOTAL
-        ========================= */
-
-        .total-box {
-
-          display: flex;
-
-          justify-content:
-            flex-end;
-
-          margin-top: 20px;
-
-        }
-
-
-        .total {
-
-          min-width: 240px;
-
-          border:
-            2px solid #111;
-
-          padding: 14px;
-
-          text-align: right;
-
-          font-size: 20px;
-
-          font-weight: bold;
-
-        }
-
-
-        /* =========================
-           FOOTER
-        ========================= */
-
-        .footer {
-
-          margin-top: 45px;
-
-          padding-top: 15px;
-
-          border-top:
-            1px solid #ccc;
-
-          text-align: center;
-
-          font-size: 12px;
-
-          color: #555;
-
-          line-height: 1.6;
-
-        }
-
-
-        .footer strong {
-
-          color: #111;
-
-        }
-
-
-        /* =========================
-           PRINT
-        ========================= */
-
-        @media print {
-
-          body {
-
-            padding: 0;
-
-            background: #fff !important;
-
-            -webkit-print-color-adjust:
-              exact !important;
-
-            print-color-adjust:
-              exact !important;
-
-          }
-
-
-          .nota {
-
-            max-width: none;
-
-          }
-
-
-          .header {
-
-            background:
-              #ffffff !important;
-
-            color:
-              #111111 !important;
-
-          }
-
-
-          .logo-box {
-
-            background:
-              #ffffff !important;
-
-          }
-
-
-          .brand-center h1 {
-
-            color:
-              #111111 !important;
-
-          }
-
-
-          .brand-center p {
-
-            color:
-              #444444 !important;
-
-          }
-
-        }
-
-      </style>
-
-    </head>
-
-
-    <body>
-
-      <div class="nota">
-
-
-        <!-- =========================
-             HEADER
-        ========================= -->
-
-        <div class="header">
-
-
-          <div class="logo-box">
-
-            <img
-              src="${logoWtUrl}"
-              alt="Logo WansTeknik"
-              onerror="this.style.display='none'"
-            >
-
-          </div>
-
-
-          <div class="brand-center">
-
-            <h1>
-              WansTeknik
-            </h1>
-
-
-            <p>
-              Service, Maintenance, Repair
-            </p>
-
-          </div>
-
-
-          <div class="logo-box">
-
-            <img
-              src="${logoBrandUrl}"
-              alt="Brand WansTeknik"
-              onerror="this.style.display='none'"
-            >
-
-          </div>
-
-
-        </div>
-
-
-        <!-- =========================
-             INFO NOTA
-        ========================= -->
-
-        <div class="invoice-info">
-
-
-          <div class="info-box">
-
-            <div class="label">
-              No. Nota
-            </div>
-
-
-            <div class="value">
-              ${esc(invoiceNo)}
-            </div>
-
-          </div>
-
-
-          <div class="info-box">
-
-            <div class="label">
-              Tanggal Service
-            </div>
-
-
-            <div class="value">
-              ${esc(formattedDate)}
-            </div>
-
-          </div>
-
-
-        </div>
-
-
-        <!-- =========================
-             DETAIL SERVICE
-        ========================= -->
-
-        <table>
-
-
-          <tr>
-
-            <td>
-              Kode Pelanggan
-            </td>
-
-            <td>
-              ${esc(customerCode)}
-            </td>
-
-          </tr>
-
-
-          <tr>
-
-            <td>
-              Nama Pelanggan
-            </td>
-
-            <td>
-              ${esc(customerName)}
-            </td>
-
-          </tr>
-
-
-          <tr>
-
-            <td>
-              Unit / Dicek
-            </td>
-
-            <td>
-              ${esc(r.checked || "-")}
-            </td>
-
-          </tr>
-
-
-          <tr>
-
-            <td>
-              Kendala
-            </td>
-
-            <td>
-              ${esc(r.problem || "-")}
-            </td>
-
-          </tr>
-
-
-          <tr>
-
-            <td>
-              Tindakan / Perbaikan
-            </td>
-
-            <td>
-              ${esc(r.repair || "-")}
-            </td>
-
-          </tr>
-
-
-          <tr>
-
-            <td>
-              Catatan
-            </td>
-
-            <td>
-              ${esc(r.notes || "-")}
-            </td>
-
-          </tr>
-
-
-        </table>
-
-
-        <!-- =========================
-             TOTAL
-        ========================= -->
-
-        <div class="total-box">
-
-          <div class="total">
-
-            Total:
-            Rp ${cost}
-
-          </div>
-
-        </div>
-
-
-        <!-- =========================
-             FOOTER
-        ========================= -->
-
-        <div class="footer">
-/* =========================
-   PRINT INVOICE
-========================= */
-
-window.printInvoice = id => {
-
-  const r =
-    serviceRecords.find(
-      x => x.id === id
-    );
-
-  if (!r) {
-
-    msg(
-      "#serviceListStatus",
-      "Data service tidak ditemukan."
-    );
-
-    return;
-  }
-
-
-  const customer =
-    r.customers || {};
-
-  const invoiceNo =
-    r.invoice_no || "-";
-
-  const customerCode =
-    customer.wt_code
-      ? `WT-${customer.wt_code}`
-      : "-";
-
-  const customerName =
-    customer.name || "-";
-
-  const formattedDate =
-    formatDate(
-      r.service_date
-    );
-
-  const cost =
-    Number(r.cost || 0)
-      .toLocaleString("id-ID");
-
-
-  /* =========================
-     LOGO KHUSUS NOTA
-  ========================= */
-
-  const logoWtUrl =
-    new URL(
-      "./logo-wt-nota.png",
-      window.location.href
-    ).href;
-
-  const logoBrandUrl =
-    new URL(
-      "./logo-brand-nota.png",
-      window.location.href
-    ).href;
-
-
-  const printWindow =
-    window.open(
-      "",
-      "_blank",
-      "width=800,height=900"
-    );
-
-
-  if (!printWindow) {
-
-    alert(
-      "Popup diblokir browser. Izinkan popup untuk membuka nota."
-    );
-
-    return;
-  }
-
-
-  printWindow.document.write(`
-
-    <!doctype html>
-
-    <html lang="id">
-
-    <head>
-
-      <meta charset="utf-8">
-
-      <meta
-        name="viewport"
-        content="width=device-width,initial-scale=1"
-      >
-
-      <title>
-        Nota ${esc(invoiceNo)}
-      </title>
-
-
-      <style>
-
-        * {
-          box-sizing: border-box;
-        }
-
-
-        body {
-
-          font-family:
-            Arial,
-            Helvetica,
-            sans-serif;
-
-          margin: 0;
-
-          padding: 30px;
-
-          color: #111;
-
-          background: #fff;
-
-        }
-
-
-        .nota {
-
-          max-width: 750px;
-
-          margin: auto;
-
-        }
-
-
-        /* =========================
-           TOMBOL PRINT
-        ========================= */
 
         .print-bar {
 
@@ -1946,7 +1175,6 @@ window.printInvoice = id => {
           margin-bottom: 25px;
 
         }
-
 
         .print-btn {
 
@@ -1968,17 +1196,11 @@ window.printInvoice = id => {
 
         }
 
-
         .print-btn:hover {
 
           background: #333;
 
         }
-
-
-        /* =========================
-           HEADER
-        ========================= */
 
         .header {
 
@@ -2004,7 +1226,6 @@ window.printInvoice = id => {
 
         }
 
-
         .logo-box {
 
           width: 90px;
@@ -2023,7 +1244,6 @@ window.printInvoice = id => {
 
         }
 
-
         .logo-box img {
 
           display: block;
@@ -2040,13 +1260,11 @@ window.printInvoice = id => {
 
         }
 
-
         .brand-center {
 
           text-align: center;
 
         }
-
 
         .brand-center h1 {
 
@@ -2062,7 +1280,6 @@ window.printInvoice = id => {
 
         }
 
-
         .brand-center p {
 
           margin: 6px 0 0;
@@ -2077,24 +1294,19 @@ window.printInvoice = id => {
 
         }
 
-
-        /* =========================
-           INFO NOTA
-        ========================= */
-
         .invoice-info {
 
           display: grid;
 
           grid-template-columns:
-            1fr 1fr;
+            1fr
+            1fr;
 
           gap: 20px;
 
           margin-bottom: 22px;
 
         }
-
 
         .info-box {
 
@@ -2106,7 +1318,6 @@ window.printInvoice = id => {
           border-radius: 6px;
 
         }
-
 
         .label {
 
@@ -2121,7 +1332,6 @@ window.printInvoice = id => {
 
         }
 
-
         .value {
 
           font-size: 15px;
@@ -2129,11 +1339,6 @@ window.printInvoice = id => {
           font-weight: bold;
 
         }
-
-
-        /* =========================
-           TABLE
-        ========================= */
 
         table {
 
@@ -2145,7 +1350,6 @@ window.printInvoice = id => {
           margin-top: 10px;
 
         }
-
 
         td {
 
@@ -2161,7 +1365,6 @@ window.printInvoice = id => {
 
         }
 
-
         td:first-child {
 
           width: 170px;
@@ -2171,11 +1374,6 @@ window.printInvoice = id => {
           background: #f5f5f5;
 
         }
-
-
-        /* =========================
-           TOTAL
-        ========================= */
 
         .total-box {
 
@@ -2187,7 +1385,6 @@ window.printInvoice = id => {
           margin-top: 20px;
 
         }
-
 
         .total {
 
@@ -2205,11 +1402,6 @@ window.printInvoice = id => {
           font-weight: bold;
 
         }
-
-
-        /* =========================
-           FOOTER
-        ========================= */
 
         .footer {
 
@@ -2230,26 +1422,17 @@ window.printInvoice = id => {
 
         }
 
-
         .footer strong {
 
           color: #111;
 
         }
 
-
-        /* =========================
-           MOBILE
-        ========================= */
-
         @media (max-width: 600px) {
 
           body {
-
             padding: 15px;
-
           }
-
 
           .header {
 
@@ -2263,7 +1446,6 @@ window.printInvoice = id => {
 
           }
 
-
           .logo-box {
 
             width: 65px;
@@ -2271,7 +1453,6 @@ window.printInvoice = id => {
             height: 60px;
 
           }
-
 
           .logo-box img {
 
@@ -2281,20 +1462,17 @@ window.printInvoice = id => {
 
           }
 
-
           .brand-center h1 {
 
             font-size: 22px;
 
           }
 
-
           .brand-center p {
 
             font-size: 10px;
 
           }
-
 
           .invoice-info {
 
@@ -2305,7 +1483,6 @@ window.printInvoice = id => {
 
           }
 
-
           td:first-child {
 
             width: 120px;
@@ -2314,21 +1491,15 @@ window.printInvoice = id => {
 
         }
 
-
-        /* =========================
-           PRINT
-        ========================= */
-
         @media print {
 
           body {
 
             padding: 0;
 
-            background: #fff;
+            background: #fff !important;
 
           }
-
 
           .print-bar {
 
@@ -2336,33 +1507,40 @@ window.printInvoice = id => {
 
           }
 
-
           .nota {
 
             max-width: none;
 
           }
 
-
           .header {
 
-            background: #fff !important;
+            background:
+              #fff !important;
 
-            color: #111 !important;
+            color:
+              #111 !important;
 
           }
 
+          .logo-box {
+
+            background:
+              #fff !important;
+
+          }
 
           .brand-center h1 {
 
-            color: #111 !important;
+            color:
+              #111 !important;
 
           }
 
-
           .brand-center p {
 
-            color: #444 !important;
+            color:
+              #444 !important;
 
           }
 
@@ -2372,16 +1550,9 @@ window.printInvoice = id => {
 
     </head>
 
-
     <body>
 
-
       <div class="nota">
-
-
-        <!-- =========================
-             PRINT BUTTON
-        ========================= -->
 
         <div class="print-bar">
 
@@ -2394,13 +1565,7 @@ window.printInvoice = id => {
 
         </div>
 
-
-        <!-- =========================
-             HEADER
-        ========================= -->
-
         <div class="header">
-
 
           <div class="logo-box">
 
@@ -2411,7 +1576,6 @@ window.printInvoice = id => {
             >
 
           </div>
-
 
           <div class="brand-center">
 
@@ -2425,7 +1589,6 @@ window.printInvoice = id => {
 
           </div>
 
-
           <div class="logo-box">
 
             <img
@@ -2436,16 +1599,9 @@ window.printInvoice = id => {
 
           </div>
 
-
         </div>
 
-
-        <!-- =========================
-             INFO NOTA
-        ========================= -->
-
         <div class="invoice-info">
-
 
           <div class="info-box">
 
@@ -2459,7 +1615,6 @@ window.printInvoice = id => {
 
           </div>
 
-
           <div class="info-box">
 
             <div class="label">
@@ -2472,16 +1627,9 @@ window.printInvoice = id => {
 
           </div>
 
-
         </div>
 
-
-        <!-- =========================
-             DETAIL SERVICE
-        ========================= -->
-
         <table>
-
 
           <tr>
 
@@ -2495,7 +1643,6 @@ window.printInvoice = id => {
 
           </tr>
 
-
           <tr>
 
             <td>
@@ -2507,7 +1654,6 @@ window.printInvoice = id => {
             </td>
 
           </tr>
-
 
           <tr>
 
@@ -2521,7 +1667,6 @@ window.printInvoice = id => {
 
           </tr>
 
-
           <tr>
 
             <td>
@@ -2533,7 +1678,6 @@ window.printInvoice = id => {
             </td>
 
           </tr>
-
 
           <tr>
 
@@ -2547,7 +1691,6 @@ window.printInvoice = id => {
 
           </tr>
 
-
           <tr>
 
             <td>
@@ -2560,13 +1703,7 @@ window.printInvoice = id => {
 
           </tr>
 
-
         </table>
-
-
-        <!-- =========================
-             TOTAL
-        ========================= -->
 
         <div class="total-box">
 
@@ -2578,11 +1715,6 @@ window.printInvoice = id => {
           </div>
 
         </div>
-
-
-        <!-- =========================
-             FOOTER
-        ========================= -->
 
         <div class="footer">
 
@@ -2602,7 +1734,6 @@ window.printInvoice = id => {
 
         </div>
 
-
       </div>
 
     </body>
@@ -2610,7 +1741,6 @@ window.printInvoice = id => {
     </html>
 
   `);
-
 
   printWindow.document.close();
 
@@ -2662,14 +1792,11 @@ $("#serviceEditor")
 
       e.preventDefault();
 
-
       const customerId =
         $("#serviceCustomer").value;
 
-
       const serviceDate =
         $("#serviceDate").value;
-
 
       if (!customerId) {
 
@@ -2681,7 +1808,6 @@ $("#serviceEditor")
         return;
       }
 
-
       if (!serviceDate) {
 
         msg(
@@ -2691,7 +1817,6 @@ $("#serviceEditor")
 
         return;
       }
-
 
       const payload = {
 
@@ -2732,15 +1857,12 @@ $("#serviceEditor")
 
       };
 
-
       const id =
         $("#serviceId")
           .value
           .trim();
 
-
       let result;
-
 
       if (id) {
 
@@ -2759,7 +1881,6 @@ $("#serviceEditor")
 
       }
 
-
       if (result.error) {
 
         console.error(
@@ -2767,35 +1888,28 @@ $("#serviceEditor")
           result.error
         );
 
-
         msg(
           "#serviceStatus",
           "Gagal menyimpan riwayat: " +
           result.error.message
         );
 
-
         return;
       }
-
 
       msg(
         "#serviceStatus",
         "Riwayat service berhasil disimpan."
       );
 
-
       $("#serviceEditor")
         .reset();
-
 
       $("#serviceId")
         .value = "";
 
-
       $("#cost")
         .value = 0;
-
 
       await loadCustomers();
 
@@ -2816,7 +1930,6 @@ $("#importCsv").onclick =
       $("#csvFile")
         .files[0];
 
-
     if (!f) {
 
       msg(
@@ -2827,14 +1940,11 @@ $("#importCsv").onclick =
       return;
     }
 
-
     const text =
       await f.text();
 
-
     const rows =
       parseCSV(text);
-
 
     if (!rows.length) {
 
@@ -2846,11 +1956,9 @@ $("#importCsv").onclick =
       return;
     }
 
-
     let ok = 0;
 
     let fail = 0;
-
 
     for (const r of rows) {
 
@@ -2861,7 +1969,6 @@ $("#importCsv").onclick =
             r.wt_code || ""
           ).trim();
 
-
         let c =
           customers.find(
             x =>
@@ -2869,7 +1976,6 @@ $("#importCsv").onclick =
                 x.wt_code
               ) === wtCode
           );
-
 
         if (
           !c &&
@@ -2898,15 +2004,12 @@ $("#importCsv").onclick =
               .select()
               .single();
 
-
           if (ins.error)
             throw ins.error;
-
 
           c = ins.data;
 
         }
-
 
         if (!c) {
 
@@ -2915,7 +2018,6 @@ $("#importCsv").onclick =
           );
 
         }
-
 
         const ins =
           await db
@@ -2947,13 +2049,10 @@ $("#importCsv").onclick =
 
             });
 
-
         if (ins.error)
           throw ins.error;
 
-
         ok++;
-
 
       } catch (e) {
 
@@ -2968,12 +2067,10 @@ $("#importCsv").onclick =
 
     }
 
-
     msg(
       "#importStatus",
       `Selesai: ${ok} berhasil, ${fail} gagal.`
     );
-
 
     await loadCustomers();
 
@@ -2995,10 +2092,8 @@ function parseCSV(text) {
         x => x.trim()
       );
 
-
   if (!lines.length)
     return [];
-
 
   const parse = s => {
 
@@ -3008,7 +2103,6 @@ function parseCSV(text) {
 
     let q = false;
 
-
     for (
       let i = 0;
       i < s.length;
@@ -3016,7 +2110,6 @@ function parseCSV(text) {
     ) {
 
       const ch = s[i];
-
 
       if (ch === '"') {
 
@@ -3035,7 +2128,6 @@ function parseCSV(text) {
 
         }
 
-
       } else if (
         ch === "," &&
         !q
@@ -3053,9 +2145,7 @@ function parseCSV(text) {
 
     }
 
-
     a.push(cur);
-
 
     return a.map(
       x => x.trim()
@@ -3063,13 +2153,11 @@ function parseCSV(text) {
 
   };
 
-
   const h =
     parse(lines[0])
       .map(
         x => x.toLowerCase()
       );
-
 
   return lines
     .slice(1)
@@ -3078,9 +2166,7 @@ function parseCSV(text) {
       const v =
         parse(line);
 
-
       const o = {};
-
 
       h.forEach(
         (k, i) => {
@@ -3090,7 +2176,6 @@ function parseCSV(text) {
 
         }
       );
-
 
       return o;
 
