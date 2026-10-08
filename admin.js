@@ -4,6 +4,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_cdjpVfFpB7WK36DrVKlr6g_E4b9XM-2";
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let customers = [];
+let serviceRecords = [];
 
 const $ = s => document.querySelector(s);
 
@@ -192,70 +193,53 @@ async function loadServiceRecords() {
   }
 
   const rows = data || [];
-  serviceRecord = rows; 
-  let serviceRecords = [];
 
-window.editService = id => {
-  const r = serviceRecords.find(x => x.id === id);
+  // Simpan data ke variabel global
+  serviceRecords = rows;
 
-  if (!r) {
-    msg("#serviceStatus", "Data service tidak ditemukan.");
-    return;
-  }
-
-  $("#serviceId").value = r.id;
-  $("#serviceCustomer").value = r.customer_id;
-  $("#serviceDate").value = r.service_date || "";
-  $("#checked").value = r.checked || "";
-  $("#problem").value = r.problem || "";
-  $("#repair").value = r.repair || "";
-  $("#notes").value = r.notes || "";
-  $("#cost").value = r.cost || 0;
-
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
-
-  msg("#serviceStatus", "Mode edit riwayat service.");
-};
-window.deleteService = async id => {
-  const yakin = confirm("Hapus riwayat service ini?");
-
-  if (!yakin) return;
-
-  const { error } = await db
-    .from("service_records")
-    .delete()
-    .eq("id", id);
-
-  if (error) {
-    console.error(error);
-    msg("#serviceListStatus", error.message);
-    return;
-  }
-
-  msg("#serviceListStatus", "Riwayat service berhasil dihapus.");
-
-  await loadServiceRecords();
-};
   $("#serviceRows").innerHTML = rows.map(r => `
     <tr>
       <td>${esc(r.service_date || "-")}</td>
-      <td>WT-${esc(r.customers?.wt_code || "-")}</td>
-      <td>${esc(r.customers?.name || "-")}</td>
-      <td>${esc(r.checked || "-")}</td>
-      <td>${esc(r.problem || "-")}</td>
-      <td>${esc(r.repair || "-")}</td>
-      <td>Rp ${Number(r.cost || 0).toLocaleString("id-ID")}</td>
-   <td>
-  <button class="row-btn" onclick="editService('${r.id}')">
-    Edit
-  </button>
-  <button class="row-btn" onclick="deleteService('${r.id}')">
-    Hapus
-  </button>
-</td>
+
+      <td>
+        WT-${esc(r.customers?.wt_code || "-")}
+      </td>
+
+      <td>
+        ${esc(r.customers?.name || "-")}
+      </td>
+
+      <td>
+        ${esc(r.checked || "-")}
+      </td>
+
+      <td>
+        ${esc(r.problem || "-")}
+      </td>
+
+      <td>
+        ${esc(r.repair || "-")}
+      </td>
+
+      <td>
+        Rp ${Number(r.cost || 0).toLocaleString("id-ID")}
+      </td>
+
+      <td>
+        <button
+          type="button"
+          class="row-btn"
+          onclick="editService('${r.id}')">
+          Edit
+        </button>
+
+        <button
+          type="button"
+          class="row-btn"
+          onclick="deleteService('${r.id}')">
+          Hapus
+        </button>
+      </td>
     </tr>
   `).join("");
 
@@ -266,6 +250,95 @@ window.deleteService = async id => {
       : "Belum ada riwayat service."
   );
 }
+
+
+/* =========================
+   EDIT SERVICE
+========================= */
+
+window.editService = id => {
+
+  const r = serviceRecords.find(x => x.id === id);
+
+  if (!r) {
+    msg(
+      "#serviceStatus",
+      "Data service tidak ditemukan."
+    );
+    return;
+  }
+
+  $("#serviceId").value = r.id;
+
+  $("#serviceCustomer").value =
+    r.customer_id || "";
+
+  $("#serviceDate").value =
+    r.service_date || "";
+
+  $("#checked").value =
+    r.checked || "";
+
+  $("#problem").value =
+    r.problem || "";
+
+  $("#repair").value =
+    r.repair || "";
+
+  $("#notes").value =
+    r.notes || "";
+
+  $("#cost").value =
+    r.cost || 0;
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+  msg(
+    "#serviceStatus",
+    "Mode edit riwayat service."
+  );
+};
+
+
+/* =========================
+   DELETE SERVICE
+========================= */
+
+window.deleteService = async id => {
+
+  const yakin = confirm(
+    "Hapus riwayat service ini?"
+  );
+
+  if (!yakin) return;
+
+  const { error } = await db
+    .from("service_records")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+
+    console.error(error);
+
+    msg(
+      "#serviceListStatus",
+      "Gagal menghapus: " + error.message
+    );
+
+    return;
+  }
+
+  msg(
+    "#serviceListStatus",
+    "Riwayat service berhasil dihapus."
+  );
+
+  await loadServiceRecords();
+};
 
 /* =========================
    EDIT CUSTOMER
@@ -503,6 +576,7 @@ $("#serviceEditor").addEventListener("submit", async e => {
   $("#cost").value = 0;
 
   await loadCustomers();
+await loadServiceRecords();
 
 });
 
