@@ -532,24 +532,27 @@ $("#serviceEditor").addEventListener("submit", async e => {
   console.log("Data service:", payload);
 
 
-  const id = $("#serviceId").value;
+  const id = $("#serviceId").value.trim();
 
-  let result;
+console.log("SERVICE ID:", id);
+console.log("MODE:", id ? "EDIT / UPDATE" : "BARU / INSERT");
 
-  if (id) {
+let result;
 
-    result = await db
-      .from("service_records")
-      .update(payload)
-      .eq("id", id);
+if (id) {
 
-  } else {
+  result = await db
+    .from("service_records")
+    .update(payload)
+    .eq("id", id);
 
-    result = await db
-      .from("service_records")
-      .insert(payload);
+} else {
 
-  }
+  result = await db
+    .from("service_records")
+    .insert(payload);
+
+}
 
 
   if (result.error) {
