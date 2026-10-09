@@ -109,3 +109,65 @@ footer{text-align:center;padding:30px;color:#8892a4;font-size:12px;line-height:1
     height: 18px;
     margin-right: 4px;
   }
+
+/* Tombol WhatsApp melayang */
+.floating-wa {
+  position: fixed;
+  right: 18px;
+  bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+  z-index: 9999;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  padding: 13px 18px;
+  border-radius: 999px;
+
+  background: #20c767;
+  color: #ffffff;
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.22);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.floating-wa:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
+}
+
+.floating-wa:focus-visible {
+  outline: 3px solid #101827;
+  outline-offset: 3px;
+}
+
+.floating-wa-icon {
+  width: 25px;
+  height: 25px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+  .floating-wa {
+    right: 14px;
+    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    padding: 13px;
+  }
+
+  .floating-wa span {
+    display: none;
+  }
+
+  .floating-wa-icon {
+    width: 29px;
+    height: 29px;
+  }
+}
