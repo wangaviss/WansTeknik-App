@@ -1,16 +1,8 @@
-/* ================================================
+/* ================================
    1. RESET & VARIABLE PALET WARNA
-   ================================================ */
+   ================================ */
 *, *::before, *::after {
   box-sizing: border-box;
-}
-
-html, body {
-  width: 100%;
-  max-width: 100%;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
 }
 
 :root {
@@ -49,6 +41,7 @@ html, body {
 }
 
 body {
+  margin: 0;
   min-height: 100vh;
   font-family: var(--font-main);
   color: var(--text-main);
@@ -57,9 +50,9 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ================================================
+/* ================================
    2. NAVBAR TOPBAR
-   ================================================ */
+   ================================ */
 .topbar {
   height: 68px;
   background-color: var(--bg-dark);
@@ -83,11 +76,10 @@ body {
   font-size: 20px;
   letter-spacing: -0.5px;
   color: #ffffff;
-  min-width: 0;
 }
 
 .brand span {
-  color: #60a5fa;
+  color: #60a5fa; /* Light Blue Accent */
 }
 
 .brand-logo {
@@ -121,57 +113,41 @@ body {
   font-size: 13px;
   font-weight: 700;
   transition: all var(--transition-fast);
+}
+
+.btn-info-web {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.btn-info-web:hover {
+  background: rgba(255, 255, 255, 0.18);
+  transform: translateY(-1px);
+}
+
+.btn-admin, 
+.admin-link {
   background: var(--primary);
   color: #ffffff;
   border: 1px solid var(--primary);
 }
 
-.btn-info-web {
-  background: rgba(255, 255, 255, 0.08) !important;
-  color: #ffffff !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
-}
-
-.btn-info-web:hover {
-  background: rgba(255, 255, 255, 0.18) !important;
-  transform: translateY(-1px);
-}
-
-.admin-link:hover,
-.btn-admin:hover {
+.btn-admin:hover, 
+.admin-link:hover {
   background: var(--primary-hover);
   border-color: var(--primary-hover);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 }
 
-/* Secondary Button Style */
-button.secondary,
-.btn-secondary {
-  background: #e2e8f0;
-  color: #0f172a;
-  border: 1px solid #cbd5e1;
-  box-shadow: none;
-}
-
-button.secondary:hover,
-.btn-secondary:hover {
-  background: #cbd5e1;
-  color: #0f172a;
-  box-shadow: none;
-}
-
-/* ================================================
+/* ================================
    3. LAYOUT & HERO SECTION
-   ================================================ */
+   ================================ */
 .container {
   max-width: 880px;
   margin: 0 auto;
   padding: 36px 20px 80px;
-}
-
-.container.admin {
-  max-width: 1100px;
 }
 
 .hero {
@@ -214,9 +190,9 @@ button.secondary:hover,
   margin: 0;
 }
 
-/* ================================================
+/* ================================
    4. CARDS & FORMS
-   ================================================ */
+   ================================ */
 .card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
@@ -233,16 +209,12 @@ button.secondary:hover,
   margin-right: auto;
 }
 
-.form-group {
-  margin-bottom: 16px;
-}
-
 label {
   display: block;
   font-weight: 700;
   font-size: 14px;
   color: var(--text-main);
-  margin: 14px 0 6px;
+  margin: 18px 0 8px;
 }
 
 input, textarea, select {
@@ -263,7 +235,7 @@ input:focus, textarea:focus, select:focus {
   box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
 }
 
-small, .help-text {
+small {
   display: block;
   color: var(--text-muted);
   margin-top: 6px;
@@ -280,7 +252,7 @@ button {
   font-weight: 800;
   font-size: 15px;
   cursor: pointer;
-  margin-top: 20px;
+  margin-top: 24px;
   min-height: 50px;
   transition: all var(--transition-fast);
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
@@ -303,16 +275,6 @@ button:disabled {
   box-shadow: none !important;
 }
 
-.form-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.form-actions button {
-  flex: 1;
-}
-
 /* Status Notifications */
 .status {
   min-height: 22px;
@@ -328,9 +290,9 @@ button:disabled {
 
 .hidden { display: none !important; }
 
-/* ================================================
+/* ================================
    5. CUSTOMER DASHBOARD & SERVICE
-   ================================================ */
+   ================================ */
 .customer-head {
   display: flex;
   justify-content: space-between;
@@ -356,31 +318,6 @@ button:disabled {
   white-space: nowrap;
 }
 
-.customer-summary {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-}
-
-.summary-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  background: var(--bg-main);
-  border-radius: 12px;
-}
-
-.summary-icon {
-  font-size: 24px;
-}
-
-.summary-item strong {
-  display: block;
-  font-size: 18px;
-  color: var(--bg-dark);
-}
-
 .muted {
   color: var(--text-muted);
   font-size: 12px;
@@ -402,6 +339,12 @@ button:disabled {
   font-size: 20px;
   font-weight: 800;
   color: var(--bg-dark);
+}
+
+.history-title span {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
 }
 
 .history {
@@ -451,13 +394,6 @@ button:disabled {
   white-space: nowrap;
 }
 
-.invoice-no {
-  display: block;
-  color: var(--text-muted);
-  font-size: 12px;
-  margin-top: 2px;
-}
-
 .service-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -493,325 +429,26 @@ button:disabled {
   margin: 16px 0 0;
 }
 
-.invoice-button {
-  margin-top: 16px;
-  background: #0284c7;
-  min-height: 42px;
-  font-size: 14px;
-}
-
-.invoice-button:hover {
-  background: #0369a1;
-}
-
-/* ================================================
-   6. ADMIN PANEL DASHBOARD STYLES
-   ================================================ */
-#adminApp .grid2 {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-}
-
-.admin-actions {
+/* Pagination */
+.customer-pagination {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 24px 0;
 }
 
-.admin-actions h1 {
-  font-size: 26px;
-  font-weight: 800;
-  margin: 0;
-  color: var(--bg-dark);
-}
-
-#logout {
+.customer-pagination button {
   width: auto;
   margin-top: 0;
-  min-height: 42px;
-  padding: 8px 18px;
-}
-
-.table-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 20px;
-}
-
-.filter-group {
-  display: flex;
-  gap: 10px;
-  width: 100%;
-  max-width: 360px;
-}
-
-.filter-group input {
-  margin: 0;
-}
-
-.filter-group button {
-  width: auto;
-  margin: 0;
-  min-height: 46px;
-  white-space: nowrap;
-}
-
-.service-filters {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 12px;
-  margin-bottom: 20px;
-  background: var(--bg-main);
-  padding: 16px;
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
-}
-
-.filter-item label {
-  margin: 0 0 6px 0;
-  font-size: 12px;
-}
-
-.filter-item input,
-.filter-item select {
-  margin: 0;
-  padding: 10px 12px;
-  font-size: 14px;
-}
-
-.filter-reset button {
-  margin-top: 22px;
-  min-height: 42px;
-  padding: 8px 12px;
-  font-size: 13px;
-}
-
-.filter-summary {
-  display: flex;
-  justify-content: space-between;
-  padding: 12px 16px;
-  background: var(--primary-light);
-  border: 1px solid var(--primary-border);
-  border-radius: 10px;
-  margin-bottom: 16px;
-  font-size: 14px;
-  color: var(--primary);
-}
-
-/* Table Wrap */
-.table-wrap {
-  width: 100%;
-  overflow-x: auto;
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  -webkit-overflow-scrolling: touch;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-  font-size: 14px;
-}
-
-th {
-  background: #f1f5f9;
-  color: var(--bg-dark);
-  font-weight: 700;
-  padding: 12px 14px;
-  border-bottom: 1px solid var(--border-color);
-  white-space: nowrap;
-}
-
-td {
-  padding: 12px 14px;
-  border-bottom: 1px solid var(--border-color);
-  vertical-align: middle;
-}
-
-tr:last-child td {
-  border-bottom: none;
-}
-
-/* Action Buttons inside Tables */
-td.action-cell {
-  white-space: nowrap;
-}
-
-.action-buttons {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.action-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 700;
-  border: none;
-  cursor: pointer;
-  margin: 0 !important;
-  min-height: 32px !important;
-  width: auto !important;
-  box-shadow: none !important;
-}
-
-.edit-btn { background: #dbeafe; color: #1d4ed8; }
-.edit-btn:hover { background: #bfdbfe; }
-
-.invoice-btn { background: #e2e8f0; color: #334155; }
-.invoice-btn:hover { background: #cbd5e1; }
-
-.delete-btn { background: #fee2e2; color: #b91c1c; }
-.delete-btn:hover { background: #fca5a5; }
-
-/* Inline Import Section */
-.inline-import {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  margin-top: 16px;
-}
-
-.inline-import input[type="file"] {
-  padding: 10px;
-}
-
-.inline-import button {
-  width: auto;
-  margin: 0;
-  white-space: nowrap;
-}
-
-/* ================================================
-   7. KALENDER MODAL UNTUK WEBVIEW/APK
-   ================================================ */
-.custom-date-field {
-  display: flex;
-  gap: 8px;
-}
-
-.custom-date-field input {
-  cursor: pointer;
-}
-
-.custom-date-field button {
-  width: auto;
-  margin: 0;
-  white-space: nowrap;
-}
-
-.calendar-modal[hidden] {
-  display: none !important;
-}
-
-.calendar-modal {
-  position: fixed;
-  inset: 0;
-  z-index: 99999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  background: rgba(15, 23, 42, 0.65);
-}
-
-.calendar-panel {
-  width: 100%;
-  max-width: 360px;
-  padding: 20px;
-  border-radius: 18px;
-  background: #ffffff;
-  color: var(--text-main);
-  box-shadow: var(--shadow-lg);
-}
-
-.calendar-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.calendar-header button {
-  width: 38px;
-  height: 38px;
-  min-height: 38px;
-  margin: 0;
-  padding: 0;
-  background: #f1f5f9;
-  color: var(--text-main);
-  font-size: 18px;
-  border-radius: 8px;
-  box-shadow: none;
-}
-
-.calendar-weekdays,
-.calendar-days {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
-  text-align: center;
-}
-
-.calendar-weekdays span {
-  padding: 6px 0;
-  color: var(--text-muted);
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.calendar-days button {
-  width: 100%;
-  height: 38px;
-  min-height: 38px;
-  margin: 0;
-  padding: 0;
-  background: #f8fafc;
-  color: var(--text-main);
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  box-shadow: none;
-}
-
-.calendar-days button.selected {
-  background: var(--primary);
-  color: #ffffff;
-}
-
-.calendar-days button.today {
-  outline: 2px solid var(--primary);
-}
-
-.calendar-days button.empty {
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.calendar-footer {
-  display: flex;
-  gap: 10px;
-  margin-top: 16px;
-}
-
-.calendar-footer button {
-  margin: 0;
+  padding: 10px 18px;
   min-height: 42px;
 }
 
-/* ================================================
-   8. FLOATING WHATSAPP BUTTON
-   ================================================ */
+/* ================================
+   6. FLOATING WHATSAPP BUTTON
+   ================================ */
 .floating-wa {
   position: fixed;
   right: 24px;
@@ -838,15 +475,58 @@ td.action-cell {
   box-shadow: 0 10px 25px rgba(37, 211, 102, 0.45);
 }
 
+.floating-wa:focus-visible {
+  outline: 3px solid var(--bg-dark);
+  outline-offset: 3px;
+}
+
 .floating-wa-icon {
   width: 24px;
   height: 24px;
   flex-shrink: 0;
 }
 
-/* ================================================
-   9. FOOTER
-   ================================================ */
+/* ================================
+   7. INPUT TANGGAL OPTIMIZATION
+   ================================ */
+#serviceEditor input[type="date"],
+#serviceDateFrom,
+#serviceDateTo {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  margin: 8px 0 16px;
+  padding: 10px 14px;
+  border: 1px solid var(--border-input);
+  border-radius: 12px;
+  background: #ffffff;
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 15px;
+  -webkit-appearance: auto;
+  appearance: auto;
+}
+
+#serviceEditor input[type="date"]:focus,
+#serviceDateFrom:focus,
+#serviceDateTo:focus {
+  border-color: var(--primary);
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+
+#serviceEditor,
+#serviceEditor .filter-item {
+  min-width: 0;
+}
+
+#serviceEditor input[type="date"]::-webkit-date-and-time-value {
+  text-align: left;
+}
+
+/* ================================
+   8. FOOTER
+   ================================ */
 footer {
   text-align: center;
   padding: 40px 20px;
@@ -867,21 +547,25 @@ footer a:hover {
   text-decoration: underline;
 }
 
-/* ================================================
-   10. RESPONSIVE MOBILE LAYOUT
-   ================================================ */
-@media (max-width: 768px) {
+/* ================================
+   9. MEDIA QUERIES (MOBILE RESPONSIVE)
+   ================================ */
+@media (max-width: 700px) {
   .topbar {
     height: 60px;
-    padding: 0 14px;
+    padding: 0 16px;
   }
 
   .brand {
-    font-size: 16px;
+    font-size: 18px;
   }
 
   .brand-logo {
-    height: 28px;
+    height: 30px;
+  }
+
+  .topbar-links {
+    gap: 6px;
   }
 
   .topbar-links a,
@@ -895,52 +579,41 @@ footer a:hover {
     padding: 20px 14px 60px;
   }
 
+  .hero {
+    padding-top: 10px;
+  }
+
   .hero h1 {
     font-size: 32px;
   }
 
   .card {
-    padding: 18px 14px;
     border-radius: 16px;
-  }
-
-  #adminApp .grid2 {
-    grid-template-columns: 1fr;
+    padding: 20px 16px;
   }
 
   .customer-head {
-    flex-direction: column;
     align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
   }
 
-  .customer-summary {
-    grid-template-columns: 1fr;
+  .code-badge {
+    align-self: flex-start;
   }
 
   .service-grid {
     grid-template-columns: 1fr;
+    gap: 12px;
   }
 
   .service-top {
     flex-direction: column;
+    gap: 6px;
   }
 
-  .table-head {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .filter-group {
-    max-width: none;
-  }
-
-  .inline-import {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .inline-import button {
-    width: 100%;
+  .cost {
+    font-size: 14px;
   }
 
   .floating-wa {
@@ -950,12 +623,410 @@ footer a:hover {
     border-radius: 50%;
   }
 
+/* Kalender khusus APK WansTeknik */
+.custom-date-field {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  width: 100%;
+}
+
+.custom-date-field input {
+  width: 100%;
+  min-height: 50px;
+  box-sizing: border-box;
+  font-size: 16px;
+  background: #fff;
+  color: #0f172a;
+  cursor: pointer;
+}
+
+.calendar-modal[hidden] {
+  display: none !important;
+}
+
+.calendar-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(15, 23, 42, 0.65);
+  box-sizing: border-box;
+}
+
+.calendar-panel {
+  width: 100%;
+  max-width: 360px;
+  max-height: 90dvh;
+  overflow-y: auto;
+  padding: 16px;
+  border-radius: 18px;
+  background: #fff;
+  color: #0f172a;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+  box-sizing: border-box;
+}
+
+.calendar-header {
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.calendar-header button,
+.calendar-days button {
+  min-width: 0;
+  min-height: 44px;
+  border: 0;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.calendar-header button {
+  background: #e2e8f0;
+  color: #0f172a;
+  font-size: 24px;
+}
+
+.calendar-weekdays,
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+  text-align: center;
+}
+
+.calendar-weekdays span {
+  padding: 8px 0;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.calendar-days button {
+  width: 100%;
+  padding: 0;
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.calendar-days button:active {
+  background: #bfdbfe;
+}
+
+.calendar-days button.selected {
+  background: #2563eb;
+  color: #fff;
+  font-weight: 700;
+}
+
+.calendar-days button.today {
+  outline: 2px solid #2563eb;
+  outline-offset: -2px;
+}
+
+.calendar-days button.empty {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.calendar-footer {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.calendar-footer button {
+  flex: 1;
+  min-height: 44px;
+}
+
   .floating-wa span {
-    display: none;
+    display: none; /* Sembunyikan teks di HP, tampilkan icon saja */
   }
 
   .floating-wa-icon {
     width: 28px;
     height: 28px;
   }
+}
+
+/* FIX ADMIN MOBILE - WANSTEKNIK */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+.container.admin {
+  width: 100%;
+  max-width: 100%;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+#adminApp,
+#adminApp .card,
+#adminApp form,
+#adminApp section {
+  min-width: 0;
+  max-width: 100%;
+}
+
+#adminApp input,
+#adminApp select,
+#adminApp textarea {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  font-size: 16px;
+}
+
+#adminApp .grid2 {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  width: 100%;
+}
+
+#adminApp .grid2 > * {
+  min-width: 0;
+  width: 100%;
+}
+
+#adminApp .admin-actions,
+#adminApp .table-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  min-width: 0;
+}
+
+#adminApp .admin-actions h1 {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  font-size: clamp(20px, 5vw, 28px);
+}
+
+#adminApp .service-filters {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  width: 100%;
+}
+
+#adminApp .filter-item,
+#adminApp .filter-group {
+  width: 100%;
+  min-width: 0;
+}
+
+#adminApp .filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+#adminApp .table-wrap {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+#adminApp .table-wrap table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+}
+
+#adminApp .table-wrap th,
+#adminApp .table-wrap td {
+  overflow-wrap: anywhere;
+  vertical-align: top;
+}
+
+#adminApp .filter-summary {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+#adminApp #customerPagination {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+@media (max-width: 700px) {
+  .topbar {
+    width: 100%;
+    padding-left: 12px;
+    padding-right: 12px;
+    gap: 8px;
+  }
+
+  .brand {
+    min-width: 0;
+  }
+
+  .brand-logo {
+    max-width: 120px;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .admin-link {
+    min-width: 0;
+    font-size: 12px;
+    gap: 5px;
+  }
+
+  .wt-icon {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+  }
+
+  #adminApp .card {
+    padding: 14px;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  #adminApp .admin-actions h1 {
+    flex: 1 1 100%;
+  }
+
+  #adminApp #logout {
+    width: 100%;
+  }
+
+  #adminApp .filter-reset button {
+    width: 100%;
+  }
+
+  #adminApp .filter-summary {
+    flex-direction: column;
+  }
+
+  #adminApp .table-wrap th,
+  #adminApp .table-wrap td {
+    padding: 8px;
+    font-size: 12px;
+  }
+}
+
+/* ==================================
+   WANSTEKNIK - TOMBOL AKSI TABEL
+================================== */
+
+#adminApp .table-wrap td.action-cell {
+  min-width: 100px;
+  padding: 6px;
+  vertical-align: middle;
+}
+
+#adminApp .action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+}
+
+#adminApp .table-wrap .action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 0;
+  min-height: 30px;
+  margin: 0;
+  padding: 5px 9px;
+  border: 0;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+/* Warna tombol */
+#adminApp .table-wrap .edit-btn {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+#adminApp .table-wrap .invoice-btn {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+#adminApp .table-wrap .delete-btn {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* Tampilan HP */
+@media (max-width: 700px) {
+  #adminApp .table-wrap td.action-cell {
+    min-width: 95px;
+    padding: 5px;
+  }
+
+  #adminApp .action-buttons {
+    gap: 4px;
+  }
+
+  #adminApp .table-wrap .action-btn {
+    min-height: 28px;
+    padding: 5px 7px;
+    font-size: 11px;
+    border-radius: 5px;
+  }
+}
+
+/* Tombol unduh nota WansTeknik */
+.download-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  min-height: 44px;
+  margin-top: 0;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 7px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.download-btn:hover {
+  background: #1d4ed8;
 }
