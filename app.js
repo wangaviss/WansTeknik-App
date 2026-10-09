@@ -1660,7 +1660,7 @@ if (form) {
 
 
       // ================================================
-      // DATA CUSTOMER
+      // DATA CUSTOMER VIA RPC
       // ================================================
 
       let customerData;
@@ -1668,17 +1668,20 @@ if (form) {
 
       try {
         const response = await withTimeout(
-          db
-            .from("customers")
-            .select("wt_code, name, phone, address")
-            .eq("wt_code", code)
-            .eq("phone", phone)
-            .maybeSingle(),
+          db.rpc("cek_data_pelanggan", {
+            p_wt_code: code,
+            p_phone: phone
+          }),
           15000
         );
 
-        customerData = response.data;
         customerError = response.error;
+
+        customerData =
+          Array.isArray(response.data) &&
+          response.data.length > 0
+            ? response.data[0]
+            : null;
 
       } catch (err) {
         console.error(
@@ -1689,59 +1692,40 @@ if (form) {
         if (statusEl) {
           statusEl.className = "status error";
           statusEl.textContent =
-            err.message ||
-            "Data pelanggan gagal dimuat.";
+            "Data pelanggan gagal dimuat. Periksa koneksi.";
         }
 
         resetSubmitButton();
         return;
       }
 
-
       if (customerError) {
-
         console.error(
-          "Customer Error:",
+          "Customer RPC Error:",
           customerError
         );
 
-
         if (statusEl) {
-
-          statusEl.className =
-            "status error";
-
+          statusEl.className = "status error";
           statusEl.textContent =
-            "Data pelanggan gagal dimuat.";
-
+            "Data pelanggan gagal dimuat. Periksa konfigurasi Supabase.";
         }
 
-
         resetSubmitButton();
-
         return;
-
       }
-
 
       if (!customerData) {
-
         if (statusEl) {
-
-          statusEl.className =
-            "status error";
-
+          statusEl.className = "status error";
           statusEl.textContent =
-            "Data pelanggan tidak ditemukan.";
-
+            "Data pelanggan tidak ditemukan. Periksa No. HP dan Kode WT.";
         }
 
-
         resetSubmitButton();
-
         return;
-
       }
+
 
 
       // ================================================
