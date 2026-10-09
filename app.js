@@ -259,36 +259,78 @@ function openCustomerInvoice(record, customer) {
         });
       }
 
-      if (downloadBtn) {
-        downloadBtn.addEventListener("click", function() {
-          downloadBtn.disabled = true;
-          downloadBtn.textContent = "Mengunduh...";
+      
+if (downloadBtn) {
+  downloadBtn.addEventListener("click", async function () {
+    const element = document.getElementById("notaArea");
+    const originalText = downloadBtn.textContent;
+    const buttonsBar = document.querySelector(".print-bar");
 
-          const element = document.getElementById("notaArea");
-          const opt = {
-            margin:       0.3,
-            filename:     'Nota-${esc(invoiceNo)}.pdf',
-            image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2, useCORS: true },
-            jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
-          };
+    if (typeof window.html2pdf !== "function") {
+      alert(
+        "Pustaka PDF belum tersedia. Periksa koneksi internet, lalu buka ulang nota."
+      );
+      return;
+    }
 
-          if (typeof html2pdf !== "undefined") {
-            html2pdf().set(opt).from(element).save().then(() => {
-              downloadBtn.disabled = false;
-              downloadBtn.textContent = "📥 Unduh PDF";
-            }).catch(err => {
-              alert("Gagal mengunduh PDF: " + err.message);
-              downloadBtn.disabled = false;
-              downloadBtn.textContent = "📥 Unduh PDF";
-            });
-          } else {
-            alert("Pustaka PDF belum dimuat sepenuhnya. Coba lagi dalam beberapa detik.");
-            downloadBtn.disabled = false;
-            downloadBtn.textContent = "📥 Unduh PDF";
+    downloadBtn.disabled = true;
+    downloadBtn.textContent = "Menyiapkan PDF...";
+
+    if (buttonsBar) {
+      buttonsBar.style.display = "none";
+    }
+
+    try {
+      // Beri kesempatan browser menyelesaikan perubahan tampilan.
+      await new Promise((resolve) => setTimeout(resolve, 300));
+
+      const safeInvoiceNo = String(
+        document.querySelector(".invoice-info .info-box .value")
+          ?.textContent || "WansTeknik"
+      ).replace(/[^a-zA-Z0-9_-]/g, "_");
+
+      await window.html2pdf()
+        .set({
+          margin: 8,
+          filename: `Nota-${safeInvoiceNo}.pdf`,
+          image: {
+            type: "jpeg",
+            quality: 0.98
+          },
+          html2canvas: {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: "#ffffff",
+            logging: false
+          },
+          jsPDF: {
+            unit: "mm",
+            format: "a4",
+            orientation: "portrait"
+          },
+          pagebreak: {
+            mode: ["css", "legacy"]
           }
-        });
+        })
+        .from(element)
+        .save();
+
+    } catch (err) {
+      console.error("Gagal membuat PDF:", err);
+      alert(
+        "PDF gagal dibuat. Coba buka portal melalui Google Chrome dan unduh kembali."
+      );
+    } finally {
+      if (buttonsBar) {
+        buttonsBar.style.display = "";
       }
+
+      downloadBtn.disabled = false;
+      downloadBtn.textContent = originalText;
+    }
+  });
+}
+
 
       if (closeBtn) {
         closeBtn.addEventListener("click", function() {
