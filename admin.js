@@ -63,73 +63,66 @@ function formatDate(value) {
 
 
 /* =========================
-   LOGIN
+   LOGIN - ERROR HANDLING
 ========================= */
 
 const loginForm = $("#loginForm");
 
 if (loginForm) {
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-  loginForm.addEventListener(
-    "submit",
-    async e => {
+    const loginButton = loginForm.querySelector(
+      'button[type="submit"], input[type="submit"]'
+    );
 
-      e.preventDefault();
-
-      msg(
-        "#loginStatus",
-        "Memproses login..."
-      );
-
-      const email =
-        $("#email").value.trim();
-
-      const password =
-        $("#password").value;
+    try {
+      const email = $("#email")?.value?.trim() || "";
+      const password = $("#password")?.value || "";
 
       if (!email || !password) {
-
-        msg(
-          "#loginStatus",
-          "Email dan password wajib diisi."
-        );
-
+        msg("#loginStatus", "Email dan password wajib diisi.");
         return;
       }
 
-      const { error } =
-        await db.auth.signInWithPassword({
-          email,
-          password
-        });
+      if (loginButton) loginButton.disabled = true;
+      msg("#loginStatus", "Memproses login...");
+
+      const { data, error } = await db.auth.signInWithPassword({
+        email,
+        password
+      });
 
       if (error) {
-
-        console.error(
-          "Login error:",
-          error
-        );
-
-        msg(
-          "#loginStatus",
-          "Login gagal: " +
-          error.message
-        );
-
+        console.error("Login error:", error);
+        msg("#loginStatus", "Login gagal: " + error.message);
         return;
       }
 
-      msg(
-        "#loginStatus",
-        "Login berhasil..."
-      );
+      if (!data?.user) {
+        msg("#loginStatus", "Login belum berhasil. Silakan coba lagi.");
+        return;
+      }
+
+      msg("#loginStatus", "Login berhasil. Memuat dashboard...");
 
       await boot();
 
-    }
-  );
+    } catch (err) {
+      console.error("Login tidak dapat diproses:", err);
 
+      msg(
+        "#loginStatus",
+        "Terjadi kesalahan: " +
+          (err?.message || "Periksa koneksi dan konfigurasi Supabase.")
+      );
+
+    } finally {
+      if (loginButton) loginButton.disabled = false;
+    }
+  });
 }
+
 
 
 /* =========================
