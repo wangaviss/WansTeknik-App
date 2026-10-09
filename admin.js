@@ -388,11 +388,15 @@ function renderCustomers() {
             onclick="editCustomer('${esc(c.id)}')"
           >Edit</button>
 
-          <button
-            type="button"
-            class="row-btn"
-            onclick="deleteCustomer('${esc(c.id)}')"
-          >Hapus</button>
+          
+<button
+  type="button"
+  class="row-btn"
+  onclick="window.deleteCustomer('${esc(c.id)}')"
+>
+  Hapus
+</button>
+
         </td>
       </tr>
     `).join("");
