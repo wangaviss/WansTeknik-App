@@ -483,47 +483,73 @@ window.editCustomer = id => {
 };
 
 
+
 /* =========================
    DELETE CUSTOMER
 ========================= */
 
-window.deleteCustomer = async id => {
-  const customer = customers.find(c => String(c.id) === String(id));
+window.deleteCustomer = async function (id) {
+  const customer = customers.find(
+    c => String(c.id) === String(id)
+  );
 
   if (!customer) {
-    msg("#customerStatus", "Pelanggan tidak ditemukan.");
+    msg("#customerStatus", "Pelanggan tidak ditemukan. Muat ulang halaman.");
     return;
   }
 
   const yakin = confirm(
-    `Hapus pelanggan ${customer.name} (WT-${customer.wt_code})?\n\n` +
-    "Data riwayat servis yang terhubung mungkin menghalangi penghapusan."
+    `Yakin hapus pelanggan ${customer.name} (WT-${customer.wt_code})?`
   );
 
   if (!yakin) return;
 
-  const { error } = await db
-    .from("customers")
-    .delete()
-    .eq("id", id);
+  msg("#customerStatus", "Menghapus pelanggan...");
 
-  if (error) {
-    console.error("Gagal menghapus pelanggan:", error);
+  try {
+    const { data, error } = await db
+      .from("customers")
+      .delete()
+      .eq("id", id)
+      .select("id");
+
+    if (error) {
+      console.error("Delete customer error:", error);
+      msg(
+        "#customerStatus",
+        "Gagal menghapus: " + error.message
+      );
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      msg(
+        "#customerStatus",
+        "Data tidak terhapus. Periksa izin DELETE pada Supabase RLS."
+      );
+      return;
+    }
+
+    customers = customers.filter(
+      c => String(c.id) !== String(id)
+    );
+
+    customerPage = 1;
+    renderCustomers();
+
+    msg("#customerStatus", "Pelanggan berhasil dihapus.");
+
+  } catch (err) {
+    console.error("Delete customer exception:", err);
 
     msg(
       "#customerStatus",
-      "Gagal menghapus pelanggan: " + error.message
+      "Terjadi kesalahan: " +
+      (err?.message || String(err))
     );
-
-    return;
   }
-
-  customerPage = 1;
-
-  msg("#customerStatus", "Pelanggan berhasil dihapus.");
-
-  await loadCustomers();
 };
+
 
 /* =========================
    NEW CUSTOMER
