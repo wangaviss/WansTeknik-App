@@ -936,3 +936,75 @@ body {
     font-size: 12px;
   }
 }
+
+/* ==================================
+   WANSTEKNIK - TOMBOL AKSI TABEL
+================================== */
+
+#adminApp .table-wrap td.action-cell {
+  min-width: 100px;
+  padding: 6px;
+  vertical-align: middle;
+}
+
+#adminApp .action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+}
+
+#adminApp .table-wrap .action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 0;
+  min-height: 30px;
+  margin: 0;
+  padding: 5px 9px;
+  border: 0;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+/* Warna tombol */
+#adminApp .table-wrap .edit-btn {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+#adminApp .table-wrap .invoice-btn {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+#adminApp .table-wrap .delete-btn {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* Tampilan HP */
+@media (max-width: 700px) {
+  #adminApp .table-wrap td.action-cell {
+    min-width: 95px;
+    padding: 5px;
+  }
+
+  #adminApp .action-buttons {
+    gap: 4px;
+  }
+
+  #adminApp .table-wrap .action-btn {
+    min-height: 28px;
+    padding: 5px 7px;
+    font-size: 11px;
+    border-radius: 5px;
+  }
+}
