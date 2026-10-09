@@ -336,87 +336,114 @@ async function loadCustomers() {
    RENDER CUSTOMER
 ========================= */
 
+
+let customerPage = 1;
+const CUSTOMER_PAGE_SIZE = 10;
+
 function renderCustomers() {
+  const search = ($("#search")?.value || "")
+    .toLowerCase()
+    .trim();
 
-  const search =
-    ($("#search")?.value || "")
-      .toLowerCase()
-      .trim();
+  const filtered = customers.filter(c => {
+    const text = [
+      c.wt_code,
+      c.name,
+      c.phone,
+      c.address
+    ]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase();
 
-  const filtered =
-    customers.filter(c => {
+    return !search || text.includes(search);
+  });
 
-      const text = [
-        c.wt_code,
-        c.name,
-        c.phone,
-        c.address
-      ]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase();
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filtered.length / CUSTOMER_PAGE_SIZE)
+  );
 
-      return !search ||
-        text.includes(search);
+  customerPage = Math.min(customerPage, totalPages);
 
-    });
+  const start = (customerPage - 1) * CUSTOMER_PAGE_SIZE;
+  const pageData = filtered.slice(
+    start,
+    start + CUSTOMER_PAGE_SIZE
+  );
 
-  const rows =
-    $("#customerRows");
+  const rows = $("#customerRows");
 
   if (rows) {
+    rows.innerHTML = pageData.map(c => `
+      <tr>
+        <td>${esc(c.wt_code)}</td>
+        <td>${esc(c.name)}</td>
+        <td>${esc(c.phone || "-")}</td>
+        <td>${esc(c.address || "-")}</td>
+        <td>
+          <button
+            type="button"
+            class="row-btn"
+            onclick="editCustomer('${esc(c.id)}')"
+          >Edit</button>
 
-    rows.innerHTML =
-      filtered.map(c => `
-
-        <tr>
-
-          <td>
-            ${esc(c.wt_code)}
-          </td>
-
-          <td>
-            ${esc(c.name)}
-          </td>
-
-          <td>
-            ${esc(c.phone || "-")}
-          </td>
-
-          <td>
-            ${esc(c.address || "-")}
-          </td>
-
-          <td>
-
-            <button
-              type="button"
-              class="row-btn"
-              onclick="editCustomer('${c.id}')"
-            >
-              Edit
-            </button>
-
-          </td>
-
-        </tr>
-
-      `).join("");
-
+          <button
+            type="button"
+            class="row-btn"
+            onclick="deleteCustomer('${esc(c.id)}')"
+          >Hapus</button>
+        </td>
+      </tr>
+    `).join("");
   }
 
-  const status =
-    $("#customerFilterStatus");
+  const status = $("#customerFilterStatus");
 
   if (status) {
-
-    status.textContent =
-      search
-        ? `${filtered.length} pelanggan ditemukan.`
-        : `${customers.length} pelanggan.`;
-
+    status.textContent = filtered.length
+      ? `Menampilkan ${start + 1}–${Math.min(
+          start + CUSTOMER_PAGE_SIZE,
+          filtered.length
+        )} dari ${filtered.length} pelanggan`
+      : "Tidak ada pelanggan yang ditemukan.";
   }
 
+  const pagination = $("#customerPagination");
+
+  if (pagination) {
+    pagination.innerHTML = `
+      <button
+        type="button"
+        class="row-btn"
+        id="customerPrev"
+        ${customerPage <= 1 ? "disabled" : ""}
+      >Sebelumnya</button>
+
+      <span>Halaman ${customerPage} dari ${totalPages}</span>
+
+      <button
+        type="button"
+        class="row-btn"
+        id="customerNext"
+        ${customerPage >= totalPages ? "disabled" : ""}
+      >Berikutnya</button>
+    `;
+
+    $("#customerPrev").onclick = () => {
+      if (customerPage > 1) {
+        customerPage--;
+        renderCustomers();
+      }
+    };
+
+    $("#customerNext").onclick = () => {
+      if (customerPage < totalPages) {
+        customerPage++;
+        renderCustomers();
+      }
+    };
+  }
 }
 
 
@@ -455,6 +482,48 @@ window.editCustomer = id => {
 
 };
 
+
+/* =========================
+   DELETE CUSTOMER
+========================= */
+
+window.deleteCustomer = async id => {
+  const customer = customers.find(c => String(c.id) === String(id));
+
+  if (!customer) {
+    msg("#customerStatus", "Pelanggan tidak ditemukan.");
+    return;
+  }
+
+  const yakin = confirm(
+    `Hapus pelanggan ${customer.name} (WT-${customer.wt_code})?\n\n` +
+    "Data riwayat servis yang terhubung mungkin menghalangi penghapusan."
+  );
+
+  if (!yakin) return;
+
+  const { error } = await db
+    .from("customers")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    console.error("Gagal menghapus pelanggan:", error);
+
+    msg(
+      "#customerStatus",
+      "Gagal menghapus pelanggan: " + error.message
+    );
+
+    return;
+  }
+
+  customerPage = 1;
+
+  msg("#customerStatus", "Pelanggan berhasil dihapus.");
+
+  await loadCustomers();
+};
 
 /* =========================
    NEW CUSTOMER
@@ -607,21 +676,20 @@ if (customerEditor) {
 }
 
 
+
 /* =========================
    SEARCH CUSTOMER
 ========================= */
 
-const customerSearch =
-  $("#search");
+const customerSearch = $("#search");
 
 if (customerSearch) {
-
-  customerSearch.addEventListener(
-    "input",
-    renderCustomers
-  );
-
+  customerSearch.addEventListener("input", () => {
+    customerPage = 1;
+    renderCustomers();
+  });
 }
+
 
 
 /* =========================
