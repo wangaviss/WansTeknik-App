@@ -2349,6 +2349,7 @@ if (serviceEditor) {
 
 }
 
+
 /* =========================
    CSV IMPORT - FIXED
 ========================= */
@@ -2357,9 +2358,7 @@ const importCsvButton = $("#importCsv");
 
 if (importCsvButton) {
   importCsvButton.onclick = async () => {
-    const status = $("#importStatus");
-    const fileInput = $("#csvFile");
-    const file = fileInput?.files?.[0];
+    const file = $("#csvFile")?.files?.[0];
 
     if (!file) {
       msg("#importStatus", "Pilih file CSV terlebih dahulu.");
@@ -2372,13 +2371,14 @@ if (importCsvButton) {
     }
 
     importCsvButton.disabled = true;
-    msg("#importStatus", "Memeriksa file CSV...");
 
     let ok = 0;
     let fail = 0;
     const errors = [];
 
     try {
+      msg("#importStatus", "Membaca file CSV...");
+
       const text = await file.text();
       const rows = parseCSV(text);
 
@@ -2386,13 +2386,8 @@ if (importCsvButton) {
         throw new Error("CSV tidak memiliki baris data.");
       }
 
-      // Periksa nama kolom
-      const required = [
-        "wt_code",
-        "service_date"
-      ];
-
-      const headers = Object.keys(rows[0] || {});
+      const required = ["wt_code", "service_date"];
+      const headers = Object.keys(rows[0]);
 
       const missing = required.filter(
         h => !headers.includes(h)
@@ -2400,13 +2395,10 @@ if (importCsvButton) {
 
       if (missing.length) {
         throw new Error(
-          "Kolom wajib tidak ditemukan: " +
-          missing.join(", ") +
-          ". Periksa nama header CSV."
+          "Kolom wajib tidak ditemukan: " + missing.join(", ")
         );
       }
 
-      // Ambil data pelanggan terbaru dari database
       msg("#importStatus", "Memuat data pelanggan...");
 
       const { data, error: customerError } = await db
@@ -2415,47 +2407,37 @@ if (importCsvButton) {
 
       if (customerError) {
         throw new Error(
-          "Gagal membaca pelanggan: " +
-          customerError.message
+          "Gagal membaca pelanggan: " + customerError.message
         );
       }
 
-      // Cache pelanggan agar kode yang sama tidak dibuat berulang
       const customerMap = new Map();
 
       (data || []).forEach(c => {
-        customerMap.set(
-          String(c.wt_code || "").trim(),
-          c
-        );
+        const code = String(c.wt_code || "").trim();
+
+        if (code && !customerMap.has(code)) {
+          customerMap.set(code, c);
+        }
       });
 
-      msg(
-        "#importStatus",
-        `Mulai mengimpor ${rows.length} baris...`
-      );
+      msg("#importStatus", `Mulai mengimpor ${rows.length} baris...`);
 
       for (let i = 0; i < rows.length; i++) {
         const r = rows[i];
         const rowNumber = i + 2;
 
         try {
-          // Kode pelanggan harus 4 digit
           const wtCode = String(r.wt_code || "").trim();
 
           if (!/^\d{4}$/.test(wtCode)) {
-            throw new Error(
-              "wt_code wajib tepat 4 angka, contoh 0001."
-            );
+            throw new Error("Kode WT harus tepat 4 angka.");
           }
 
-          // Validasi tanggal
           const date = String(r.service_date || "").trim();
 
           if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-            throw new Error(
-              "Tanggal wajib berformat YYYY-MM-DD."
-            );
+            throw new Error("Tanggal harus berformat YYYY-MM-DD.");
           }
 
           const parsedDate = new Date(date + "T00:00:00Z");
@@ -2467,209 +2449,51 @@ if (importCsvButton) {
             throw new Error("Tanggal tidak valid.");
           }
 
-          // Cari pelanggan yang sudah ada
           let customer = customerMap.get(wtCode);
 
-          // Buat pelanggan baru jika belum ada
+          if (!customer) {
+            const { data: existing, error: lookupError } = await db
+              .from("customers")
+              .select("id, wt_code, name, phone, address")
+              .eq("wt_code", wtCode)
+              .limit(1)
+              .maybeSingle();
+
+            if (lookupError) {
+              throw new Error(
+                "Gagal mencari pelanggan: " + lookupError.message
+              );
+            }
+
+            if (existing) {
+              customer = existing;
+              customerMap.set(wtCode, customer);
+            }
+          }
+
           if (!customer) {
             const name = String(r.name || "").trim();
 
             if (!name) {
               throw new Error(
-                "Pelanggan belum terdaftar dan kolom name kosong."
+                "Pelanggan belum ada dan kolom name kosong."
               );
             }
 
-            const { data: newCustomer, error: insertCustomerError } =
-              await db
-                .from("customers")
-                .insert({
-                  wt_code: wtCode,
-                  name,
-                  phone: String(r.phone || "").trim() || null,
-                  address: String(r.address || "").trim() || null
-                })
-                .select("id, wt_code, name, phone, address")
-                .single();
+            const { data: newCustomer, error: insertError } = await db
+              .from("customers")
+              .insert({
+                wt_code: wtCode,
+                name,
+                phone: String(r.phone || "").trim() || null,
+                address: String(r.address || "").trim() || null
+              })
+              .select("id, wt_code, name, phone, address")
+              .single();
 
-            if (insertCustomerError) {
+            if (insertError) {
               throw new Error(
-                "Gagal membuat pelanggan: " +
-                insertCustomerError.message
-              );
-            }
-
-            customer = newCustomer;
-
-            // Simpan ke cache untuk baris berikutnya
-            customerMap.set(wtCode, customer);
-          }
-
-          // Biaya: menerima 75000, 75.000, atau Rp 75.000
-          const rawCost = String(r.cost ?? "0")
-            .trim()
-            .replace(/^Rp\s*/i, "")
-            .replace(/[\s.,]/g, "");
-
-          if (rawCost && !/^\d+$/.test(rawCost)) {
-            throw new Error(
-              "Biaya tidak valid. Gunakan angka, contoh 75000."
-            );
-          }
-
-          const cost = rawCost ? Number(rawCost) : 0;
-
-          if (!Number.isSafeInteger(cost)) {
-            throw new Error("Nilai biaya terlalu besar.");
-          }
-
-          // Simpan riwayat servis
-          const { error: serviceError } = await db
-            .from("service_records")
-
-/* =========================
-   CSV IMPORT - FIXED
-========================= */
-
-const importCsvButton = $("#importCsv");
-
-if (importCsvButton) {
-  importCsvButton.onclick = async () => {
-    const fileInput = $("#csvFile");
-    const file = fileInput?.files?.[0];
-
-    if (!file) {
-      msg("#importStatus", "Pilih file CSV terlebih dahulu.");
-      return;
-    }
-
-    if (!/\.csv$/i.test(file.name)) {
-      msg("#importStatus", "File harus berformat .csv.");
-      return;
-    }
-
-    importCsvButton.disabled = true;
-    msg("#importStatus", "Memeriksa file CSV...");
-
-    let ok = 0;
-    let fail = 0;
-    const errors = [];
-
-    try {
-      const text = await file.text();
-      const rows = parseCSV(text);
-
-      if (!rows.length) {
-        throw new Error("CSV tidak memiliki baris data.");
-      }
-
-      // 1. Periksa kolom wajib
-      const required = ["wt_code", "service_date"];
-      const headers = Object.keys(rows[0] || {});
-
-      const missing = required.filter(
-        h => !headers.includes(h)
-      );
-
-      if (missing.length) {
-        throw new Error(
-          "Kolom wajib tidak ditemukan: " +
-          missing.join(", ") +
-          ". Periksa header CSV."
-        );
-      }
-
-      // 2. Ambil pelanggan dari database
-      msg("#importStatus", "Memuat data pelanggan...");
-
-      const { data, error: customerError } = await db
-        .from("customers")
-        .select("id, wt_code, name, phone, address");
-
-      if (customerError) {
-        throw new Error(
-          "Gagal membaca pelanggan: " +
-          customerError.message
-        );
-      }
-
-      // 3. Buat cache pelanggan berdasarkan kode
-      const customerMap = new Map();
-
-      (data || []).forEach(c => {
-        customerMap.set(
-          String(c.wt_code || "").trim(),
-          c
-        );
-      });
-
-      msg(
-        "#importStatus",
-        `Mulai mengimpor ${rows.length} baris...`
-      );
-
-      // 4. Proses setiap baris CSV
-      for (let i = 0; i < rows.length; i++) {
-        const r = rows[i];
-        const rowNumber = i + 2;
-
-        try {
-          // Validasi kode pelanggan
-          const wtCode = String(r.wt_code || "").trim();
-
-          if (!/^\d{4}$/.test(wtCode)) {
-            throw new Error(
-              "wt_code harus tepat 4 angka, contoh 0001."
-            );
-          }
-
-          // Validasi tanggal servis
-          const date = String(r.service_date || "").trim();
-
-          if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-            throw new Error(
-              "Tanggal harus berformat YYYY-MM-DD."
-            );
-          }
-
-          const parsedDate = new Date(date + "T00:00:00Z");
-
-          if (
-            Number.isNaN(parsedDate.getTime()) ||
-            parsedDate.toISOString().slice(0, 10) !== date
-          ) {
-            throw new Error("Tanggal servis tidak valid.");
-          }
-
-          // 5. Cari pelanggan berdasarkan wt_code
-          let customer = customerMap.get(wtCode);
-
-          // Buat pelanggan jika belum terdaftar
-          if (!customer) {
-            const name = String(r.name || "").trim();
-
-            if (!name) {
-              throw new Error(
-                "Pelanggan belum terdaftar dan kolom name kosong."
-              );
-            }
-
-            const { data: newCustomer, error: insertCustomerError } =
-              await db
-                .from("customers")
-                .insert({
-                  wt_code: wtCode,
-                  name: name,
-                  phone: String(r.phone || "").trim() || "-",
-                  address: String(r.address || "").trim() || "-"
-                })
-                .select("id, wt_code, name, phone, address")
-                .single();
-
-            if (insertCustomerError) {
-              throw new Error(
-                "Gagal membuat pelanggan: " +
-                insertCustomerError.message
+                "Gagal membuat pelanggan: " + insertError.message
               );
             }
 
@@ -2677,25 +2501,21 @@ if (importCsvButton) {
             customerMap.set(wtCode, customer);
           }
 
-          // 6. Validasi biaya servis
           const rawCost = String(r.cost ?? "0")
             .trim()
             .replace(/^Rp\s*/i, "")
             .replace(/[\s.,]/g, "");
 
           if (rawCost && !/^\d+$/.test(rawCost)) {
-            throw new Error(
-              "Biaya tidak valid. Contoh yang benar: 75000."
-            );
+            throw new Error("Biaya tidak valid. Contoh: 75000.");
           }
 
           const cost = rawCost ? Number(rawCost) : 0;
 
           if (!Number.isSafeInteger(cost)) {
-            throw new Error("Nilai biaya terlalu besar.");
+            throw new Error("Nilai biaya tidak valid.");
           }
 
-          // 7. Simpan riwayat servis ke database
           const { error: serviceError } = await db
             .from("service_records")
             .insert({
@@ -2705,13 +2525,12 @@ if (importCsvButton) {
               problem: String(r.problem || "").trim() || "-",
               repair: String(r.repair || "").trim() || "-",
               notes: String(r.notes || "").trim() || "-",
-              cost: cost
+              cost
             });
 
           if (serviceError) {
             throw new Error(
-              "Gagal menyimpan riwayat servis: " +
-              serviceError.message
+              "Gagal menyimpan riwayat servis: " + serviceError.message
             );
           }
 
@@ -2721,35 +2540,24 @@ if (importCsvButton) {
           fail++;
 
           const detail = err?.message || String(err);
+          errors.push(`Baris ${rowNumber}: ${detail}`);
 
-          errors.push(
-            `Baris ${rowNumber}: ${detail}`
-          );
-
-          console.error(
-            `Import CSV baris ${rowNumber} gagal:`,
-            err
-          );
+          console.error(`Import baris ${rowNumber} gagal:`, err);
         }
       }
 
-      // 8. Tampilkan ringkasan hasil impor
-      let summary =
-        `Import selesai: ${ok} berhasil, ${fail} gagal.`;
+      let summary = `Import selesai: ${ok} berhasil, ${fail} gagal.`;
 
       if (errors.length) {
-        summary += "\n\nDetail kegagalan:\n";
-        summary += errors.slice(0, 10).join("\n");
+        summary += "\n\n" + errors.slice(0, 10).join("\n");
 
         if (errors.length > 10) {
-          summary +=
-            `\n...dan ${errors.length - 10} error lainnya.`;
+          summary += `\n...dan ${errors.length - 10} error lainnya.`;
         }
       }
 
       msg("#importStatus", summary);
 
-      // 9. Muat ulang data pelanggan dan riwayat servis
       await loadCustomers();
       await loadServiceRecords();
 
@@ -2758,8 +2566,7 @@ if (importCsvButton) {
 
       msg(
         "#importStatus",
-        "Import gagal: " +
-        (err?.message || String(err))
+        "Import gagal: " + (err?.message || String(err))
       );
 
     } finally {
@@ -2767,6 +2574,8 @@ if (importCsvButton) {
     }
   };
 }
+
+
 
 
 
