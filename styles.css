@@ -171,3 +171,17 @@ footer{text-align:center;padding:30px;color:#8892a4;font-size:12px;line-height:1
     height: 29px;
   }
 }
+
+.customer-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.customer-pagination button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
