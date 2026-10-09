@@ -1813,6 +1813,13 @@ td:first-child {
     >
       🖨️ Print Nota
     </button>
+    <button
+  type="button"
+  class="download-btn"
+  id="downloadButton"
+>
+  ⬇️ Unduh Nota HTML
+</button>
 
     <button
       type="button"
@@ -2033,7 +2040,8 @@ td:first-child {
     document.getElementById(
       "closeButton"
     );
-
+const downloadButton =
+  document.getElementById("downloadButton");
 
   /* =========================
      PRINT BUTTON
