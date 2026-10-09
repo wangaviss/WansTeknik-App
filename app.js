@@ -73,11 +73,7 @@ const totalServiceEl =
 const lastServiceEl =
   document.querySelector("#lastService");
 
-const whatsappBtn =
-  document.querySelector("#whatsappBtn");
 
-const bookingBtn =
-  document.querySelector("#bookingBtn");
 
 
 // =====================================================
@@ -194,73 +190,6 @@ function formatRupiah(v) {
   ).format(v);
 
 }
-
-
-// =====================================================
-// WHATSAPP
-// =====================================================
-
-function setupWhatsApp(
-  customerName,
-  customerCode,
-  phone
-) {
-
-  const message =
-`Halo WansTeknik.
-
-Saya pelanggan WansTeknik.
-
-Nama: ${customerName}
-Kode WT: ${customerCode}
-No. HP: ${phone}
-
-Saya ingin menanyakan layanan service.`;
-
-  const url =
-    "https://wa.me/" +
-    WANSTEKNIK_WA +
-    "?text=" +
-    encodeURIComponent(message);
-
-  if (whatsappBtn) {
-
-    whatsappBtn.href = url;
-
-  }
-
-
-  const bookingMessage =
-`Halo WansTeknik.
-
-Saya ingin melakukan booking service.
-
-Nama: ${customerName}
-Kode WT: ${customerCode}
-No. HP: ${phone}
-
-Alamat:
-Jenis Unit:
-Keluhan:
-Tanggal/Jam yang diinginkan:`;
-
-  const bookingUrl =
-    "https://wa.me/" +
-    WANSTEKNIK_WA +
-    "?text=" +
-    encodeURIComponent(
-      bookingMessage
-    );
-
-  if (bookingBtn) {
-
-    bookingBtn.href =
-      bookingUrl;
-
-  }
-
-}
-
 
 // =====================================================
 // CUSTOMER INVOICE / NOTA
