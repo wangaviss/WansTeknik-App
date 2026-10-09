@@ -1,85 +1,92 @@
-*{box-sizing:border-box}
-:root{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#172033;background:#f5f7fb}
-body{margin:0;min-height:100vh}.topbar{height:64px;background:#101827;color:white;display:flex;align-items:center;justify-content:space-between;padding:0 max(5%,18px);position:sticky;top:0;z-index:5;box-shadow:0 3px 15px rgba(0,0,0,.12)}
-.brand{font-weight:850;font-size:21px;letter-spacing:-.3px}.brand span{color:#56d6a1}.admin-link{color:white;text-decoration:none;opacity:.9;font-size:14px;font-weight:700;padding:9px 12px;border:1px solid rgba(255,255,255,.2);border-radius:10px}
-.container{max-width:850px;margin:0 auto;padding:30px 18px 60px}.hero{padding:22px 0 10px}.hero-badge{display:inline-block;color:#117a55;background:#e7faf2;border-radius:999px;padding:7px 10px;font-size:11px;font-weight:850;letter-spacing:.8px}.hero h1{font-size:clamp(32px,8vw,54px);line-height:1.04;letter-spacing:-2px;margin:15px 0 12px}.hero h1 span{color:#117a55}.hero p{color:#657087;max-width:650px;font-size:16px;line-height:1.6}
-.card{background:white;border:1px solid #e4e8ef;border-radius:18px;padding:22px;margin:18px 0;box-shadow:0 8px 30px rgba(20,30,50,.05)}.login-card{padding:24px;max-width:680px}
-label{display:block;font-weight:800;font-size:14px;margin:15px 0 7px}input,textarea,select{width:100%;padding:14px 13px;border:1px solid #ccd3df;border-radius:11px;background:white;font:inherit;font-size:16px;outline:none}input:focus{border-color:#117a55;box-shadow:0 0 0 3px rgba(17,122,85,.1)}small{display:block;color:#7a8496;margin-top:6px;font-size:12px}
-button{width:100%;border:0;border-radius:11px;background:#117a55;color:#fff;padding:14px 16px;font-weight:850;font-size:15px;cursor:pointer;margin-top:20px;min-height:48px}button:disabled{opacity:.65;cursor:wait}
-.status{min-height:20px;font-size:14px;text-align:center;margin:12px 0 0}.status.error{color:#b42318}.status.success{color:#117a55}.status.loading{color:#657087}.hidden{display:none!important}.customer-head{display:flex;justify-content:space-between;align-items:center}.customer-head h2{margin:4px 0 5px}.code-badge{font-weight:850;background:#e8faf2;color:#117a55;padding:10px 13px;border-radius:12px;white-space:nowrap}.muted{color:#718096;font-size:12px;font-weight:800;letter-spacing:.8px;margin:0}.history-title{display:flex;justify-content:space-between;align-items:center;margin:25px 2px 12px}.history-title h2{margin:0;font-size:21px}.history-title span{color:#718096;font-size:13px}
-.history{display:grid;gap:14px}.service{background:#fff;border:1px solid #e4e8ef;border-radius:15px;padding:18px;box-shadow:0 5px 20px rgba(20,30,50,.035)}.service-top{display:flex;justify-content:space-between;gap:10px}.service h3{margin:5px 0 0;font-size:17px}.date{font-weight:850;color:#117a55;font-size:13px}.cost{font-size:14px;white-space:nowrap}.service-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:15px}.service-grid b{display:block;font-size:11px;color:#778198;margin-bottom:5px;letter-spacing:.5px}.service-grid span{font-size:14px;line-height:1.5}.notes{color:#718096;font-size:13px;line-height:1.5;border-top:1px solid #edf0f4;padding-top:10px;margin:14px 0 0}
-footer{text-align:center;padding:30px;color:#8892a4;font-size:12px;line-height:1.8}footer a{color:#117a55;text-decoration:none;font-weight:700}
-@media(max-width:700px){.container{padding:20px 14px 50px}.hero{padding-top:15px}.hero h1{font-size:38px}.card{border-radius:15px;padding:18px}.service-grid{grid-template-columns:1fr;gap:10px}.customer-head{align-items:flex-start;flex-direction:column;gap:15px}.code-badge{align-self:flex-start}.service-top{align-items:flex-start}.cost{font-size:13px}.topbar{height:60px}.brand{font-size:19px}}
+/* ================================
+   1. RESET & VARIABLE PALET WARNA
+   ================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+:root {
+  /* Font Family */
+  --font-main: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* Color Palette - Blue & Dark Theme */
+  --bg-main: #f8fafc;         /* Slate 50 */
+  --bg-card: #ffffff;
+  --bg-dark: #0f172a;         /* Slate 900 */
+  --bg-dark-hover: #1e293b;   /* Slate 800 */
+  
+  --primary: #2563eb;         /* Blue 600 */
+  --primary-hover: #1d4ed8;   /* Blue 700 */
+  --primary-light: #eff6ff;   /* Blue 50 */
+  --primary-border: #bfdbfe;  /* Blue 200 */
+
+  --text-main: #0f172a;       /* Dark Text */
+  --text-muted: #64748b;      /* Slate 500 */
+  --text-light: #f8fafc;      /* Light Text */
+
+  --border-color: #e2e8f0;    /* Slate 200 */
+  --border-input: #cbd5e1;    /* Slate 300 */
+
+  /* UI Feedback */
+  --danger: #ef4444;
+  --success: #10b981;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 10px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+  
+  /* Transitions */
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-main);
+  color: var(--text-main);
+  background-color: var(--bg-main);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ================================
+   2. NAVBAR TOPBAR
+   ================================ */
+.topbar {
+  height: 68px;
+  background-color: var(--bg-dark);
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 max(5%, 20px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
 .brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: -0.5px;
+  color: #ffffff;
+}
+
+.brand span {
+  color: #60a5fa; /* Light Blue Accent */
 }
 
 .brand-logo {
-  width: 150px;
-  height: auto;
+  width: auto;
+  height: 36px;
   object-fit: contain;
 }
-
-/* ================================
-   HEADER NAVIGASI
-   ================================ */
-
-.topbar-links {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.topbar-links a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  min-height: 40px;
-  padding: 8px 14px;
-
-  border-radius: 10px;
-
-  text-decoration: none;
-  font-size: 13px;
-  font-weight: 700;
-
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    opacity 0.2s ease;
-}
-
-.topbar-links a:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.12);
-}
-
-/* ================================
-   TOMBOL INFO WANSTEKNIK
-   ================================ */
-
-.btn-info-web {
-  background: #ffffff;
-  color: #101827;
-  border: 1px solid #d7dce5;
-}
-
-/* ================================
-   TOMBOL ADMIN
-   ================================ */
-
-.btn-admin {
-  background: #101827;
-  color: #ffffff;
-  border: 1px solid #101827;
-}
-
-/* ================================
-   IKON WT
-   ================================ */
 
 .wt-icon {
   width: 22px;
@@ -88,148 +95,426 @@ footer{text-align:center;padding:30px;color:#8892a4;font-size:12px;line-height:1
   margin-right: 6px;
 }
 
-/* ================================
-   MOBILE
-   ================================ */
+.topbar-links {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
-@media (max-width: 600px) {
-
-  .topbar-links {
-    gap: 5px;
-  }
-
-  .topbar-links a {
-    min-height: 36px;
-    padding: 7px 9px;
-    font-size: 11px;
-  }
-
-  .wt-icon {
-    width: 18px;
-    height: 18px;
-    margin-right: 4px;
-  }
-
-/* Tombol WhatsApp melayang */
-.floating-wa {
-  position: fixed;
-  right: 18px;
-  bottom: calc(18px + env(safe-area-inset-bottom, 0px));
-  z-index: 9999;
-
+.topbar-links a,
+.admin-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-
-  padding: 13px 18px;
-  border-radius: 999px;
-
-  background: #20c767;
-  color: #ffffff;
+  min-height: 42px;
+  padding: 8px 16px;
+  border-radius: 10px;
   text-decoration: none;
-
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
-
-  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.22);
-
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: all var(--transition-fast);
 }
 
-.floating-wa:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
+.btn-info-web {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-.floating-wa:focus-visible {
-  outline: 3px solid #101827;
-  outline-offset: 3px;
+.btn-info-web:hover {
+  background: rgba(255, 255, 255, 0.18);
+  transform: translateY(-1px);
 }
 
-.floating-wa-icon {
-  width: 25px;
-  height: 25px;
-  flex-shrink: 0;
+.btn-admin, 
+.admin-link {
+  background: var(--primary);
+  color: #ffffff;
+  border: 1px solid var(--primary);
 }
 
-@media (max-width: 480px) {
-  .floating-wa {
-    right: 14px;
-    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
-    padding: 13px;
-  }
-
-  .floating-wa span {
-    display: none;
-  }
-
-  .floating-wa-icon {
-    width: 29px;
-    height: 29px;
-  }
+.btn-admin:hover, 
+.admin-link:hover {
+  background: var(--primary-hover);
+  border-color: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 }
 
+/* ================================
+   3. LAYOUT & HERO SECTION
+   ================================ */
+.container {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 36px 20px 80px;
+}
+
+.hero {
+  padding: 10px 0 20px;
+  text-align: left;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  color: var(--primary);
+  background: var(--primary-light);
+  border: 1px solid var(--primary-border);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  font-size: clamp(28px, 5vw, 48px);
+  line-height: 1.1;
+  font-weight: 850;
+  letter-spacing: -1.5px;
+  color: var(--bg-dark);
+  margin: 16px 0 12px;
+}
+
+.hero h1 span {
+  color: var(--primary);
+}
+
+.hero p {
+  color: var(--text-muted);
+  max-width: 640px;
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ================================
+   4. CARDS & FORMS
+   ================================ */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 28px;
+  margin: 20px 0;
+  box-shadow: var(--shadow-md);
+  transition: box-shadow var(--transition-fast);
+}
+
+.login-card {
+  max-width: 680px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+label {
+  display: block;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text-main);
+  margin: 18px 0 8px;
+}
+
+input, textarea, select {
+  width: 100%;
+  padding: 13px 16px;
+  border: 1px solid var(--border-input);
+  border-radius: 12px;
+  background: #ffffff;
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 15px;
+  outline: none;
+  transition: all var(--transition-fast);
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+small {
+  display: block;
+  color: var(--text-muted);
+  margin-top: 6px;
+  font-size: 12px;
+}
+
+button {
+  width: 100%;
+  border: 0;
+  border-radius: 12px;
+  background: var(--primary);
+  color: #ffffff;
+  padding: 14px 20px;
+  font-weight: 800;
+  font-size: 15px;
+  cursor: pointer;
+  margin-top: 24px;
+  min-height: 50px;
+  transition: all var(--transition-fast);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+button:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Status Notifications */
+.status {
+  min-height: 22px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  margin: 14px 0 0;
+}
+
+.status.error { color: var(--danger); }
+.status.success { color: var(--success); }
+.status.loading { color: var(--text-muted); }
+
+.hidden { display: none !important; }
+
+/* ================================
+   5. CUSTOMER DASHBOARD & SERVICE
+   ================================ */
+.customer-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.customer-head h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--bg-dark);
+}
+
+.code-badge {
+  font-weight: 800;
+  background: var(--primary-light);
+  color: var(--primary);
+  border: 1px solid var(--primary-border);
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.muted {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 4px 0;
+}
+
+.history-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 32px 2px 16px;
+}
+
+.history-title h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--bg-dark);
+}
+
+.history-title span {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.history {
+  display: grid;
+  gap: 16px;
+}
+
+/* Service Card */
+.service {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast);
+}
+
+.service:hover {
+  border-color: var(--primary-border);
+  box-shadow: var(--shadow-md);
+}
+
+.service-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.service h3 {
+  margin: 4px 0 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--bg-dark);
+}
+
+.date {
+  font-weight: 800;
+  color: var(--primary);
+  font-size: 13px;
+}
+
+.cost {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--bg-dark);
+  white-space: nowrap;
+}
+
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 16px;
+  background: var(--bg-main);
+  padding: 14px;
+  border-radius: 12px;
+}
+
+.service-grid b {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+  letter-spacing: 0.5px;
+}
+
+.service-grid span {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+  line-height: 1.4;
+}
+
+.notes {
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.6;
+  border-top: 1px dashed var(--border-color);
+  padding-top: 12px;
+  margin: 16px 0 0;
+}
+
+/* Pagination */
 .customer-pagination {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 12px;
-  margin: 16px 0;
+  gap: 10px;
+  margin: 24px 0;
 }
 
-.customer-pagination button:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
+.customer-pagination button {
+  width: auto;
+  margin-top: 0;
+  padding: 10px 18px;
+  min-height: 42px;
 }
 
-/* ========================================
-   WansTeknik - FIX INPUT TANGGAL MOBILE
-======================================== */
+/* ================================
+   6. FLOATING WHATSAPP BUTTON
+   ================================ */
+.floating-wa {
+  position: fixed;
+  right: 24px;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  z-index: 999;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 20px;
+  border-radius: 999px;
+  background: #25d366;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 800;
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.35);
+  transition: all var(--transition-fast);
+}
 
+.floating-wa:hover {
+  background: #20ba5a;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(37, 211, 102, 0.45);
+}
+
+.floating-wa:focus-visible {
+  outline: 3px solid var(--bg-dark);
+  outline-offset: 3px;
+}
+
+.floating-wa-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+/* ================================
+   7. INPUT TANGGAL OPTIMIZATION
+   ================================ */
 #serviceEditor input[type="date"],
 #serviceDateFrom,
 #serviceDateTo {
   display: block;
-  position: relative;
   width: 100%;
-  max-width: 100%;
-  min-width: 0;
   min-height: 48px;
   margin: 8px 0 16px;
-  padding: 10px 12px;
-
-  box-sizing: border-box;
-  border: 1px solid #9ca3af;
-  border-radius: 8px;
-
-  background: #fff;
-  color: #111827;
-
+  padding: 10px 14px;
+  border: 1px solid var(--border-input);
+  border-radius: 12px;
+  background: #ffffff;
+  color: var(--text-main);
   font-family: inherit;
-  font-size: 16px;
-  line-height: normal;
-
+  font-size: 15px;
   -webkit-appearance: auto;
   appearance: auto;
-
-  opacity: 1;
-  pointer-events: auto;
-  touch-action: manipulation;
 }
 
 #serviceEditor input[type="date"]:focus,
 #serviceDateFrom:focus,
 #serviceDateTo:focus {
-  border-color: #2563eb;
-  outline: 2px solid #2563eb;
-  outline-offset: 2px;
+  border-color: var(--primary);
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
 }
 
-/* Pastikan form tidak memotong area input */
 #serviceEditor,
 #serviceEditor .filter-item {
   min-width: 0;
@@ -239,12 +524,111 @@ footer{text-align:center;padding:30px;color:#8892a4;font-size:12px;line-height:1
   text-align: left;
 }
 
-/* Optimasi layar HP */
-@media (max-width: 600px) {
-  #serviceEditor input[type="date"],
-  #serviceDateFrom,
-  #serviceDateTo {
-    min-height: 50px;
-    font-size: 16px;
+/* ================================
+   8. FOOTER
+   ================================ */
+footer {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.8;
+  border-top: 1px solid var(--border-color);
+  background: #ffffff;
+}
+
+footer a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+/* ================================
+   9. MEDIA QUERIES (MOBILE RESPONSIVE)
+   ================================ */
+@media (max-width: 700px) {
+  .topbar {
+    height: 60px;
+    padding: 0 16px;
+  }
+
+  .brand {
+    font-size: 18px;
+  }
+
+  .brand-logo {
+    height: 30px;
+  }
+
+  .topbar-links {
+    gap: 6px;
+  }
+
+  .topbar-links a,
+  .admin-link {
+    min-height: 36px;
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .container {
+    padding: 20px 14px 60px;
+  }
+
+  .hero {
+    padding-top: 10px;
+  }
+
+  .hero h1 {
+    font-size: 32px;
+  }
+
+  .card {
+    border-radius: 16px;
+    padding: 20px 16px;
+  }
+
+  .customer-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .code-badge {
+    align-self: flex-start;
+  }
+
+  .service-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .service-top {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .cost {
+    font-size: 14px;
+  }
+
+  .floating-wa {
+    right: 16px;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    padding: 14px;
+    border-radius: 50%;
+  }
+
+  .floating-wa span {
+    display: none; /* Sembunyikan teks di HP, tampilkan icon saja */
+  }
+
+  .floating-wa-icon {
+    width: 28px;
+    height: 28px;
   }
 }
