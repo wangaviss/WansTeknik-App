@@ -2039,27 +2039,34 @@ td:first-child {
      PRINT BUTTON
   ========================= */
 
-  if (printButton) {
-
-    printButton.addEventListener(
-      "click",
-      function() {
-
-        window.focus();
-
-        setTimeout(
-          function() {
-
-            window.print();
-
-          },
-          150
+  
+if (printButton) {
+  printButton.addEventListener("click", function () {
+    // Cetak harus dipanggil langsung dari tindakan pengguna.
+    try {
+      if (typeof window.print !== "function") {
+        alert(
+          "Fitur cetak tidak tersedia di tampilan ini.\n\n" +
+          "Buka halaman WansTeknik melalui Google Chrome, " +
+          "lalu pilih Cetak atau Simpan sebagai PDF."
         );
-
+        return;
       }
-    );
 
-  }
+      window.focus();
+      window.print();
+
+    } catch (error) {
+      console.error("Gagal mencetak nota:", error);
+
+      alert(
+        "Nota berhasil dibuka, tetapi fitur cetak tidak didukung " +
+        "oleh tampilan ini. Coba buka WansTeknik melalui Google Chrome."
+      );
+    }
+  });
+}
+
 
 
   /* =========================
