@@ -179,6 +179,20 @@ function formatRupiah(v) {
 
 }
 
+function withTimeout(promise, ms = 15000) {
+  let timer;
+
+  const timeout = new Promise((_, reject) => {
+    timer = setTimeout(() => {
+      reject(new Error("Waktu pencarian habis. Periksa koneksi internet lalu coba lagi."));
+    }, ms);
+  });
+
+  return Promise.race([promise, timeout])
+    .finally(() => clearTimeout(timer));
+}
+
+
 // =====================================================
 // CUSTOMER INVOICE / NOTA
 // =====================================================
@@ -1561,51 +1575,61 @@ if (form) {
       }
 
 
+      
       // ================================================
-      // RPC
+      // RPC — CARI RIWAYAT SERVICE
       // ================================================
 
-      const {
-        data,
-        error
-      } =
-        await db.rpc(
-          "cek_riwayat_konsumen",
-          {
-            p_wt_code:
-              code,
+      let data;
+      let error;
 
-            p_phone:
-              phone
-          }
+      try {
+        const response = await withTimeout(
+          db.rpc(
+            "cek_riwayat_konsumen",
+            {
+              p_wt_code: code,
+              p_phone: phone
+            }
+          ),
+          15000
         );
 
+        data = response.data;
+        error = response.error;
+
+      } catch (err) {
+        console.error(
+          "Gagal mencari riwayat:",
+          err
+        );
+
+        if (statusEl) {
+          statusEl.className = "status error";
+          statusEl.textContent =
+            err.message ||
+            "Pencarian gagal. Periksa koneksi internet.";
+        }
+
+        resetSubmitButton();
+        return;
+      }
 
       if (error) {
-
         console.error(
           "Supabase Error:",
           error
         );
 
-
         if (statusEl) {
-
-          statusEl.className =
-            "status error";
-
+          statusEl.className = "status error";
           statusEl.textContent =
-            "Sistem belum terhubung atau konfigurasi Supabase belum selesai.";
-
+            "Riwayat gagal dimuat. Periksa koneksi atau konfigurasi Supabase.";
         }
 
-
         resetSubmitButton();
-
         return;
-
       }
-
 
       // ================================================
       // TIDAK ADA DATA
@@ -1634,28 +1658,44 @@ if (form) {
       }
 
 
+
       // ================================================
       // DATA CUSTOMER
       // ================================================
 
-      const {
-        data: customerData,
-        error: customerError
-      } =
-        await db
-          .from("customers")
-          .select(
-            "wt_code, name, phone, address"
-          )
-          .eq(
-            "wt_code",
-            code
-          )
-          .eq(
-            "phone",
-            phone
-          )
-          .maybeSingle();
+      let customerData;
+      let customerError;
+
+      try {
+        const response = await withTimeout(
+          db
+            .from("customers")
+            .select("wt_code, name, phone, address")
+            .eq("wt_code", code)
+            .eq("phone", phone)
+            .maybeSingle(),
+          15000
+        );
+
+        customerData = response.data;
+        customerError = response.error;
+
+      } catch (err) {
+        console.error(
+          "Gagal memuat pelanggan:",
+          err
+        );
+
+        if (statusEl) {
+          statusEl.className = "status error";
+          statusEl.textContent =
+            err.message ||
+            "Data pelanggan gagal dimuat.";
+        }
+
+        resetSubmitButton();
+        return;
+      }
 
 
       if (customerError) {
