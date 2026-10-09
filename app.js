@@ -2,20 +2,10 @@
 // WANSTEKNIK CUSTOMER PORTAL (app.js)
 // =====================================================
 
-// =====================================================
-// SUPABASE CONFIGURATION
-// =====================================================
-
 const SUPABASE_URL = "https://kxdqviatkjonsfqywgwy.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_cdjpVfFpB7WK36DrVKlr6g_E4b9XM-2";
 
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-
-console.log("Supabase berhasil dibuat:", db);
-
-// =====================================================
-// DOM ELEMENTS
-// =====================================================
 
 const form = document.querySelector("#customerForm");
 const statusEl = document.querySelector("#status");
@@ -30,17 +20,10 @@ const historyCountEl = document.querySelector("#historyCount");
 const totalServiceEl = document.querySelector("#totalService");
 const lastServiceEl = document.querySelector("#lastService");
 
-// =====================================================
-// HELPER FUNCTIONS
-// =====================================================
-
 function normalizePhone(v) {
   let p = String(v || "").replace(/[^\d+]/g, "");
-  if (p.startsWith("+62")) {
-    p = "0" + p.slice(3);
-  } else if (p.startsWith("62")) {
-    p = "0" + p.slice(2);
-  }
+  if (p.startsWith("+62")) p = "0" + p.slice(3);
+  else if (p.startsWith("62")) p = "0" + p.slice(2);
   return p;
 }
 
@@ -49,36 +32,22 @@ function normalizeCode(v) {
 }
 
 function esc(v = "") {
-  return String(v).replace(
-    /[&<>"']/g,
-    (m) =>
-      ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#039;",
-      }[m])
-  );
+  return String(v).replace(/[&<>"']/g, (m) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+  }[m]));
 }
 
 function formatDate(v) {
   if (!v) return "-";
   return new Date(`${v}T00:00:00`).toLocaleDateString("id-ID", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
+    day: "2-digit", month: "long", year: "numeric"
   });
 }
 
 function formatRupiah(v) {
-  if (v === null || v === undefined || v === "" || Number(v) === 0) {
-    return "";
-  }
+  if (v === null || v === undefined || v === "" || Number(v) === 0) return "";
   return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    maximumFractionDigits: 0,
+    style: "currency", currency: "IDR", maximumFractionDigits: 0
   }).format(v);
 }
 
@@ -89,13 +58,8 @@ function withTimeout(promise, ms = 15000) {
       reject(new Error("Waktu pencarian habis. Periksa koneksi internet lalu coba lagi."));
     }, ms);
   });
-
   return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
 }
-
-// =====================================================
-// CUSTOMER INVOICE / NOTA (COMPATIBLE WITH APP/WEBVIEW)
-// =====================================================
 
 function openCustomerInvoice(record, customer) {
   if (!record) return alert("Data nota tidak ditemukan.");
@@ -113,11 +77,7 @@ function openCustomerInvoice(record, customer) {
   const logoBrandUrl = new URL("./logo-brand-nota.png", window.location.href).href;
 
   const printWindow = window.open("", "_blank", "width=800,height=900");
-
-  if (!printWindow) {
-    alert("Popup diblokir aplikasi/browser. Izinkan popup untuk membuka nota.");
-    return;
-  }
+  if (!printWindow) return alert("Popup diblokir browser. Izinkan popup untuk membuka nota.");
 
   const notaHTML = `
 <!doctype html>
@@ -129,97 +89,46 @@ function openCustomerInvoice(record, customer) {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"><\/script>
   <style>
     * { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; }
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      color: #111;
-      background: #fff;
-      padding: 20px;
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
-    }
-    .nota-wrapper { width: 100%; max-width: 750px; margin: 0 auto; background: #fff; }
-    .print-bar { display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 20px; }
-    .print-btn, .download-btn, .close-btn {
-      border: none; padding: 12px 18px; border-radius: 7px; font-size: 14px; font-weight: bold; cursor: pointer; color: #fff;
-    }
+    body { font-family: Arial, sans-serif; padding: 20px; color: #111; background: #fff; }
+    .nota-wrapper { max-width: 750px; margin: 0 auto; }
+    .print-bar { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+    .print-btn, .download-btn, .close-btn { border: none; padding: 10px 18px; border-radius: 6px; font-weight: bold; cursor: pointer; color: #fff; }
     .print-btn { background: #111; }
-    .print-btn:hover { background: #333; }
     .download-btn { background: #0284c7; }
-    .download-btn:hover { background: #0369a1; }
     .close-btn { background: #64748b; }
-    .close-btn:hover { background: #475569; }
-
-    .header { display: grid; grid-template-columns: 80px 1fr 80px; align-items: center; gap: 10px; padding-bottom: 15px; border-bottom: 2px solid #111; }
-    .logo-box { width: 80px; height: 65px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-    .logo-box img { max-width: 75px; max-height: 60px; object-fit: contain; }
+    .header { display: grid; grid-template-columns: 80px 1fr 80px; align-items: center; border-bottom: 2px solid #111; padding-bottom: 10px; }
+    .header img { max-width: 75px; max-height: 60px; object-fit: contain; }
     .brand-center { text-align: center; }
-    .brand-center h1 { margin: 0; font-size: 24px; font-weight: 800; color: #111; letter-spacing: 1px; }
-    .brand-center p { margin: 4px 0 0; font-size: 12px; color: #555; }
-    
+    .brand-center h1 { margin: 0; font-size: 24px; }
     .invoice-info { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
     .info-box { border: 1px solid #ddd; padding: 10px; border-radius: 6px; }
-    .label { font-size: 10px; color: #666; text-transform: uppercase; margin-bottom: 4px; }
+    .label { font-size: 10px; color: #666; text-transform: uppercase; }
     .value { font-size: 14px; font-weight: bold; }
-    
     table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    td { border: 1px solid #ddd; padding: 10px; font-size: 13px; vertical-align: top; }
+    td { border: 1px solid #ddd; padding: 10px; font-size: 13px; }
     td:first-child { width: 160px; font-weight: bold; background: #f8fafc; }
-    
     .total-box { display: flex; justify-content: flex-end; margin-top: 15px; }
-    .total { min-width: 220px; border: 2px solid #111; padding: 12px; text-align: right; font-size: 18px; font-weight: bold; }
-    .footer { margin-top: 30px; padding-top: 15px; border-top: 1px solid #ddd; text-align: center; font-size: 11px; color: #555; line-height: 1.5; }
-
-    @media (max-width: 600px) {
-      body { padding: 12px; }
-      .print-bar { flex-direction: column; }
-      .print-btn, .download-btn, .close-btn { width: 100%; }
-      .header { grid-template-columns: 60px 1fr 60px; }
-      .brand-center h1 { font-size: 18px; }
-      .invoice-info { grid-template-columns: 1fr; gap: 8px; }
-      td:first-child { width: 120px; }
-    }
-
-    @media print {
-      .print-bar { display: none !important; }
-      body { padding: 0 !important; }
-      .nota-wrapper { width: 100% !important; max-width: none !important; }
-    }
+    .total { border: 2px solid #111; padding: 10px 20px; font-size: 18px; font-weight: bold; }
+    .footer { margin-top: 30px; text-align: center; font-size: 11px; color: #666; border-top: 1px solid #ddd; padding-top: 10px; }
+    @media print { .print-bar { display: none !important; } body { padding: 0 !important; } }
   </style>
 </head>
 <body>
-
   <div class="print-bar">
     <button type="button" class="print-btn" id="printButton">🖨️ Cetak / Print</button>
     <button type="button" class="download-btn" id="downloadButton">📥 Unduh PDF</button>
     <button type="button" class="close-btn" id="closeButton">✕ Tutup</button>
   </div>
-
   <div id="notaArea" class="nota-wrapper">
     <div class="header">
-      <div class="logo-box">
-        <img src="${logoWtUrl}" alt="Logo WT" onerror="this.style.display='none'">
-      </div>
-      <div class="brand-center">
-        <h1>WansTeknik</h1>
-        <p>Service, Maintenance & Repair</p>
-      </div>
-      <div class="logo-box">
-        <img src="${logoBrandUrl}" alt="Brand WT" onerror="this.style.display='none'">
-      </div>
+      <div><img src="${logoWtUrl}" alt="WT" onerror="this.style.display='none'"></div>
+      <div class="brand-center"><h1>WansTeknik</h1><p>Service, Maintenance & Repair</p></div>
+      <div><img src="${logoBrandUrl}" alt="Brand" onerror="this.style.display='none'"></div>
     </div>
-
     <div class="invoice-info">
-      <div class="info-box">
-        <div class="label">No. Nota</div>
-        <div class="value">${esc(invoiceNo)}</div>
-      </div>
-      <div class="info-box">
-        <div class="label">Tanggal Service</div>
-        <div class="value">${esc(formattedDate)}</div>
-      </div>
+      <div class="info-box"><div class="label">No. Nota</div><div class="value">${esc(invoiceNo)}</div></div>
+      <div class="info-box"><div class="label">Tanggal Service</div><div class="value">${esc(formattedDate)}</div></div>
     </div>
-
     <table>
       <tr><td>Kode Pelanggan</td><td>${esc(customerCode)}</td></tr>
       <tr><td>Nama Pelanggan</td><td>${esc(customerName)}</td></tr>
@@ -230,376 +139,117 @@ function openCustomerInvoice(record, customer) {
       <tr><td>Tindakan / Perbaikan</td><td>${esc(record.repair || "-")}</td></tr>
       <tr><td>Catatan</td><td>${esc(record.notes || "-")}</td></tr>
     </table>
-
-    <div class="total-box">
-      <div class="total">Total: Rp ${cost}</div>
-    </div>
-
-    <div class="footer">
-      <strong>WansTeknik</strong><br>
-      Terima kasih telah menggunakan layanan WansTeknik.<br>
-      Nota ini merupakan bukti transaksi service resmi.
-    </div>
+    <div class="total-box"><div class="total">Total: Rp ${cost}</div></div>
+    <div class="footer"><strong>WansTeknik</strong><br>Terima kasih telah menggunakan layanan WansTeknik.</div>
   </div>
-
   <script>
     (function() {
       const printBtn = document.getElementById("printButton");
       const downloadBtn = document.getElementById("downloadButton");
       const closeBtn = document.getElementById("closeButton");
-
-      if (printBtn) {
-        printBtn.addEventListener("click", function() {
-          try {
-            window.focus();
-            setTimeout(() => window.print(), 150);
-          } catch (e) {
-            alert("Sistem cetak tidak didukung aplikasi ini. Silakan gunakan tombol Unduh PDF.");
-          }
-        });
+      if (printBtn) printBtn.onclick = () => { try { window.print(); } catch(e) { alert("Format cetak tidak didukung."); } };
+      if (downloadBtn) {
+        downloadBtn.onclick = () => {
+          downloadBtn.disabled = true;
+          downloadBtn.textContent = "Mengunduh...";
+          const element = document.getElementById("notaArea");
+          const opt = { margin: 0.3, filename: 'Nota-${esc(invoiceNo)}.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } };
+          html2pdf().set(opt).from(element).save().then(() => { downloadBtn.disabled = false; downloadBtn.textContent = "📥 Unduh PDF"; });
+        };
       }
-
-      
-if (downloadBtn) {
-  downloadBtn.addEventListener("click", async function () {
-    const element = document.getElementById("notaArea");
-    const originalText = downloadBtn.textContent;
-    const buttonsBar = document.querySelector(".print-bar");
-
-    if (typeof window.html2pdf !== "function") {
-      alert(
-        "Pustaka PDF belum tersedia. Periksa koneksi internet, lalu buka ulang nota."
-      );
-      return;
-    }
-
-    downloadBtn.disabled = true;
-    downloadBtn.textContent = "Menyiapkan PDF...";
-
-    if (buttonsBar) {
-      buttonsBar.style.display = "none";
-    }
-
-    try {
-      // Beri kesempatan browser menyelesaikan perubahan tampilan.
-      await new Promise((resolve) => setTimeout(resolve, 300));
-
-      const safeInvoiceNo = String(
-        document.querySelector(".invoice-info .info-box .value")
-          ?.textContent || "WansTeknik"
-      ).replace(/[^a-zA-Z0-9_-]/g, "_");
-
-      await window.html2pdf()
-        .set({
-          margin: 8,
-          filename: `Nota-${safeInvoiceNo}.pdf`,
-          image: {
-            type: "jpeg",
-            quality: 0.98
-          },
-          html2canvas: {
-            scale: 2,
-            useCORS: true,
-            backgroundColor: "#ffffff",
-            logging: false
-          },
-          jsPDF: {
-            unit: "mm",
-            format: "a4",
-            orientation: "portrait"
-          },
-          pagebreak: {
-            mode: ["css", "legacy"]
-          }
-        })
-        .from(element)
-        .save();
-
-    } catch (err) {
-      console.error("Gagal membuat PDF:", err);
-      alert(
-        "PDF gagal dibuat. Coba buka portal melalui Google Chrome dan unduh kembali."
-      );
-    } finally {
-      if (buttonsBar) {
-        buttonsBar.style.display = "";
-      }
-
-      downloadBtn.disabled = false;
-      downloadBtn.textContent = originalText;
-    }
-  });
-}
-
-
-      if (closeBtn) {
-        closeBtn.addEventListener("click", function() {
-          window.close();
-        });
-      }
-
-      document.addEventListener("keydown", function(e) {
-        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "p") {
-          e.preventDefault();
-          window.print();
-        }
-      });
+      if (closeBtn) closeBtn.onclick = () => window.close();
     })();
   <\/script>
 </body>
-</html>
-  `;
+</html>`;
 
   printWindow.document.open();
   printWindow.document.write(notaHTML);
   printWindow.document.close();
-
-  setTimeout(() => {
-    try {
-      printWindow.focus();
-    } catch (e) {
-      console.warn("Tidak dapat focus ke window nota:", e);
-    }
-  }, 500);
 }
-
-// =====================================================
-// RENDER RIWAYAT
-// =====================================================
 
 function renderHistory(data, customer) {
   if (!historyEl) return;
-
-  historyEl.innerHTML = data
-    .map(
-      (r, index) => `
-      <article class="service">
-        <div class="service-top">
-          <div>
-            <span class="date">${formatDate(r.service_date)}</span>
-            <h3>${esc(r.checked || "Service")}</h3>
-            ${
-              r.invoice_no
-                ? `<small class="invoice-no">Nota: ${esc(r.invoice_no)}</small>`
-                : ""
-            }
-          </div>
-          ${
-            r.cost
-              ? `<strong class="cost">${formatRupiah(r.cost)}</strong>`
-              : ""
-          }
+  historyEl.innerHTML = data.map((r, index) => `
+    <article class="service">
+      <div class="service-top">
+        <div>
+          <span class="date">${formatDate(r.service_date)}</span>
+          <h3>${esc(r.checked || "Service")}</h3>
+          ${r.invoice_no ? `<small class="invoice-no">Nota: ${esc(r.invoice_no)}</small>` : ""}
         </div>
+        ${r.cost ? `<strong class="cost">${formatRupiah(r.cost)}</strong>` : ""}
+      </div>
+      <div class="service-grid">
+        <div><b>KENDALA</b><span>${esc(r.problem || "-")}</span></div>
+        <div><b>DIPERBAIKI</b><span>${esc(r.repair || "-")}</span></div>
+      </div>
+      ${r.notes ? `<p class="notes">${esc(r.notes)}</p>` : ""}
+      ${r.invoice_no ? `<button type="button" class="invoice-button" data-index="${index}">🧾 Lihat / Cetak Nota</button>` : ""}
+    </article>
+  `).join("");
 
-        <div class="service-grid">
-          <div>
-            <b>KENDALA</b>
-            <span>${esc(r.problem || "-")}</span>
-          </div>
-          <div>
-            <b>DIPERBAIKI</b>
-            <span>${esc(r.repair || "-")}</span>
-          </div>
-        </div>
-
-        ${r.notes ? `<p class="notes">${esc(r.notes)}</p>` : ""}
-
-        ${
-          r.invoice_no
-            ? `
-              <button
-                type="button"
-                class="invoice-button"
-                data-index="${index}"
-              >
-                🧾 Lihat / Cetak Nota
-              </button>
-            `
-            : ""
-        }
-      </article>
-    `
-    )
-    .join("");
-
-  // Bind event tombol nota
   historyEl.querySelectorAll(".invoice-button").forEach((button) => {
     button.addEventListener("click", () => {
-      const index = Number(button.dataset.index);
-      const record = data[index];
-      openCustomerInvoice(record, customer);
+      openCustomerInvoice(data[Number(button.dataset.index)], customer);
     });
   });
 }
 
-// =====================================================
-// SUBMIT CUSTOMER
-// =====================================================
-
 if (form) {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-
-    if (result) {
-      result.classList.add("hidden");
-    }
-
-    if (statusEl) {
-      statusEl.className = "status loading";
-      statusEl.textContent = "Mencari riwayat service...";
-    }
-
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Mencari...";
-    }
+    if (result) result.classList.add("hidden");
+    if (statusEl) { statusEl.className = "status loading"; statusEl.textContent = "Mencari riwayat service..."; }
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = "Mencari..."; }
 
     const phoneInput = document.querySelector("#phone");
     const codeInput = document.querySelector("#code");
-
     const phone = normalizePhone(phoneInput ? phoneInput.value : "");
     const code = normalizeCode(codeInput ? codeInput.value : "");
 
     if (!phone || !code) {
-      if (statusEl) {
-        statusEl.className = "status error";
-        statusEl.textContent = "No. HP dan kode WT wajib diisi.";
-      }
+      if (statusEl) { statusEl.className = "status error"; statusEl.textContent = "No. HP dan kode WT wajib diisi."; }
       resetSubmitButton();
       return;
     }
-
-    // 1. RPC Cari Riwayat Service
-    let data;
-    let error;
 
     try {
-      const response = await withTimeout(
-        db.rpc("cek_riwayat_konsumen", {
-          p_wt_code: code,
-          p_phone: phone,
-        }),
-        15000
-      );
+      const response = await withTimeout(db.rpc("cek_riwayat_konsumen", { p_wt_code: code, p_phone: phone }), 15000);
+      const data = response.data;
+      if (response.error || !data || data.length === 0) {
+        if (statusEl) { statusEl.className = "status error"; statusEl.textContent = "Data tidak ditemukan. Pastikan No. HP dan Kode WT benar."; }
+        resetSubmitButton();
+        return;
+      }
 
-      data = response.data;
-      error = response.error;
+      const custRes = await withTimeout(db.rpc("cek_data_pelanggan", { p_wt_code: code, p_phone: phone }), 15000);
+      const customerData = Array.isArray(custRes.data) && custRes.data.length > 0 ? custRes.data[0] : null;
+
+      if (!customerData) {
+        if (statusEl) { statusEl.className = "status error"; statusEl.textContent = "Data pelanggan tidak ditemukan."; }
+        resetSubmitButton();
+        return;
+      }
+
+      if (customerNameEl) customerNameEl.textContent = customerData.name || "Nama belum diisi";
+      if (customerAddressEl) customerAddressEl.textContent = customerData.address || "Alamat belum diisi";
+      if (customerCodeEl) customerCodeEl.textContent = customerData.wt_code ? `WT-${customerData.wt_code}` : code;
+      if (historyCountEl) historyCountEl.textContent = `${data.length} riwayat service`;
+      if (totalServiceEl) totalServiceEl.textContent = data.length;
+      if (lastServiceEl && data[0]) lastServiceEl.textContent = formatDate(data[0].service_date);
+
+      renderHistory(data, customerData);
+
+      if (statusEl) { statusEl.className = "status success"; statusEl.textContent = "Riwayat ditemukan."; }
+      if (result) { result.classList.remove("hidden"); result.scrollIntoView({ behavior: "smooth", block: "start" }); }
     } catch (err) {
-      console.error("Gagal mencari riwayat:", err);
-      if (statusEl) {
-        statusEl.className = "status error";
-        statusEl.textContent =
-          err.message || "Pencarian gagal. Periksa koneksi internet.";
-      }
-      resetSubmitButton();
-      return;
+      if (statusEl) { statusEl.className = "status error"; statusEl.textContent = err.message || "Gagal memuat data."; }
     }
-
-    if (error) {
-      console.error("Supabase Error:", error);
-      if (statusEl) {
-        statusEl.className = "status error";
-        statusEl.textContent =
-          "Riwayat gagal dimuat. Periksa koneksi atau konfigurasi Supabase.";
-      }
-      resetSubmitButton();
-      return;
-    }
-
-    if (!data || data.length === 0) {
-      if (statusEl) {
-        statusEl.className = "status error";
-        statusEl.textContent =
-          "Data tidak ditemukan. Pastikan No. HP dan Kode WT benar.";
-      }
-      resetSubmitButton();
-      return;
-    }
-
-    // 2. RPC Cari Data Pelanggan
-    let customerData;
-    let customerError;
-
-    try {
-      const response = await withTimeout(
-        db.rpc("cek_data_pelanggan", {
-          p_wt_code: code,
-          p_phone: phone,
-        }),
-        15000
-      );
-
-      customerError = response.error;
-      customerData =
-        Array.isArray(response.data) && response.data.length > 0
-          ? response.data[0]
-          : null;
-    } catch (err) {
-      console.error("Gagal memuat pelanggan:", err);
-      if (statusEl) {
-        statusEl.className = "status error";
-        statusEl.textContent = "Data pelanggan gagal dimuat. Periksa koneksi.";
-      }
-      resetSubmitButton();
-      return;
-    }
-
-    if (customerError) {
-      console.error("Customer RPC Error:", customerError);
-      if (statusEl) {
-        statusEl.className = "status error";
-        statusEl.textContent =
-          "Data pelanggan gagal dimuat. Periksa konfigurasi Supabase.";
-      }
-      resetSubmitButton();
-      return;
-    }
-
-    if (!customerData) {
-      if (statusEl) {
-        statusEl.className = "status error";
-        statusEl.textContent =
-          "Data pelanggan tidak ditemukan. Periksa No. HP dan Kode WT.";
-      }
-      resetSubmitButton();
-      return;
-    }
-
-    // Populate Info Pelanggan
-    if (customerNameEl) customerNameEl.textContent = customerData.name || "Nama belum diisi";
-    if (customerAddressEl) customerAddressEl.textContent = customerData.address || "Alamat belum diisi";
-    if (customerCodeEl) customerCodeEl.textContent = customerData.wt_code ? `WT-${customerData.wt_code}` : code;
-    if (historyCountEl) historyCountEl.textContent = `${data.length} riwayat service`;
-    if (totalServiceEl) totalServiceEl.textContent = data.length;
-
-    const latestService = data[0];
-    if (lastServiceEl && latestService) {
-      lastServiceEl.textContent = formatDate(latestService.service_date);
-    }
-
-    renderHistory(data, customerData);
-
-    if (statusEl) {
-      statusEl.className = "status success";
-      statusEl.textContent = "Riwayat ditemukan.";
-    }
-
-    if (result) {
-      result.classList.remove("hidden");
-      result.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }
-
     resetSubmitButton();
   });
 }
 
 function resetSubmitButton() {
-  if (!submitBtn) return;
-  submitBtn.disabled = false;
-  submitBtn.textContent = "Lihat Riwayat Service";
+  if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = "Lihat Riwayat Service"; }
 }
-
-console.log("WansTeknik Customer Portal siap.");
