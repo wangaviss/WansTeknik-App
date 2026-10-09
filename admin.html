@@ -204,13 +204,69 @@
           ></select>
 
 
-          <label>Tanggal</label>
+          
+<label for="serviceDate">Tanggal Service</label>
 
-          <input
-            id="serviceDate"
-            type="date"
-            required
-          >
+<div class="custom-date-field">
+  <input
+    id="serviceDate"
+    name="service_date"
+    type="text"
+    placeholder="Pilih tanggal service"
+    readonly
+    required
+    autocomplete="off"
+    aria-label="Tanggal service"
+  >
+
+  <button
+    id="openServiceCalendar"
+    type="button"
+    class="secondary"
+  >
+    📅 Pilih Tanggal
+  </button>
+</div>
+
+<div id="serviceCalendar" class="calendar-modal" hidden>
+  <div
+    class="calendar-panel"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Pilih tanggal service"
+  >
+    <div class="calendar-header">
+      <button id="calendarPrev" type="button"
+        aria-label="Bulan sebelumnya">‹</button>
+
+      <strong id="calendarMonth"></strong>
+
+      <button id="calendarNext" type="button"
+        aria-label="Bulan berikutnya">›</button>
+    </div>
+
+    <div class="calendar-weekdays">
+      <span>Min</span>
+      <span>Sen</span>
+      <span>Sel</span>
+      <span>Rab</span>
+      <span>Kam</span>
+      <span>Jum</span>
+      <span>Sab</span>
+    </div>
+
+    <div id="calendarDays" class="calendar-days"></div>
+
+    <div class="calendar-footer">
+      <button id="calendarToday" type="button"
+        class="secondary">Hari Ini</button>
+
+      <button id="calendarClose" type="button"
+        class="secondary">Tutup</button>
+    </div>
+  </div>
+</div>
+
 
 
           <label>Yang dicek / unit</label>
