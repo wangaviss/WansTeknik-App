@@ -2673,6 +2673,158 @@ function parseCSV(text) {
 }
 
 /* =========================
+   KALENDER SERVICE APK
+========================= */
+(() => {
+  const dateInput = document.getElementById("serviceDate");
+  const openBtn = document.getElementById("openServiceCalendar");
+  const modal = document.getElementById("serviceCalendar");
+  const monthLabel = document.getElementById("calendarMonth");
+  const daysBox = document.getElementById("calendarDays");
+  const prevBtn = document.getElementById("calendarPrev");
+  const nextBtn = document.getElementById("calendarNext");
+  const todayBtn = document.getElementById("calendarToday");
+  const closeBtn = document.getElementById("calendarClose");
+
+  if (
+    !dateInput || !openBtn || !modal || !monthLabel ||
+    !daysBox || !prevBtn || !nextBtn || !todayBtn || !closeBtn
+  ) return;
+
+  const pad = n => String(n).padStart(2, "0");
+
+  function toISO(date) {
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+  }
+
+  function parseISO(value) {
+    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value || "");
+    if (!match) return null;
+
+    const d = new Date(+match[1], +match[2] - 1, +match[3]);
+
+    if (
+      d.getFullYear() !== +match[1] ||
+      d.getMonth() !== +match[2] - 1 ||
+      d.getDate() !== +match[3]
+    ) return null;
+
+    return d;
+  }
+
+  let viewDate = new Date();
+  viewDate.setDate(1);
+
+  function renderCalendar() {
+    const year = viewDate.getFullYear();
+    const month = viewDate.getMonth();
+    const selected = parseISO(dateInput.value);
+    const today = toISO(new Date());
+
+    monthLabel.textContent = new Intl.DateTimeFormat("id-ID", {
+      month: "long",
+      year: "numeric"
+    }).format(viewDate);
+
+    daysBox.replaceChildren();
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    for (let i = 0; i < firstDay; i++) {
+      const empty = document.createElement("button");
+      empty.type = "button";
+      empty.className = "empty";
+      empty.tabIndex = -1;
+      empty.setAttribute("aria-hidden", "true");
+      daysBox.appendChild(empty);
+    }
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(year, month, day);
+      const iso = toISO(date);
+      const button = document.createElement("button");
+
+      button.type = "button";
+      button.textContent = String(day);
+
+      if (iso === today) button.classList.add("today");
+      if (selected && iso === toISO(selected)) {
+        button.classList.add("selected");
+      }
+
+      button.setAttribute(
+        "aria-label",
+        `Pilih ${day} ${monthLabel.textContent}`
+      );
+
+      button.addEventListener("click", () => {
+        dateInput.value = iso;
+        dateInput.dispatchEvent(new Event("input", { bubbles: true }));
+        dateInput.dispatchEvent(new Event("change", { bubbles: true }));
+
+        closeCalendar();
+      });
+
+      daysBox.appendChild(button);
+    }
+  }
+
+  function openCalendar() {
+    const existing = parseISO(dateInput.value);
+    const initial = existing || new Date();
+
+    viewDate = new Date(
+      initial.getFullYear(),
+      initial.getMonth(),
+      1
+    );
+
+    renderCalendar();
+    modal.hidden = false;
+  }
+
+  function closeCalendar() {
+    modal.hidden = true;
+  }
+
+  openBtn.addEventListener("click", openCalendar);
+  dateInput.addEventListener("click", openCalendar);
+
+  prevBtn.addEventListener("click", () => {
+    viewDate.setMonth(viewDate.getMonth() - 1);
+    renderCalendar();
+  });
+
+  nextBtn.addEventListener("click", () => {
+    viewDate.setMonth(viewDate.getMonth() + 1);
+    renderCalendar();
+  });
+
+  todayBtn.addEventListener("click", () => {
+    const today = new Date();
+
+    dateInput.value = toISO(today);
+    dateInput.dispatchEvent(new Event("input", { bubbles: true }));
+    dateInput.dispatchEvent(new Event("change", { bubbles: true }));
+
+    closeCalendar();
+  });
+
+  closeBtn.addEventListener("click", closeCalendar);
+
+  modal.addEventListener("click", event => {
+    if (event.target === modal) closeCalendar();
+  });
+
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && !modal.hidden) {
+      closeCalendar();
+    }
+  });
+})();
+
+/* =========================
    START
 ========================= */
 
