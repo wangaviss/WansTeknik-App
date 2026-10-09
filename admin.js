@@ -381,23 +381,23 @@ function renderCustomers() {
         <td>${esc(c.name)}</td>
         <td>${esc(c.phone || "-")}</td>
         <td>${esc(c.address || "-")}</td>
-        <td>
-          <button
-            type="button"
-            class="row-btn"
-            onclick="editCustomer('${esc(c.id)}')"
-          >Edit</button>
+        
+<td class="action-cell">
+  <div class="action-buttons">
+    <button
+      type="button"
+      class="row-btn action-btn edit-btn"
+      onclick="editCustomer('${esc(c.id)}')"
+    >Edit</button>
 
-          
-<button
-  type="button"
-  class="row-btn"
-  onclick="window.deleteCustomer('${esc(c.id)}')"
->
-  Hapus
-</button>
+    <button
+      type="button"
+      class="row-btn action-btn delete-btn"
+      onclick="window.deleteCustomer('${esc(c.id)}')"
+    >Hapus</button>
+  </div>
+</td>
 
-        </td>
       </tr>
     `).join("");
   }
@@ -954,33 +954,29 @@ function renderServiceRecords() {
             ${formatRupiah(r.cost)}
           </td>
 
-          <td>
+          
+<td class="action-cell">
+  <div class="action-buttons">
+    <button
+      type="button"
+      class="row-btn action-btn edit-btn"
+      onclick="editService('${esc(r.id)}')"
+    >Edit</button>
 
-            <button
-              type="button"
-              class="row-btn"
-              onclick="editService('${r.id}')"
-            >
-              Edit
-            </button>
+    <button
+      type="button"
+      class="row-btn action-btn invoice-btn"
+      onclick="printInvoice('${esc(r.id)}')"
+    >Nota</button>
 
-            <button
-              type="button"
-              class="row-btn"
-              onclick="printInvoice('${r.id}')"
-            >
-              🧾 Nota
-            </button>
+    <button
+      type="button"
+      class="row-btn action-btn delete-btn"
+      onclick="deleteService('${esc(r.id)}')"
+    >Hapus</button>
+  </div>
+</td>
 
-            <button
-              type="button"
-              class="row-btn"
-              onclick="deleteService('${r.id}')"
-            >
-              Hapus
-            </button>
-
-          </td>
 
         </tr>
 
