@@ -2387,42 +2387,251 @@ if (importCsvButton) {
                 notes:
                   r.notes || null,
 
-                cost:
-                  Number(
-                    r.cost || 0
-                  )
 
-              });
+/* =========================
+   CSV IMPORT - FIXED
+========================= */
 
-          if (ins.error)
-            throw ins.error;
+const importCsvButton = $("#importCsv");
 
-          ok++;
+if (importCsvButton) {
+  importCsvButton.onclick = async () => {
+    const status = $("#importStatus");
+    const fileInput = $("#csvFile");
+    const file = fileInput?.files?.[0];
 
-        } catch (e) {
+    if (!file) {
+      msg("#importStatus", "Pilih file CSV terlebih dahulu.");
+      return;
+    }
 
-          console.error(
-            "Import gagal:",
-            e
-          );
+    if (!/\.csv$/i.test(file.name)) {
+      msg("#importStatus", "File harus berformat .csv.");
+      return;
+    }
 
-          fail++;
+    importCsvButton.disabled = true;
+    msg("#importStatus", "Memeriksa file CSV...");
 
-        }
+    let ok = 0;
+    let fail = 0;
+    const errors = [];
 
+    try {
+      const text = await file.text();
+      const rows = parseCSV(text);
+
+      if (!rows.length) {
+        throw new Error("CSV tidak memiliki baris data.");
       }
+
+      // Periksa nama kolom
+      const required = [
+        "wt_code",
+        "service_date"
+      ];
+
+      const headers = Object.keys(rows[0] || {});
+
+      const missing = required.filter(
+        h => !headers.includes(h)
+      );
+
+      if (missing.length) {
+        throw new Error(
+          "Kolom wajib tidak ditemukan: " +
+          missing.join(", ") +
+          ". Periksa nama header CSV."
+        );
+      }
+
+      // Ambil data pelanggan terbaru dari database
+      msg("#importStatus", "Memuat data pelanggan...");
+
+      const { data, error: customerError } = await db
+        .from("customers")
+        .select("id, wt_code, name, phone, address");
+
+      if (customerError) {
+        throw new Error(
+          "Gagal membaca pelanggan: " +
+          customerError.message
+        );
+      }
+
+      // Cache pelanggan agar kode yang sama tidak dibuat berulang
+      const customerMap = new Map();
+
+      (data || []).forEach(c => {
+        customerMap.set(
+          String(c.wt_code || "").trim(),
+          c
+        );
+      });
 
       msg(
         "#importStatus",
-        `Selesai: ${ok} berhasil, ${fail} gagal.`
+        `Mulai mengimpor ${rows.length} baris...`
       );
 
-      await loadCustomers();
+      for (let i = 0; i < rows.length; i++) {
+        const r = rows[i];
+        const rowNumber = i + 2;
 
+        try {
+          // Kode pelanggan harus 4 digit
+          const wtCode = String(r.wt_code || "").trim();
+
+          if (!/^\d{4}$/.test(wtCode)) {
+            throw new Error(
+              "wt_code wajib tepat 4 angka, contoh 0001."
+            );
+          }
+
+          // Validasi tanggal
+          const date = String(r.service_date || "").trim();
+
+          if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+            throw new Error(
+              "Tanggal wajib berformat YYYY-MM-DD."
+            );
+          }
+
+          const parsedDate = new Date(date + "T00:00:00Z");
+
+          if (
+            Number.isNaN(parsedDate.getTime()) ||
+            parsedDate.toISOString().slice(0, 10) !== date
+          ) {
+            throw new Error("Tanggal tidak valid.");
+          }
+
+          // Cari pelanggan yang sudah ada
+          let customer = customerMap.get(wtCode);
+
+          // Buat pelanggan baru jika belum ada
+          if (!customer) {
+            const name = String(r.name || "").trim();
+
+            if (!name) {
+              throw new Error(
+                "Pelanggan belum terdaftar dan kolom name kosong."
+              );
+            }
+
+            const { data: newCustomer, error: insertCustomerError } =
+              await db
+                .from("customers")
+                .insert({
+                  wt_code: wtCode,
+                  name,
+                  phone: String(r.phone || "").trim() || null,
+                  address: String(r.address || "").trim() || null
+                })
+                .select("id, wt_code, name, phone, address")
+                .single();
+
+            if (insertCustomerError) {
+              throw new Error(
+                "Gagal membuat pelanggan: " +
+                insertCustomerError.message
+              );
+            }
+
+            customer = newCustomer;
+
+            // Simpan ke cache untuk baris berikutnya
+            customerMap.set(wtCode, customer);
+          }
+
+          // Biaya: menerima 75000, 75.000, atau Rp 75.000
+          const rawCost = String(r.cost ?? "0")
+            .trim()
+            .replace(/^Rp\s*/i, "")
+            .replace(/[\s.,]/g, "");
+
+          if (rawCost && !/^\d+$/.test(rawCost)) {
+            throw new Error(
+              "Biaya tidak valid. Gunakan angka, contoh 75000."
+            );
+          }
+
+          const cost = rawCost ? Number(rawCost) : 0;
+
+          if (!Number.isSafeInteger(cost)) {
+            throw new Error("Nilai biaya terlalu besar.");
+          }
+
+          // Simpan riwayat servis
+          const { error: serviceError } = await db
+            .from("service_records")
+            .insert({
+              customer_id: customer.id,
+              service_date: date,
+              checked: String(r.checked || "").trim() || null,
+              problem: String(r.problem || "").trim() || null,
+              repair: String(r.repair || "").trim() || null,
+              notes: String(r.notes || "").trim() || null,
+              cost
+            });
+
+          if (serviceError) {
+            throw new Error(
+              "Gagal menyimpan servis: " +
+              serviceError.message
+            );
+          }
+
+          ok++;
+
+        } catch (err) {
+          fail++;
+
+          const detail =
+            err?.message || String(err);
+
+          errors.push(
+            `Baris ${rowNumber}: ${detail}`
+          );
+
+          console.error(
+            `Import CSV baris ${rowNumber} gagal:`,
+            err
+          );
+        }
+      }
+
+      let summary =
+        `Import selesai: ${ok} berhasil, ${fail} gagal.`;
+
+      if (errors.length) {
+        summary += "\n\nDetail kegagalan:\n" +
+          errors.slice(0, 10).join("\n");
+
+        if (errors.length > 10) {
+          summary +=
+            `\n...dan ${errors.length - 10} error lainnya.`;
+        }
+      }
+
+      msg("#importStatus", summary);
+
+      await loadCustomers();
       await loadServiceRecords();
 
-    };
+    } catch (err) {
+      console.error("Import CSV error:", err);
 
+      msg(
+        "#importStatus",
+        "Import gagal: " +
+        (err?.message || String(err))
+      );
+
+    } finally {
+      importCsvButton.disabled = false;
+    }
+  };
 }
 
 
@@ -2431,105 +2640,93 @@ if (importCsvButton) {
 ========================= */
 
 function parseCSV(text) {
+  text = String(text || "").replace(/^\uFEFF/, "");
 
-  const lines =
-    text
-      .split(/\r?\n/)
-      .filter(
-        x => x.trim()
-      );
+  const firstLine = text.split(/\r\n|\n|\r/)[0] || "";
+  let comma = 0;
+  let semicolon = 0;
+  let quoted = false;
 
-  if (!lines.length)
-    return [];
+  for (let i = 0; i < firstLine.length; i++) {
+    const c = firstLine[i];
 
-  const parse = s => {
-
-    let a = [];
-
-    let cur = "";
-
-    let q = false;
-
-    for (
-      let i = 0;
-      i < s.length;
-      i++
-    ) {
-
-      const ch = s[i];
-
-      if (ch === '"') {
-
-        if (
-          q &&
-          s[i + 1] === '"'
-        ) {
-
-          cur += '"';
-
-          i++;
-
-        } else {
-
-          q = !q;
-
-        }
-
-      } else if (
-        ch === "," &&
-        !q
-      ) {
-
-        a.push(cur);
-
-        cur = "";
-
+    if (c === '"') {
+      if (quoted && firstLine[i + 1] === '"') {
+        i++;
       } else {
-
-        cur += ch;
-
+        quoted = !quoted;
       }
+    } else if (!quoted && c === ",") {
+      comma++;
+    } else if (!quoted && c === ";") {
+      semicolon++;
+    }
+  }
 
+  const delimiter = semicolon > comma ? ";" : ",";
+
+  const rows = [];
+  let row = [];
+  let cell = "";
+  quoted = false;
+
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+
+    if (c === '"') {
+      if (quoted && text[i + 1] === '"') {
+        cell += '"';
+        i++;
+      } else {
+        quoted = !quoted;
+      }
+    } else if (!quoted && c === delimiter) {
+      row.push(cell);
+      cell = "";
+    } else if (!quoted && (c === "\n" || c === "\r")) {
+      if (c === "\r" && text[i + 1] === "\n") i++;
+
+      row.push(cell);
+      if (row.some(v => v.trim() !== "")) rows.push(row);
+
+      row = [];
+      cell = "";
+    } else {
+      cell += c;
+    }
+  }
+
+  if (quoted) {
+    throw new Error("CSV memiliki tanda kutip yang tidak berpasangan.");
+  }
+
+  row.push(cell);
+  if (row.some(v => v.trim() !== "")) rows.push(row);
+
+  if (rows.length < 2) {
+    throw new Error("CSV kosong atau tidak memiliki baris data.");
+  }
+
+  const headers = rows.shift().map(h =>
+    h.trim().toLowerCase().replace(/^\uFEFF/, "")
+  );
+
+  if (new Set(headers).size !== headers.length) {
+    throw new Error("Ada nama kolom CSV yang duplikat.");
+  }
+
+  return rows.map((values, index) => {
+    if (values.length !== headers.length) {
+      throw new Error(
+        `Baris CSV ${index + 2}: jumlah kolom tidak sesuai header.`
+      );
     }
 
-    a.push(cur);
-
-    return a.map(
-      x => x.trim()
+    return Object.fromEntries(
+      headers.map((header, i) => [header, values[i].trim()])
     );
-
-  };
-
-  const h =
-    parse(lines[0])
-      .map(
-        x => x.toLowerCase()
-      );
-
-  return lines
-    .slice(1)
-    .map(line => {
-
-      const v =
-        parse(line);
-
-      const o = {};
-
-      h.forEach(
-        (k, i) => {
-
-          o[k] =
-            v[i] || "";
-
-        }
-      );
-
-      return o;
-
-    });
-
+  });
 }
-
 
 /* =========================
    START
